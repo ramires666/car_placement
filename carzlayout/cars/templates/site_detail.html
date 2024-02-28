@@ -12,47 +12,75 @@
 
 <!--<div><a href="{% url 'site_edit' site_slug=site.slug %}" class="btn btn-primary">Редактировать участок</a></div>-->
 
-<!-- Toggle Buttons and Tables for Each Relation -->
-{% for key, table_html in related_data_tables.items %}
-    <!-- Generate Edit Link -->
+<!--&lt;!&ndash; Toggle Buttons and Tables for Each Relation &ndash;&gt;-->
+<!--{% for key, table_html in related_data_tables.items %}-->
+
 <!--    {% if '_all' not in key %}-->
+
+<!--    {% endif %}-->
+
+
+<!--    {% if '_all' in key %}-->
+
+<!--        &lt;!&ndash; Button to Toggle View &ndash;&gt;-->
+<!--        <button onclick="toggleVisibility('{{ key }}')">Все / Используемые</button>-->
+
+<!--        &lt;!&ndash; Container for All Records Table (Initially Visible) &ndash;&gt;-->
+<!--        <div id="{{ key }}" style="display: none;">-->
+<!--            {{ table_html|safe }}-->
+<!--        </div>-->
+<!--    {% else %}-->
 <!--        <div>-->
-<!--&lt;!&ndash;            <a href="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</a>&ndash;&gt;-->
 <!--            <form action="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}" method="get">-->
-<!--                <button type="submit">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>-->
+<!--                &lt;!&ndash; Check if the user is authenticated &ndash;&gt;-->
+<!--                {% if request.user.is_authenticated %}-->
+<!--                    <button type="submit">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>-->
+<!--                {% else %}-->
+<!--                    <button type="submit" disabled>Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>-->
+<!--                    <p>You must be logged in to submit.</p>-->
+<!--                {% endif %}-->
 <!--            </form>-->
 <!--        </div>-->
+<!--        &lt;!&ndash; Container for Filtered Records Table (Initially Hidden) &ndash;&gt;-->
+<!--        <div id="{{ key }}" style="display: block;">-->
+<!--            {{ table_html|safe }}-->
+<!--        </div>-->
 <!--    {% endif %}-->
-    {% if '_all' not in key %}
-        <div>
-            <form action="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}" method="get">
-                <!-- Check if the user is authenticated -->
-                {% if request.user.is_authenticated %}
-                    <button type="submit">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>
-                {% else %}
-                    <button type="submit" disabled>Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>
-                    <p>You must be logged in to submit.</p>
-                {% endif %}
-            </form>
-        </div>
-    {% endif %}
+<!--{% endfor %}-->
 
+<!-- Toggle Buttons and Tables for Each Relation -->
+{% for key, table_html in related_data_tables.items %}
+    <div class="property-section">
+        {% if '_all' not in key %}
+            <!-- Button/Form for Adding/Changing Records for Each Property -->
+            <div class="edit-property-form">
+                <form action="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}" method="get">
+                    <!-- Check if the user is authenticated -->
+                    {% if request.user.is_authenticated %}
+                        <button type="submit">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>
+                    {% else %}
+                        <button type="submit" disabled>Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>
+                        <p>You must be logged in to submit.</p>
+                    {% endif %}
+                </form>
+            </div>
+        {% endif %}
 
-    {% if '_all' in key %}
+        {% if '_all' in key %}
+            <!-- Button to Toggle View -->
+            <button onclick="toggleVisibility('{{ key }}')">Все / Используемые</button>
 
-        <!-- Button to Toggle View -->
-        <button onclick="toggleVisibility('{{ key }}')">Все / Используемые</button>
-
-        <!-- Container for All Records Table (Initially Visible) -->
-        <div id="{{ key }}" style="display: none;">
-            {{ table_html|safe }}
-        </div>
-    {% else %}
-        <!-- Container for Filtered Records Table (Initially Hidden) -->
-        <div id="{{ key }}" style="display: block;">
-            {{ table_html|safe }}
-        </div>
-    {% endif %}
+            <!-- Container for All Records Table (Initially Visible) -->
+            <div id="{{ key }}" style="display: none;">
+                {{ table_html|safe }}
+            </div>
+        {% else %}
+            <!-- Container for Filtered Records Table (Initially Hidden) -->
+            <div id="{{ key }}" style="display: block;">
+                {{ table_html|safe }}
+            </div>
+        {% endif %}
+    </div>
 {% endfor %}
 
 
