@@ -43,7 +43,7 @@ def get_universal_property_form(model_class, initial_site=None,user=None,initial
 
                 # If the user is an admin, provide a dropdown of all users
                 if user.is_superuser:
-                    self.fields['changed_by'] = forms.ModelChoiceField(queryset=User.objects.all(), initial=user.id)
+                    self.fields['changed_by'] = forms.ModelChoiceField(queryset=User.objects.all(), initial=1)
                 else:
                     # If not admin, make the field display only
                     self.fields['changed_by'].disabled = True

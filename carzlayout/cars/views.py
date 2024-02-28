@@ -57,7 +57,7 @@ class UniversalPropertyView(View):
             initial_data = model_to_dict(latest_record) if latest_record else None
 
             PropertyForm = get_universal_property_form(model_class, initial_site=initial_site, user=request.user, initial=initial_data)
-            form = PropertyForm(initial=initial_data)  # instantiate the form class
+            form = PropertyForm(initial=initial_data, user=request.user)  # instantiate the form class
             return render(request, 'universal_property_form.html', {
                 'form': form,
                 'property_verbose_name': property_verbose_name,
@@ -77,7 +77,7 @@ class UniversalPropertyView(View):
         latest_record = model_class.objects.filter(site=initial_site, changed_by=request.user,
                                                    period=period).order_by('-created').first()
 
-        PropertyForm = get_universal_property_form(model_class)
+        PropertyForm = get_universal_property_form(model_class, user=request.user)
         form = PropertyForm(request.POST, request.FILES, instance=latest_record)
 
         if form.is_valid():
