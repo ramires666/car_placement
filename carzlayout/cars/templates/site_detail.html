@@ -15,14 +15,28 @@
 <!-- Toggle Buttons and Tables for Each Relation -->
 {% for key, table_html in related_data_tables.items %}
     <!-- Generate Edit Link -->
+<!--    {% if '_all' not in key %}-->
+<!--        <div>-->
+<!--&lt;!&ndash;            <a href="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</a>&ndash;&gt;-->
+<!--            <form action="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}" method="get">-->
+<!--                <button type="submit">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    {% endif %}-->
     {% if '_all' not in key %}
         <div>
-<!--            <a href="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</a>-->
             <form action="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}" method="get">
-                <button type="submit">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>
+                <!-- Check if the user is authenticated -->
+                {% if request.user.is_authenticated %}
+                    <button type="submit">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>
+                {% else %}
+                    <button type="submit" disabled>Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>
+                    <p>You must be logged in to submit.</p>
+                {% endif %}
             </form>
         </div>
     {% endif %}
+
 
     {% if '_all' in key %}
 
