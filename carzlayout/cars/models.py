@@ -188,6 +188,39 @@ class Nsmen(PropertyBase):
         verbose_name="Nsm - Количество смен"
 
 
+class V_objem_kuzova(PropertyBase):
+    Vk = models.FloatField(verbose_name="Объем кузова")
+    class Meta:
+        verbose_name="Vk - Объем кузова"
+
+
+class Kuzov_Coeff_Zapl(PropertyBase):
+    Kz = models.FloatField(verbose_name="Коэффициент заполнения кузова")
+    class Meta:
+        verbose_name="Kz - Коэффициент заполнения кузова"
+
+
+class V_Skorost_dvizh(PropertyBase):
+    Vdv = models.FloatField(verbose_name="Средн. скорость движения")
+    class Meta:
+        verbose_name="Vdv - Средн. скорость движения"
+
+
+
+class T_pogruzki(PropertyBase):
+    Tpogr = models.FloatField(verbose_name="Продолжит погрузки со сменой автосам")
+    class Meta:
+        verbose_name="Tpogr - Продолжит погрузки со сменой автосам"
+
+
+class T_razgruzki(PropertyBase):
+    Trazgr = models.FloatField(verbose_name="Прожолжит. разгрузки с маневрами")
+    class Meta:
+        verbose_name="Trazgr - Прожолжит. разгрузки с маневрами"
+
+
+
+
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
