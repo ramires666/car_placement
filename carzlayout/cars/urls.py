@@ -1,6 +1,6 @@
 from django.urls import path, re_path, register_converter
 from cars import views
-from cars.views import CarsHome, SiteDetail, SiteUpdate, edit_property_view, UniversalPropertyView,CarDetailView
+from cars.views import CarsHome, SiteDetail, SiteUpdate, edit_property_view, UniversalPropertyView,CarDetailView,CarListView
 
 from cars import converter
 # from models import Car
@@ -24,7 +24,7 @@ urlpatterns = [
 
     # path('cars/<slug:car_slug>/', views.show_car, name='car'),
     path('cars/<slug:car_slug>/', CarDetailView.as_view() , name='car'),
-
+    path('cars/', CarListView.as_view(), name='car_list'),
 
     path('category/<slug:cat_slug>/', views.show_category, name='category'),
     path('tag/<slug:tag_slug>/', views.show_tag_postlist, name='tag'),

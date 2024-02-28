@@ -26,6 +26,12 @@ from .site_data_service import SiteDataService
 from django.utils.html import format_html_join, mark_safe
 
 
+class CarListView(ListView):
+    model = Car
+    template_name = 'car_list.html'
+    context_object_name = 'cars'
+    queryset = Car.objects.filter(is_published=Car.Status.PUBLISHED)  # Show only published cars
+
 class CarDetailView(DetailView):
     model = Car
     template_name = 'car_detail.html'

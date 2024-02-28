@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="car-list">
+    <h2>Available Cars</h2>
+    <ul>
+        {% for car in object_list %}
+            <li>
+                <h3>{{ car.title }}</h3>
+                {% if car.photo %}
+                    <img src="{{ car.photo.url }}" alt="{{ car.title }}" style="width: 100px; height: auto;">
+                {% endif %}
+                <p>Description: {{ car.content|truncatewords:20 }}</p>
+                <a href="{% url 'car' car.slug %}">View Details</a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
