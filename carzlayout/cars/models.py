@@ -268,6 +268,22 @@ class Car(models.Model):
     published = PublishedManager()
 
 
+class CarPropertyBase(models.Model):
+    period = models.ForeignKey(YearMonth,on_delete=models.PROTECT,verbose_name="Период")
+    # site = models.ForeignKey(Site, on_delete=models.CASCADE,verbose_name="Участок")
+    created = models.DateTimeField(auto_now_add=True,verbose_name="Дата_обновления")
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,verbose_name="Автор")
+    document = models.FileField(upload_to='property_documents/', null=True, blank=False,verbose_name="Документ_обоснование")
+    history = HistoricalRecords()
+    class Meta:
+        abstract = True
+
+
+class Ktg(CarPropertyBase):
+    KTG = models.FloatField(verbose_name="КТГ")
+    class Meta:
+        verbose_name="KTG - КТГ"
+
 
 @reversion.register()
 class Category(models.Model):
