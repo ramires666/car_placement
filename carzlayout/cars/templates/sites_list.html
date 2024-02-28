@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Участки шахты: {{ shaft.title }}</h1>
+<ul>
+    {% for site in sites %}
+    <li><a href="{% url 'site_detail' site.slug %}">{{ site.title }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

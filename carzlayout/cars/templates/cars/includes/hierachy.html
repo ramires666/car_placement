@@ -1,0 +1,13 @@
+    {% for mine in mines %}
+        <div>
+            <h2>Mine: {{ mine.title }}</h2>
+            {% for shaft in mine.shaft_set.all %}
+                <div style="margin-left: 20px;">
+                    <h3>Shaft: {{ shaft.title }}</h3>
+                    {% for site in shaft.site_set.all %}
+                        <p style="margin-left: 40px;">Site: {{ site.title }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}

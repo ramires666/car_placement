@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Шахты рудника: {{ mine.title }}</h1>
+<ul>
+    {% for shaft in shafts %}
+    <li><a href="{% url 'sites_list' shaft.slug %}">{{ shaft.title }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

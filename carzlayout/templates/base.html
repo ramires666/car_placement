@@ -1,0 +1,103 @@
+{% load static %}
+{% load cars_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{title}}</title>
+	<!-- Bootstrap JS, Popper.js, and jQuery -->
+<link type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+	<link type="text/css" href="{% static 'cars/css/styles.css' %}" rel="stylesheet" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link rel="shortcut icon" href="{% static 'cars/images/main.ico' %}" type="image/x-icon"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<table class="table-page" border=0 cellpadding="0" cellspacing="0">
+<tr><td valign=top>
+{% block mainmenu %}
+		<div class="header">
+			<ul id="mainmenu" class="mainmenu">
+			<li class="logo"><a href="{% url 'home' %}"><div class="logo"></div></a></li>
+<!--		{%  get_menu as menu %}-->
+			{% for m in menu %}
+<!--				{% if not forloop.last %}<li>{% else %}<li class="last">{% endif %}-->
+					<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
+			{% endfor %}
+				{% if user.is_authenticated %}
+
+				<form id="logoutForm" method="post" action="{% url 'users:logout' %}">
+					{% csrf_token %}
+					<li class="last">{{ user.username }} | <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Выйти</a></li>
+				</form>
+<!--				<form style="display:inline-block" method="post" action="{% url 'users:logout' %}">-->
+<!--				<form method="post" action="{% url 'users:logout' %}">-->
+<!--					{% csrf_token %}-->
+<!--					<li class="last"> {{user.username}} |  <a href="{% url 'users:logout' %}">Выйти</a></li>-->
+<!--				</form>-->
+<!--					<li class="last"> {{user.username}} |  <a href="{% url 'users:logout' %}">Выйти</a></li>-->
+				{% else %}
+					<li class="last"><a href="{% url 'users:login' %}">Войти</a> | <a href="#">Регистрация</a> </li>
+				{% endif %}
+			</ul>
+			<div class="clear"></div>
+		</div>
+{% endblock mainmenu %}
+
+
+
+
+<table class="table-content" border=0 cellpadding="0" cellspacing="0">
+<tr>
+
+<!-- Sidebar слева -->
+	<td valign="top" class="left-chapters">
+	<ul id="leftchapters">
+		<li><a href="{% url 'places' %}">Все места</a></li>
+
+		{% if cat_selected == 0 %}
+			<li class="selected">Все категории</li>
+		{% else %}
+			<li><a href="{% url 'home' %}">Все категории машин</a></li>
+		{% endif %}
+
+		{% show_categories cat_selected %}
+	</ul>
+</td>
+<!-- Конец Sidebar'а -->
+
+
+<td valign="top" class="content">
+	<!-- Хлебные крошки -->
+	{% block breadcrumbs %}
+	{% endblock %}
+
+<!-- Блок контента -->
+	<div class="content-text">
+{% block content %}
+{% endblock %}
+	</div>
+<!-- Конец блока контента -->
+
+</td></tr></table>
+</td></tr>
+<!-- Footer -->
+<tr><td valign=top>
+	<div id="footer">
+		<p>&copy; 2023 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго рекомендуется.</p>
+	</div>
+</td></tr></table>
+
+
+    <!-- Modal-related JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+			function showImageModal(imageUrl) {
+            $('#modalImage').attr('src', imageUrl);
+            $('#imageModal').modal('show');
+        }
+    </script>
+</body>
+</html>

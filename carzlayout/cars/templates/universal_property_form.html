@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Добавление {{ property_verbose_name }} участка {{site}} шахты {{site.shaft}} </h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset>
+        {{ form.as_p }}
+    </fieldset>
+
+<!--    <fieldset>-->
+<!--        <legend>Для массового изменения</legend>-->
+<!--        {{ form.shaft }}-->
+<!--            <br>или<br>-->
+<!--        {{ form.mine }}-->
+<!--    </fieldset>-->
+
+    <br></br>
+
+    <button type="submit"> Сохранить </button>
+                <form action="{{% url 'site_detail' site_slug=site_slug %}" method="get">
+                <button type="submit"> Отмена/вернуться</button>
+            </form>
+<!--    <a href="{% url 'site_detail' site_slug=site_slug %}" class="button"> Отмена/вернуться</a>-->
+
+</form>
+
+{% endblock %}

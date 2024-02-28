@@ -1,0 +1,79 @@
+
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block content %}
+<!-- Site Details -->
+<div class="site-details">
+    <h2>Участок: {{ site.title }} на шахте {{ site.shaft.title }}, рудника {{ site.shaft.mine.title }}</h2>
+<!--    <p>находится на шахте: {{ site.shaft.title }}</p>-->
+<!--    <p>которая находится на руднике: {{ site.shaft.mine.title }}</p>-->
+</div>
+
+<!--<div><a href="{% url 'site_edit' site_slug=site.slug %}" class="btn btn-primary">Редактировать участок</a></div>-->
+
+<!-- Toggle Buttons and Tables for Each Relation -->
+{% for key, table_html in related_data_tables.items %}
+    <!-- Generate Edit Link -->
+    {% if '_all' not in key %}
+        <div>
+<!--            <a href="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</a>-->
+            <form action="{% url 'edit_property' site_slug=site.slug property_type=key|trim_suffix:'_filtered' %}" method="get">
+                <button type="submit">Внести новое значение: {{ key|trim_suffix:'_filtered'|rus_verbose }}</button>
+            </form>
+        </div>
+    {% endif %}
+
+    {% if '_all' in key %}
+
+        <!-- Button to Toggle View -->
+        <button onclick="toggleVisibility('{{ key }}')">Все / Используемые</button>
+
+        <!-- Container for All Records Table (Initially Visible) -->
+        <div id="{{ key }}" style="display: none;">
+            {{ table_html|safe }}
+        </div>
+    {% else %}
+        <!-- Container for Filtered Records Table (Initially Hidden) -->
+        <div id="{{ key }}" style="display: block;">
+            {{ table_html|safe }}
+        </div>
+    {% endif %}
+{% endfor %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Document Image</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- The image will be loaded here -->
+        <img id="modalImage" src="" class="img-fluid" alt="Document"/>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+
+function toggleVisibility(key) {
+    var allKey = key.replace("_filtered", "_all");
+    var filteredKey = key.replace("_all", "_filtered");
+    var allTable = document.getElementById(allKey);
+    var filteredTable = document.getElementById(filteredKey);
+    if (allTable.style.display === "none") {
+        allTable.style.display = "block";
+        filteredTable.style.display = "none";
+    } else {
+        allTable.style.display = "none";
+        filteredTable.style.display = "block";
+    }
+}
+</script>
+{% endblock %}

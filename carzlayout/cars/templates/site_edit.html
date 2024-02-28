@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{title}}</h1>
+<p>Редактирование участка</p>
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+  <fieldset>
+    <legend>Site Details</legend>
+    {{ form.as_p }}
+  </fieldset>
+
+  {% for formset in formsets %}
+    <fieldset>
+        {% for form in formset %}
+          {{ form.as_p }}
+        {% endfor %}
+    </fieldset>
+  {% endfor %}
+
+  <input type="submit" value="Сохранить">
+</form>
+
+{% endblock %}
