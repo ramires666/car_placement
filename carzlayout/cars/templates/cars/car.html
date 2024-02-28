@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1> {{car.title}}</h1>
+
+{%  if car.photo %}
+<p><img class="img-article-left" src="{{car.photo.url}}"></p>
+{% endif %}
+
+{{car.content|linebreaks}}
+
+{% endblock %}
+<!--HierarchicalListView(ListView)-->

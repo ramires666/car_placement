@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="car-details">
+    <h2>{{ car.title }}</h2>
+    {% if car.photo %}
+        <img src="{{ car.photo.url }}" alt="{{ car.title }}" style="max-width: 500px;">
+    {% endif %}
+    <p>Description: {{ car.content }}</p>
+    <p>Category: {{ car.cat.name }}</p>
+    <p>Tags: 
+        {% for tag in car.tags.all %}
+            {{ tag.name }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    <p>Created: {{ car.time_create|date:"Y-m-d H:i" }}</p>
+    <p>Last Updated: {{ car.time_update|date:"Y-m-d H:i" }}</p>
+    <p>Status: {{ car.get_is_published_display }}</p>
+</div>
+{% endblock %}

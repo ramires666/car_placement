@@ -241,7 +241,7 @@ class Car(models.Model):
     time_create = models.DateTimeField(auto_now_add=True)
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]),x[1]), Status.choices)), default=Status.DRAFT)
-    cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='posts',verbose_name='Категория')
+    cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='cars',verbose_name='Категория')
     tags = models.ManyToManyField('TagPost',blank=True,related_name='tags')
     history = HistoricalRecords()
 
@@ -255,7 +255,7 @@ class Car(models.Model):
         indexes = [models.Index(fields=['-time_create'])]
 
     def get_absolute_url(self):
-        return reverse('post', kwargs={'post_slug': self.slug})
+        return reverse('car', kwargs={'car_slug': self.slug})
 
 
 

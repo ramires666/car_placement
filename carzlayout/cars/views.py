@@ -26,6 +26,13 @@ from .site_data_service import SiteDataService
 from django.utils.html import format_html_join, mark_safe
 
 
+class CarDetailView(DetailView):
+    model = Car
+    template_name = 'car_detail.html'
+    context_object_name = 'car'
+    # Assuming your Car model has a 'slug' field for URL routing
+    slug_url_kwarg = 'car_slug'
+
 class UniversalPropertyView(View):
     models = {
         'plan_zadanie': Plan_zadanie,
@@ -252,11 +259,11 @@ The Cat® AD45 Underground Truck delivers all the power, performance and reliabi
 class CarsHome(ListView):
     model = Car
     template_name = 'cars/index.html'
-    context_object_name = 'post'
+    context_object_name = 'car'
     extra_context = {
         'title':'Полный список машин',
         'menu':menu,
-        'posts': Car.published.all().select_related('cat'),
+        'cars': Car.published.all().select_related('cat'),
         'cat_selected': 0,
     }
 
@@ -396,15 +403,15 @@ def contact(request):
 def login(request):
     return HttpResponse("Авторизация")
 
-def show_post(request, post_slug):
-    post = get_object_or_404(Car, slug=post_slug)
+def show_car(request, car_slug):
+    car = get_object_or_404(Car, slug=car_slug)
     data = {
-        'title': post.title,
+        'title': car.title,
         'menu': menu,
-        'post': post,
+        'car': car,
         'cat_selected':1,
     }
-    return render(request, 'cars/post.html', data)
+    return render(request, 'cars/car.html', data)
 
 
 
@@ -441,25 +448,25 @@ def page_not_found(request, exception):
 
 def show_category(request, cat_slug):
     category = get_object_or_404(Category, slug=cat_slug)
-    posts = Car.published.filter(cat_id=category.pk)
+    cars = Car.published.filter(cat_id=category.pk)
     # cat_selected = cat_id if cat_id is not None else 0
 
     data = {
         'title': f'Рубрика:{category.name}',
         'menu': menu,
-        'posts': posts,
+        'cars': cars,
         'cat_selected': category.pk,
     }
     return render(request, 'cars/index.html', context=data)
 
 def show_tag_postlist(request, tag_slug):
     tag = get_object_or_404(TagPost, slug=tag_slug)
-    posts = tag.tags.filter(is_published=Car.Status.PUBLISHED)
+    cars = tag.tags.filter(is_published=Car.Status.PUBLISHED)
 
     data = {
         'title':f"Тег: {tag.tag}",
         'menu': menu,
-        'posts': posts,
+        'cars': cars,
         'cat_selected': None,
     }
 
