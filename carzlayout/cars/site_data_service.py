@@ -1,4 +1,4 @@
-from .models import Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen
+from .models import Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki,  T_razgruzki
 from django.conf import settings
 from django.db.models import Model
 from typing import Type
@@ -37,7 +37,11 @@ class SiteDataService:
             't_pereezd': T_pereezd,
             't_vspom': T_vspom,
             'nsmen': Nsmen,
-
+            'Vk': V_objem_kuzova,
+            'Kz': Kuzov_Coeff_Zapl,
+            'Vdv': V_Skorost_dvizh,
+            'Tpogr': T_pogruzki,
+            'Trazgr': T_razgruzki,
         }
 
         data = {}

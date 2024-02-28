@@ -10,7 +10,7 @@ from django.utils.timezone import now
 from django.views import View
 from django.views.generic import ListView, DetailView, FormView, UpdateView
 from cars.models import Mine, Shaft, Site, Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, \
-    T_pereezd, T_vspom, Nsmen, YearMonth
+    T_pereezd, T_vspom, Nsmen, YearMonth, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki,  T_razgruzki
 from .forms import SiteEditForm, PlanZadanieFormset, Plotnost_gruzaFormset, Schema_otkatkiFormset, T_smenyFormset, \
     T_regl_pereryvFormset, T_pereezdFormset, T_vspomFormset, NsmenFormset, PropertyEditForm, UniversalPropertyForm
 from itertools import chain
@@ -36,6 +36,11 @@ class UniversalPropertyView(View):
         't_pereezd': T_pereezd,
         't_vspom': T_vspom,
         'nsmen': Nsmen,
+        'Vk': V_objem_kuzova,
+        'Kz': Kuzov_Coeff_Zapl,
+        'Vdv': V_Skorost_dvizh,
+        'Tpogr': T_pogruzki,
+        'Trazgr': T_razgruzki,
     }
 
     def get(self, request, property_type, *args, **kwargs):
