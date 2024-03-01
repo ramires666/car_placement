@@ -4,10 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="media">
-      <change afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/car_list.html" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="KTG added">
+      <change afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/cars_list.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/photos/2024/03/01/Снимок_экрана_2023-11-25_155803.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100339.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100339_lOTzHuw.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_143350_xiOFxOi.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-02_121603.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-03_215746.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carzlayout/cars/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/forms.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carzlayout/cars/static/cars/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/static/cars/css/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/car_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/car_detail.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
@@ -29,12 +38,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "ramires666"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;ramires666&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -59,6 +68,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
     "DefaultHtmlFileTemplate": "HTML File",
     "RunOnceActivity.OpenDatabaseViewOnStart": "true",
@@ -130,7 +140,9 @@
       <workItem from="1707714512537" duration="68055000" />
       <workItem from="1709023833917" duration="8000" />
       <workItem from="1709023851003" duration="35164000" />
-      <workItem from="1709129505281" duration="14407000" />
+      <workItem from="1709129505281" duration="14961000" />
+      <workItem from="1709201097848" duration="3990000" />
+      <workItem from="1709272892089" duration="13330000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -204,7 +216,23 @@
       <option name="project" value="LOCAL" />
       <updated>1709143620164</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="car detail and list viw">
+      <option name="closed" value="true" />
+      <created>1709146059660</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1709146059660</updated>
+    </task>
+    <task id="LOCAL-00011" summary="KTG added">
+      <option name="closed" value="true" />
+      <created>1709146374841</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1709146374841</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,6 +267,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <ignored-roots>
       <path value="$PROJECT_DIR$/carzlayout/mymenu" />
       <path value="$PROJECT_DIR$" />
@@ -252,7 +281,9 @@
     <MESSAGE value="added KTG property" />
     <MESSAGE value="chnaged post to cars&#10;added class view and new template for car" />
     <MESSAGE value="media" />
-    <option name="LAST_COMMIT_MESSAGE" value="media" />
+    <MESSAGE value="car detail and list viw" />
+    <MESSAGE value="KTG added" />
+    <option name="LAST_COMMIT_MESSAGE" value="KTG added" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -262,6 +293,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1709143946441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
+    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1709286254818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
   </component>
 </project>

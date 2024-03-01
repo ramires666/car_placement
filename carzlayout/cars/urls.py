@@ -1,6 +1,7 @@
 from django.urls import path, re_path, register_converter
 from cars import views
-from cars.views import CarsHome, SiteDetail, SiteUpdate, edit_property_view, UniversalPropertyView,CarDetailView,CarListView
+from cars.views import CarsHome, SiteDetail, SiteUpdate, edit_property_view, UniversalPropertyView, CarDetailView, \
+    CarListView, update_ktg
 
 from cars import converter
 # from models import Car
@@ -23,8 +24,15 @@ urlpatterns = [
     path('login/', views.login, name='login'),
 
     # path('cars/<slug:car_slug>/', views.show_car, name='car'),
-    path('cars/<slug:car_slug>/', CarDetailView.as_view() , name='car'),
-    path('cars/', CarListView.as_view(), name='car_list'),
+    # path('cars/<slug:car_slug>/', CarDetailView.as_view() , name='car'),
+    path('cars/<slug:car_slug>/', views.car_detail , name='car'),
+
+    # path('update_ktg/', update_ktg, name='update_ktg'),
+    path('update_ktg/<slug:car_slug>/', views.update_ktg, name='update_ktg'),
+
+
+    # path('cars/', CarListView.as_view(), name='car_list'),
+    path('cars/', views.list_cars, name='list_cars'),
 
     path('category/<slug:cat_slug>/', views.show_category, name='category'),
     path('tag/<slug:tag_slug>/', views.show_tag_postlist, name='tag'),

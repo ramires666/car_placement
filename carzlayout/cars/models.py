@@ -280,6 +280,7 @@ class CarPropertyBase(models.Model):
 
 
 class Ktg(CarPropertyBase):
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Машина")
     KTG = models.FloatField(verbose_name="КТГ")
     class Meta:
         verbose_name="KTG - КТГ"

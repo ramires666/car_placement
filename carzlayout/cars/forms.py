@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
-from .models import Mine, Shaft,Car, YearMonth, Site, Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen
-
+from .models import Mine, Shaft, Car, YearMonth, Site, Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, \
+    T_regl_pereryv, T_pereezd, T_vspom, Nsmen, Ktg
 
 PlanZadanieFormset = inlineformset_factory(Site, Plan_zadanie, fields='__all__', extra=1, can_delete=True)
 Plotnost_gruzaFormset = inlineformset_factory(Site, Plotnost_gruza, fields='__all__', extra=1, can_delete=True)
@@ -15,6 +15,13 @@ NsmenFormset = inlineformset_factory(Site, Nsmen, fields='__all__', extra=1, can
 
 
 from django.forms.models import modelform_factory
+
+
+class KtgForm(forms.ModelForm):
+    class Meta:
+        model = Ktg
+        fields = ['KTG']
+        labels = {'KTG': 'КТГ'}
 
 
 def get_universal_property_form(model_class, initial_site=None,user=None,initial=None):

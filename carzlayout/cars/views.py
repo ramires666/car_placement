@@ -1,18 +1,23 @@
+from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import F, OuterRef, Subquery
 from django.forms import model_to_dict
-from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy, resolve
 from django.template.loader import render_to_string
 from django.template.defaultfilters import slugify
 from django.utils.timezone import now
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, FormView, UpdateView
 from cars.models import Mine, Shaft, Site, Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, \
-    T_pereezd, T_vspom, Nsmen, YearMonth, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki,  T_razgruzki
+    T_pereezd, T_vspom, Nsmen, YearMonth, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki, \
+    Ktg
 from .forms import SiteEditForm, PlanZadanieFormset, Plotnost_gruzaFormset, Schema_otkatkiFormset, T_smenyFormset, \
-    T_regl_pereryvFormset, T_pereezdFormset, T_vspomFormset, NsmenFormset, PropertyEditForm, UniversalPropertyForm
+    T_regl_pereryvFormset, T_pereezdFormset, T_vspomFormset, NsmenFormset, PropertyEditForm, UniversalPropertyForm, \
+    KtgForm
 from itertools import chain
 from django.apps import apps
 
@@ -32,12 +37,129 @@ class CarListView(ListView):
     context_object_name = 'cars'
     queryset = Car.objects.filter(is_published=Car.Status.PUBLISHED)  # Show only published cars
 
+
+def list_cars(request):
+    # Subquery to get the most recent KTG value for each car
+    latest_ktg_subquery = Ktg.objects.filter(
+        car=OuterRef('pk')
+    # ).order_by('-period__date', '-created').values('KTG')[:1]
+    ).order_by('-period__year', '-period__month', '-created').values('KTG')[:1]
+
+
+    # Fetch all cars from the database, annotating each with its category name and the most recent KTG value
+    cars = Car.objects.annotate(
+        category_title=F('cat__name'),
+        latest_ktg=Subquery(latest_ktg_subquery)
+    ).values(
+        'title', 'V_objem_kuzova', 'category_title', 'latest_ktg'
+    )
+
+    # Convert the cars queryset into a DataFrame
+    cars_df = pd.DataFrame(list(cars))
+
+    # Convert the DataFrame to an HTML table
+    cars_html_table = cars_df.to_html(classes=["table", "table-striped"], index=False)
+
+    # Pass the HTML table to the template
+    context = {'cars_html_table': cars_html_table}
+    return render(request, 'cars/cars_list.html', context)
+
+
 class CarDetailView(DetailView):
     model = Car
     template_name = 'car_detail.html'
     context_object_name = 'car'
     # Assuming your Car model has a 'slug' field for URL routing
     slug_url_kwarg = 'car_slug'
+
+
+@csrf_exempt
+def update_ktg(request, car_slug):
+    if request.method == 'POST':
+        car = get_object_or_404(Car, slug=car_slug)
+        # Assume you're receiving a year, month, and KTG value from the form
+        # year = request.POST.get('year')
+
+        period = request.POST.get('period')
+
+        ktg_value = request.POST.get('ktg_value').replace(',', '.')
+        document = request.FILES.get('document')
+        # Fetch the YearMonth instance using period_id
+        period_instance = get_object_or_404(YearMonth, pk=period)
+
+        ktg_record = Ktg.objects.create(
+            car=car,
+            KTG=ktg_value,  # Ensure this field name matches your model's field name
+            period=period_instance,  # Assign the fetched YearMonth instance here
+            document=document
+        )
+
+        if ktg_record:
+            response_message = "KTG record created successfully."
+            # Convert ktg_record to a dict excluding non-serializable fields
+            ktg_data = model_to_dict(ktg_record, exclude=["document"])
+            # If you need to include the document URL, do it separately
+            ktg_data["document_url"] = ktg_record.document.url if ktg_record.document else None
+        else:
+            response_message = "KTG record update failed."  # Adjust according to your logic
+
+    return JsonResponse({"success": response_message, "ktg_data": ktg_data})
+
+
+def car_detail(request, car_slug):
+    car = get_object_or_404(Car, slug=car_slug)
+    ktg_records = Ktg.objects.filter(car=car).order_by('-period__year', '-period__month')
+    year_months = YearMonth.objects.all().order_by('-year', 'month')
+
+    # Initially set ktg_html_table and most_recent_ktg to default values
+    ktg_html_table = "<p>No KTG records found for this car.</p>"
+    most_recent_ktg = {'KTG': 0, 'document': None}  # Default values for the form
+
+    if ktg_records.exists():  # Check if there are any KTG records
+        # Convert KTG records to a DataFrame
+        ktg_df = pd.DataFrame(list(ktg_records.values('period__year', 'period__month', 'KTG')))
+
+        # Map month numbers to names using the YearMonth.Month.choices, if the DataFrame is not empty
+        if not ktg_df.empty:
+            month_names = dict(YearMonth.Month.choices)
+            ktg_df['period__month'] = ktg_df['period__month'].map(month_names)
+
+            # Convert the DataFrame to an HTML table
+            ktg_html_table = ktg_df.to_html(index=False,
+                                            border=0,
+                                            justify='center',
+                                            classes='content-table',
+                                            render_links=True,
+                                            escape=False)
+
+        # Fetch the most recent KTG record to prefill in the edit form
+        most_recent_ktg_record = ktg_records.latest('period__year', 'period__month')
+        most_recent_ktg = {
+            'KTG': most_recent_ktg_record.KTG,
+            'document': most_recent_ktg_record.document,
+            'period_year': most_recent_ktg_record.period.year,
+            'period_month': most_recent_ktg_record.period.get_month_display(),  # Assuming you have a get_month_display method or similar
+        }
+
+    context = {
+        'car': car,
+        'ktg_html_table': ktg_html_table,
+        'most_recent_ktg': most_recent_ktg,  # Pass the most recent KTG or default values to the template
+        'year_months': year_months,
+    }
+    return render(request, 'car_detail.html', context)
+
+
+
+# def update_ktg(request, ktg_id):
+#     if request.method == 'POST':
+#         ktg_value = request.POST.get('ktg_value')
+#         ktg = Ktg.objects.get(pk=ktg_id)
+#         ktg.KTG = ktg_value
+#         ktg.save()
+#         # Redirect back to the car detail page, adjust the redirect as necessary
+#         return HttpResponseRedirect(reverse('car_detail', args=[ktg.car.id]))
+
 
 class UniversalPropertyView(View):
     models = {
@@ -122,27 +244,7 @@ class UniversalPropertyView(View):
                     # Create a new property instance for each site with the adjusted data
                     property_instance = model_class(**model_data)
                     property_instance.save()
-                # if site != initial_site:  # Avoid duplicating for the initial site
-                #     # Create a copy of form.cleaned_data and update the 'site' key
-                #     property_data = form.cleaned_data.copy()
-                #     property_data['site'] = site
-                #
-                #     if not property_data.get('document'):
-                #         # If 'document' key is not in property_data or the value is None,
-                #         # retain the document from the latest_record if it exists
-                #         property_data['document'] = latest_record.document if latest_record and latest_record.document\
-                #                                                             else property_data.get('document')
-                #
-                #     # Create a new property instance with the updated data
-                #     property_instance = model_class(**property_data)
-                #     property_instance.save()
 
-            # for site in sites:
-            #     if site != initial_site:  # Avoid duplicating for the initial site
-            #         property_instance = model_class(**form.cleaned_data, site=site)
-            #         if not form.cleaned_data.get('document'):
-            #             property_instance.document = instance.document  # Retain the document from the instance
-            #         property_instance.save()
 
             # Redirect to the site detail page, or wherever is appropriate.
             return HttpResponseRedirect(reverse('site_detail', kwargs={'site_slug': kwargs.get('site_slug')}))
@@ -168,28 +270,7 @@ def edit_property_view(request, site_slug, model_name, property_id):
 
     return render(request, 'edit_property.html', {'form': form, 'site': site})
 
-# def edit_property(request, site_id, model_name, property_id):
-#     # Map model names to model classes
-#     model_mapping = {
-#         'plan_zadanie': Plan_zadanie,
-#         'plotnost_gruza': Plotnost_gruza,
-#         # Add the rest of the mappings
-#     }
-#     model_class = model_mapping.get(model_name)
-#     if not model_class:
-#         return HttpResponseNotFound('Model not found')
-#
-#     instance = get_object_or_404(model_class, id=property_id)
-#
-#     if request.method == 'POST':
-#         form = PropertyEditForm(request.POST, instance=instance, model_class=model_class)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('site_detail', site_id=site_id)  # Adjust as needed to redirect back to the detail view
-#     else:
-#         form = PropertyEditForm(instance=instance, model_class=model_class)
-#
-#     return render(request, 'edit_property.html', {'form': form})
+
 
 def mines_list(request):
     mines = Mine.objects.all()
@@ -299,7 +380,6 @@ class SiteDetail(DetailView):
 
     def convert_to_html(self, records):
         # Assuming each record is a dictionary that you want to convert into an HTML table row
-        # This is a simplistic conversion for demonstration; adjust as needed
         if not records:
             return mark_safe("<p>No records found.</p>")
 
