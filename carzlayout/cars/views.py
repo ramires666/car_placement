@@ -35,6 +35,7 @@ from .site_data_service import SiteDataService
 from django.utils.html import format_html_join, mark_safe
 
 from django.utils import timezone
+from django.db import transaction
 
 
 class CarListView(ListView):
@@ -259,24 +260,42 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
     # Get the appropriate form class
     PropertyForm = get_universal_property_form(PropertyModel)
 
-    # If this is a POST request then process the Form data
     if request.method == 'POST':
-        # form = PropertyForm(request.POST, instance=property_instance)
         form = PropertyForm(request.POST, request.FILES)
 
         if form.is_valid():
-            new_record = form.save(commit=False)
+            overwrite = form.cleaned_data.get('overwrite_existing', False)
 
-            model_fields = [field.name for field in PropertyModel._meta.get_fields()]
-            model_fields = [x for x in model_fields if x not in ['id', 'period', 'site', 'created', 'changed_by', 'document']]
+            with transaction.atomic():
+                if form.cleaned_data['mine']:
+                    mine_ = form.cleaned_data['mine'].slug
+                    target_sites = Site.objects.filter(shaft__mine__slug=mine_)
+                elif form.cleaned_data['shaft']:
+                    shaft_ = form.cleaned_data['shaft'].slug
+                    target_sites = Site.objects.filter(shaft__slug=shaft_)
+                else:
+                    target_sites = [site]
 
-            for key, value in request.POST.items():
-                if key in model_fields:
-                    setattr(new_record, key, value)
-            new_record.created = timezone.now()
+                # for target_site in target_sites:
+                #     # Prepare form data for model instantiation, excluding 'site' field if it exists
+                #     model_data = {k: v for k, v in form.cleaned_data.items() if k not in ['shaft', 'mine', 'site', 'period']}
+                #     new_record = PropertyModel(site=target_site, period=current_period, **model_data)
+                #
+                for target_site in target_sites:
+                    if not overwrite:
+                        # Check if a record for the current period already exists
+                        exists = PropertyModel.objects.filter(site=target_site, period=current_period).exists()
+                        if exists:
+                            continue  # Skip to the next site if a record exists and we're not overwriting
 
-            new_record.save()
+                    model_data = {k: v for k, v in form.cleaned_data.items() if k not in ['shaft', 'mine', 'site', 'period', 'overwrite_existing']}
+                    new_record = PropertyModel(site=target_site, period=current_period, **model_data)
+                    new_record.created = timezone.now()
+                    new_record.changed_by = request.user  # Set this according to your model's requirements
+                    new_record.save()
+
             return redirect('places')  # Adjust the redirect as needed
+
     else:
         if not property_instance:
             initial_data = {
@@ -746,7 +765,7 @@ def places1(request):
             'Шахта': site.shaft.title,
             'Участок': site.title,
             'План задание': site.plan_zadanie_[-1].Qpl if site.plan_zadanie_ else None,
-            'Плотность груза': site.plotnost_gruza_[1].d if site.plotnost_gruza_ else None,
+            'Плотность груза': site.plotnost_gruza_[-1].d if site.plotnost_gruza_ else None,
             'Плечо откатки': site.schema_otkatki_[-1].L if site.schema_otkatki_ else None,
             'Длительность смены': site.t_smeny_[-1].Tsm if site.t_smeny_ else None,
             'Регламент.перерывы': site.t_regl_pereryv_[-1].Tregl if site.t_regl_pereryv_ else None,

@@ -4,16 +4,29 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="building common ste properties table">
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_SIEoy08.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_TY14lOJ.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/41414142476-6501b5354a1e3__700.jpg" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="fixing mass propertis table edit">
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_Cywsjry.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_Ml6mhtd.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_SoA6z1w.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_T3fNjQK.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_eGoEbDl.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_fsPAj44.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_kpCtV5x.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_p2u9hB0.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_qbD10KM.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/2024-02-16_19-08-59_s9TnF6v.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_0yRB8Wz.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_Ae6kWyn.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_QCOj7Ix.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_SyVLqQ7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_VgCr0Bl.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_hsRcelS.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_i0R1WEZ.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_rc9IrqP.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_tvssWlT.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_wj8pSNB.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/management/commands/populate_slugs.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/management/commands/populate_slugs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/edit_property.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/edit_property.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/property_editor.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/property_editor.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/db.sqlite3" afterDir="false" />
     </list>
@@ -139,7 +152,7 @@
       <workItem from="1709201097848" duration="3990000" />
       <workItem from="1709272892089" duration="17541000" />
       <workItem from="1709533965029" duration="15410000" />
-      <workItem from="1709625789475" duration="43537000" />
+      <workItem from="1709625789475" duration="48640000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -245,7 +258,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709728080492</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="fixing mass propertis table edit">
+      <option name="closed" value="true" />
+      <created>1709745489219</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1709745489219</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -298,7 +319,8 @@
     <MESSAGE value="KTG added" />
     <MESSAGE value="finished car editing page with period KTG" />
     <MESSAGE value="building common ste properties table" />
-    <option name="LAST_COMMIT_MESSAGE" value="building common ste properties table" />
+    <MESSAGE value="fixing mass propertis table edit" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing mass propertis table edit" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -309,6 +331,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1709745112536" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
+    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1709750235389" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
   </component>
 </project>

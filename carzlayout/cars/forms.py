@@ -39,6 +39,7 @@ def get_universal_property_form(model_class, initial_site=None,user=None,initial
 
     class CustomUniversalPropertyForm(UniversalPropertyForm):
 
+        overwrite_existing = forms.BooleanField(required=False, initial=False, help_text="Overwrite existing records")
 
         def __init__(self, *args, **kwargs):
             user = kwargs.pop('user', None)
