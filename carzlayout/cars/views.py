@@ -267,10 +267,10 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
 
     if request.method == 'POST':
         form = PropertyForm(request.POST, request.FILES, user=request.user)
-
+        form.instance.changed_by = request.user
         if form.is_valid():
             overwrite = form.cleaned_data.get('overwrite_existing', False)
-            form.instance.changed_by = request.user  # Ensure changed_by is always the current user
+             # Ensure changed_by is always the current user
 
             with transaction.atomic():
                 if form.cleaned_data['mine']:
@@ -285,7 +285,7 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
                 for target_site in target_sites:
                     if not overwrite:
                         # Check if a record for the current period already exists
-                        exists = PropertyModel.objects.filter(site=target_site, period=current_period).exists()
+                        exists = PropertyModel.objects.filter(site=target_site, period=current_period, value__isnull=False).exists()
                         if exists:
                             continue  # Skip to the next site if a record exists and we're not overwriting
 
@@ -324,12 +324,14 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
     # Sort the combined list of records by the 'created' timestamp and limit to the last 10
     # last_10_records = sorted(last_10_records, key=lambda x: x.created, reverse=True)[:10]
     last_10_records = PropertyModel.objects.filter(site=site).order_by('-created')[:10]
-
+    df10 = pd.DataFrame(list(last_10_records.values()))
+    df10html_table = df10.to_html(classes=["table", "table-bordered", "table-striped"], index=False)
 
     context = {
         'form': form,
         'property_name_verbose': PropertyModel._meta.verbose_name,
-        'last_10_records': last_10_records,
+        'last_10_records': df10html_table,
+        'tab': '\t',
     }
     return render(request, 'edit_property.html', context)
 
@@ -782,19 +784,32 @@ def places1(request):
             'Рудник': site.shaft.mine.title,
             'Шахта': site.shaft.title,
             'Участок': site.title,
-            'План задание': site.plan_zadanie_[-1].Qpl if site.plan_zadanie_ else None,
-            'Плотность груза': site.plotnost_gruza_[-1].d if site.plotnost_gruza_ else None,
-            'Плечо откатки': site.schema_otkatki_[-1].L if site.schema_otkatki_ else None,
-            'Длительность смены': site.t_smeny_[-1].Tsm if site.t_smeny_ else None,
-            'Регламент.перерывы': site.t_regl_pereryv_[-1].Tregl if site.t_regl_pereryv_ else None,
-            'Время переезда': site.t_pereezd_[-1].Tprz if site.t_pereezd_ else None,
-            'Время вспомогат.': site.t_vspom_[-1].Tvsp if site.t_vspom_ else None,
-            'Кол-во смнен': site.nsmen_[-1].Nsm if site.nsmen_ else None,
-            'Объем кузова': site.v_objem_kuzova_[-1].Vk if site.v_objem_kuzova_ else None,
-            'КОэфф заполн. кузова': site.kuzov_coeff_zapl_[-1].Kz if site.kuzov_coeff_zapl_ else None,
-            'Скорость движения': site.v_skorost_dvizh_[-1].Vdv if site.v_skorost_dvizh_ else None,
-            'Время погрузки': site.t_pogruzki_[-1].Tpogr if site.t_pogruzki_ else None,
-            'Время разгр.': site.t_razgruzki_[-1].Trazgr if site.t_razgruzki_ else None,
+            # 'План задание': site.plan_zadanie_[-1].Qpl if site.plan_zadanie_ else None,
+            # 'Плотность груза': site.plotnost_gruza_[-1].d if site.plotnost_gruza_ else None,
+            # 'Плечо откатки': site.schema_otkatki_[-1].L if site.schema_otkatki_ else None,
+            # 'Длительность смены': site.t_smeny_[-1].Tsm if site.t_smeny_ else None,
+            # 'Регламент.перерывы': site.t_regl_pereryv_[-1].Tregl if site.t_regl_pereryv_ else None,
+            # 'Время переезда': site.t_pereezd_[-1].Tprz if site.t_pereezd_ else None,
+            # 'Время вспомогат.': site.t_vspom_[-1].Tvsp if site.t_vspom_ else None,
+            # 'Кол-во смнен': site.nsmen_[-1].Nsm if site.nsmen_ else None,
+            # 'Объем кузова': site.v_objem_kuzova_[-1].Vk if site.v_objem_kuzova_ else None,
+            # 'КОэфф заполн. кузова': site.kuzov_coeff_zapl_[-1].Kz if site.kuzov_coeff_zapl_ else None,
+            # 'Скорость движения': site.v_skorost_dvizh_[-1].Vdv if site.v_skorost_dvizh_ else None,
+            # 'Время погрузки': site.t_pogruzki_[-1].Tpogr if site.t_pogruzki_ else None,
+            # 'Время разгр.': site.t_razgruzki_[-1].Trazgr if site.t_razgruzki_ else None,
+            'План задание': site.plan_zadanie_[-1].value if site.plan_zadanie_ else None,
+            'Плотность груза': site.plotnost_gruza_[-1].value if site.plotnost_gruza_ else None,
+            'Плечо откатки': site.schema_otkatki_[-1].value if site.schema_otkatki_ else None,
+            'Длительность смены': site.t_smeny_[-1].value if site.t_smeny_ else None,
+            'Регламент.перерывы': site.t_regl_pereryv_[-1].value if site.t_regl_pereryv_ else None,
+            'Время переезда': site.t_pereezd_[-1].value if site.t_pereezd_ else None,
+            'Время вспомогат.': site.t_vspom_[-1].value if site.t_vspom_ else None,
+            'Кол-во смнен': site.nsmen_[-1].value if site.nsmen_ else None,
+            'Объем кузова': site.v_objem_kuzova_[-1].value if site.v_objem_kuzova_ else None,
+            'КОэфф заполн. кузова': site.kuzov_coeff_zapl_[-1].value if site.kuzov_coeff_zapl_ else None,
+            'Скорость движения': site.v_skorost_dvizh_[-1].value if site.v_skorost_dvizh_ else None,
+            'Время погрузки': site.t_pogruzki_[-1].value if site.t_pogruzki_ else None,
+            'Время разгр.': site.t_razgruzki_[-1].value if site.t_razgruzki_ else None,
 
         }
         for site in sites

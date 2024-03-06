@@ -41,45 +41,65 @@ def get_universal_property_form(model_class, initial_site=None,user=None,initial
 
         overwrite_existing = forms.BooleanField(required=False, initial=False, help_text="Overwrite existing records")
 
+
         def __init__(self, *args, **kwargs):
-            user = kwargs.pop('user', None)
+            self.user = kwargs.pop('user', None)
             # super().__init__(*args, **kwargs)
+            super(CustomUniversalPropertyForm, self).__init__(*args, **kwargs)
+
             if initial is not None:
                 kwargs['initial'] = initial
             super(CustomUniversalPropertyForm, self).__init__(*args, **kwargs)
-            # Preselect the "changed_by" field to the current user
-            if user is not None:
-                self.fields['changed_by'].initial = user.id
 
-                # If the user is an admin, provide a dropdown of all users
-                if user.is_superuser:
-                    self.fields['changed_by'] = forms.ModelChoiceField(queryset=User.objects.all(), initial=1)
-                else:
-                    # If not admin, make the field display only
-                    self.fields['changed_by'].disabled = True
-                    self.fields['changed_by'].help_text = "You cannot change this field."
+            if self.user is not None:
+                # Preselect the "changed_by" field to the current user for display only
+                self.fields['changed_by'].initial = self.user
+                #
+                # # If the user is an admin, allow selection of any user
+                # if self.user.is_superuser:
+                #     self.fields['changed_by'] = forms.ModelChoiceField(queryset=User.objects.all(), initial=self.user)
+                # else:
+                #     # For non-admin users, make the field readonly in the UI
+                #     self.fields['changed_by'].disabled = True
+                #     self.fields['changed_by'].help_text = "You cannot change this field."
+
+            # if user is not None:
+            #     self.fields['changed_by'].initial = user.id
+            #
+            #     # If the user is an admin, provide a dropdown of all users
+            #     if user.is_superuser:
+            #         self.fields['changed_by'] = forms.ModelChoiceField(queryset=User.objects.all(), initial=1)
+            #     else:
+            #         # If not admin, make the field display only
+            #         self.fields['changed_by'].disabled = True
+            #         self.fields['changed_by'].help_text = "You cannot change this field."
 
             if initial_site:
                 # Assuming 'site' is the field name in your form
                 self.fields['site'].initial = initial_site
             # Dynamically add 'shaft' and 'mine' fields
             self.fields['shaft'] = forms.ModelChoiceField(
-            # shaft = forms.ModelChoiceField(
-
                 queryset=Shaft.objects.all(),
                 required=False,
                 empty_label="(опционально) Шахта целиком ",
                 label="Шахта"
             )
             self.fields['mine'] = forms.ModelChoiceField(
-            # mine = forms.ModelChoiceField(
-
                 queryset=Mine.objects.all(),
                 required=False,
                 empty_label="(опционально) Рудник целиком ",
                 label="Рудник"
             )
 
+        def save(self, commit=True):
+            instance = super().save(commit=False)
+            # Ensure `changed_by` is correctly set for non-superusers upon saving
+            if not self.user.is_superuser:
+                instance.changed_by = self.user
+            if commit:
+                instance.save()
+                self.save_m2m()
+            return instance
 
     return CustomUniversalPropertyForm
 

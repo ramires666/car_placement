@@ -8,12 +8,16 @@
         <button type="submit">Save changes</button>
     </form>
 
-    <h3>Last 10 records for this site</h3>
-<ul>
-    {% for record in last_10_records %}
-    <li>Дата записи:{{ record.created }} {{ record.form.changed_data }} - Внёс: {{ record.changed_by.username }} Документ: {{ record.document }} </li>
-    {% endfor %}
-</ul>
+    <h3>Последние 10 изменений: </h3>
+
+    {% autoescape off %}
+{{ last_10_records|safe }}
+{% endautoescape %}
+{#<ul>#}
+{#    {% for record in last_10_records %}#}
+{#    <li>=  {{ record.value }}  = {{ record.created }} << {{ record.changed_by.email }} >> {{ record.document }} </li>#}
+{#    {% endfor %}#}
+{#</ul>#}
 
     {% for field, value in changed_values.items %}
     <p>{{ field }}: {{ value }}</p>

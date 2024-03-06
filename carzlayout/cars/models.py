@@ -117,6 +117,7 @@ class YearMonth(models.Model):
 
 
 class PropertyBase(models.Model):
+    value = models.FloatField(null=True, verbose_name="Значение")
     period = models.ForeignKey(YearMonth,on_delete=models.PROTECT,verbose_name="Период")
     site = models.ForeignKey(Site, on_delete=models.CASCADE,verbose_name="Участок")
     created = models.DateTimeField(auto_now_add=True,verbose_name="Дата_обновления")
