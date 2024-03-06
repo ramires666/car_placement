@@ -39,7 +39,7 @@ def get_universal_property_form(model_class, initial_site=None,user=None,initial
 
     class CustomUniversalPropertyForm(UniversalPropertyForm):
 
-        overwrite_existing = forms.BooleanField(required=False, initial=False, help_text="Overwrite existing records")
+        overwrite_existing = forms.BooleanField(required=False, initial=False, help_text="ПЕРЕЗАПИСАТЬ существующие значения периода")
 
 
         def __init__(self, *args, **kwargs):

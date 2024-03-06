@@ -129,7 +129,7 @@ class PropertyBase(models.Model):
 
 
 class Plan_zadanie(PropertyBase):
-    Qpl = models.FloatField(verbose_name="План задание")
+    # Qpl = models.FloatField(verbose_name="План задание")
 
     class Meta:
         verbose_name="Qpl - План задание"
@@ -137,14 +137,14 @@ class Plan_zadanie(PropertyBase):
 
 
 class Plotnost_gruza(PropertyBase):
-    d = models.FloatField(verbose_name="Плотность груза")
+    # d = models.FloatField(verbose_name="Плотность груза")
     class Meta:
         verbose_name="d - Плотность груза"
 
 
 
 class Schema_otkatki(PropertyBase):
-    L = models.FloatField(verbose_name="Плечо откатки")
+    # L = models.FloatField(verbose_name="Плечо откатки")
     class Meta:
         verbose_name="L - Плечо откатки"
 
@@ -152,7 +152,7 @@ class Schema_otkatki(PropertyBase):
 
 
 class T_smeny(PropertyBase):
-    Tsm = models.FloatField(verbose_name="Длительность смены")
+    # Tsm = models.FloatField(verbose_name="Длительность смены")
     class Meta:
         verbose_name="Tsm - Длительность смены"
 
@@ -160,7 +160,7 @@ class T_smeny(PropertyBase):
 
 
 class T_regl_pereryv(PropertyBase):
-    Tregl = models.FloatField(verbose_name="Регламентные перерывы")
+    # Tregl = models.FloatField(verbose_name="Регламентные перерывы")
     class Meta:
         verbose_name="Tregl - Регламентные перерывы"
 
@@ -168,7 +168,7 @@ class T_regl_pereryv(PropertyBase):
 
 
 class T_pereezd(PropertyBase):
-    Tprz = models.FloatField(verbose_name="Время переезда")
+    # Tprz = models.FloatField(verbose_name="Время переезда")
     class Meta:
         verbose_name="Tprz - Время переезда"
 
@@ -176,7 +176,7 @@ class T_pereezd(PropertyBase):
 
 
 class T_vspom(PropertyBase):
-    Tvsp = models.FloatField(verbose_name="Вспомогательное время")
+    # Tvsp = models.FloatField(verbose_name="Вспомогательное время")
     class Meta:
         verbose_name="Tvsp - Вспомогательное время"
 
@@ -184,38 +184,38 @@ class T_vspom(PropertyBase):
 
 
 class Nsmen(PropertyBase):
-    Nsm = models.FloatField(verbose_name="Количество смен")
+    # Nsm = models.FloatField(verbose_name="Количество смен")
     class Meta:
         verbose_name="Nsm - Количество смен"
 
 
 class V_objem_kuzova(PropertyBase):
-    Vk = models.FloatField(verbose_name="Объем кузова")
+    # Vk = models.FloatField(verbose_name="Объем кузова")
     class Meta:
         verbose_name="Vk - Объем кузова"
 
 
 class Kuzov_Coeff_Zapl(PropertyBase):
-    Kz = models.FloatField(verbose_name="Коэффициент заполнения кузова")
+    # Kz = models.FloatField(verbose_name="Коэффициент заполнения кузова")
     class Meta:
         verbose_name="Kz - Коэффициент заполнения кузова"
 
 
 class V_Skorost_dvizh(PropertyBase):
-    Vdv = models.FloatField(verbose_name="Средн. скорость движения")
+    # Vdv = models.FloatField(verbose_name="Средн. скорость движения")
     class Meta:
         verbose_name="Vdv - Средн. скорость движения"
 
 
 
 class T_pogruzki(PropertyBase):
-    Tpogr = models.FloatField(verbose_name="Продолжит погрузки со сменой автосам")
+    # Tpogr = models.FloatField(verbose_name="Продолжит погрузки со сменой автосам")
     class Meta:
         verbose_name="Tpogr - Продолжит погрузки со сменой автосам"
 
 
 class T_razgruzki(PropertyBase):
-    Trazgr = models.FloatField(verbose_name="Прожолжит. разгрузки с маневрами")
+    # Trazgr = models.FloatField(verbose_name="Прожолжит. разгрузки с маневрами")
     class Meta:
         verbose_name="Trazgr - Прожолжит. разгрузки с маневрами"
 

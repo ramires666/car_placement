@@ -27,9 +27,9 @@ class CarAdmin (SimpleHistoryAdmin):
 
 @admin.register(Plan_zadanie)
 class CarAdmin(SimpleHistoryAdmin):
-    list_display = ('id','Qpl','period', 'site')
-    list_display_links = ('id','Qpl','period', 'site')
-    history_list_display = ['site','Qpl']
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
 
 @admin.register(Mine)
 class CarAdmin (SimpleHistoryAdmin):
@@ -45,19 +45,19 @@ class CarAdmin (SimpleHistoryAdmin):
 
 @admin.register(Site)
 class CarAdmin (SimpleHistoryAdmin):
-    list_display =('id','title','shaft_id','slug','get_latest_qpl')
-    list_display_links = ('id','title','shaft_id','slug','get_latest_qpl')
-    history_list_display = ['get_latest_qpl_history']
+    list_display =('id','title','shaft_id','slug')#,'get_latest_value')
+    list_display_links = ('id','title','shaft_id','slug')#,'get_latest_value')
+    # history_list_display = ['get_latest_qpl_history']
 
-    def get_latest_qpl(self, obj):
-        return obj.plan_zadanie.Qpl if obj.plan_zadanie else None
+    # def get_latest_value(self, obj):
+    #     return obj.plan_zadanie.Qpl if obj.plan_zadanie else None
 
-    get_latest_qpl.short_description = 'Latest Qpl'
+    # get_latest_value.short_description = 'последнее занчение'
 
-    def get_latest_qpl_history(self, history):
-        return history.instance.plan_zadanie.Qpl if history.instance.plan_zadanie else None
-
-    get_latest_qpl_history.short_description = 'Qpl at Revision'
+    # def get_latest_value_history(self, history):
+    #     return history.instance.plan_zadanie.Qpl if history.instance.plan_zadanie else None
+    #
+    # get_latest_qpl_history.short_description = 'Qpl at Revision'
 
 
 @admin.register(YearMonth)
