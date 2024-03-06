@@ -8,10 +8,20 @@
     {% endif %}
 
     <p></p>
-    <h4>Данные: КТГ</h4>
-    <div>
-        {{ ktg_html_table|safe }}
+    <h4>Данные КТГ:</h4>
+    <!-- Toggle Button -->
+    <button id="toggleKtgTable">Показать полную таблицу</button>
+<p></p>
+    <div id="latestKtgTable" style="display:block;">
+        <h5>Значения за {{ current_year }} :</h5>
+        {{ latest_ktg_table|safe }}
     </div>
+    <div id="fullKtgTable" style="display:none;">
+        <h5>Все доступные значения:</h5>
+        {{ full_ktg_table|safe }}
+    </div>
+
+
     <!-- Trigger/Open The Modal -->
 <button id="myBtn">Редактировать КТГ</button>
 
@@ -19,18 +29,7 @@
 <div id="myModal" class="modal">
   <div class="modal-content">
     <span class="close">&times;</span>
-{#    <form id="ktgEditForm" method="post" enctype="multipart/form-data">#}
-{#      {% csrf_token %}#}
-{#      <!-- Assuming 'most_recent_ktg' is passed in context and contains year, month, and KTG value -->#}
-{#      <label for="ktg_value">KTG Value:</label>#}
-{#      <input type="text" id="ktg_value" name="ktg_value" value="{{ most_recent_ktg.KTG }}" required>#}
-{##}
-{#      <!-- Document Upload -->#}
-{#      <label for="document">Document:</label>#}
-{#      <input type="file" id="document" name="document">#}
-{##}
-{#      <input type="submit" value="Submit">#}
-{#    </form>#}
+
 
 <form id="ktgEditForm" method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -113,5 +112,23 @@ document.getElementById("ktgEditForm").onsubmit = function(e) {
         console.error('Error:', error);
     });
 };
+
+
+// Toggle between latest and full KTG tables
+document.getElementById("toggleKtgTable").addEventListener("click", function() {
+    var latestTable = document.getElementById("latestKtgTable");
+    var fullTable = document.getElementById("fullKtgTable");
+    if (fullTable.style.display === "none") {
+        fullTable.style.display = "block";
+        latestTable.style.display = "none";
+        this.textContent = "Показать последние записи";
+    } else {
+        fullTable.style.display = "none";
+        latestTable.style.display = "block";
+        this.textContent = "Показать полную таблицу";
+    }
+});
+
+
 </script>
 {% endblock %}

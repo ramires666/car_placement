@@ -4,20 +4,60 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="KTG added">
-      <change afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/cars_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/photos/2024/03/01/Снимок_экрана_2023-11-25_155803.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100339.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100339_lOTzHuw.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_143350_xiOFxOi.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-02_121603.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-03_215746.png" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="finished car editing page with period KTG">
+      <change afterPath="$PROJECT_DIR$/carzlayout/cars/templates/places1.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/cars/templates/property_editor.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_082938.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/Jinja2-3.1.3.dist-info/INSTALLER" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/Jinja2-3.1.3.dist-info/LICENSE.rst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/Jinja2-3.1.3.dist-info/METADATA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/Jinja2-3.1.3.dist-info/RECORD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/Jinja2-3.1.3.dist-info/REQUESTED" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/Jinja2-3.1.3.dist-info/WHEEL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/Jinja2-3.1.3.dist-info/entry_points.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/Jinja2-3.1.3.dist-info/top_level.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/MarkupSafe-2.1.5.dist-info/INSTALLER" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/MarkupSafe-2.1.5.dist-info/LICENSE.rst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/MarkupSafe-2.1.5.dist-info/METADATA" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/MarkupSafe-2.1.5.dist-info/RECORD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/MarkupSafe-2.1.5.dist-info/WHEEL" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/MarkupSafe-2.1.5.dist-info/top_level.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/_identifier.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/async_utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/bccache.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/compiler.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/constants.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/debug.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/defaults.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/environment.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/exceptions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/ext.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/filters.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/idtracking.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/lexer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/loaders.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/meta.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/nativetypes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/nodes.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/optimizer.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/parser.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/py.typed" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/runtime.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/sandbox.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/utils.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/jinja2/visitor.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/markupsafe/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/markupsafe/_native.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/markupsafe/_speedups.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/markupsafe/_speedups.cp312-win_amd64.pyd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/markupsafe/_speedups.pyi" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/djvenv/Lib/site-packages/markupsafe/py.typed" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/static/cars/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/static/cars/css/styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/car_detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/car_detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/places.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/places.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/db.sqlite3" afterDir="false" />
@@ -66,26 +106,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "RunOnceActivity.OpenDatabaseViewOnStart": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/PYTHON/Projects/django",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;RunOnceActivity.OpenDatabaseViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/PYTHON/Projects/django&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\PYTHON\Projects\django\carzlayout\cars\templates\cars" />
@@ -142,7 +182,9 @@
       <workItem from="1709023851003" duration="35164000" />
       <workItem from="1709129505281" duration="14961000" />
       <workItem from="1709201097848" duration="3990000" />
-      <workItem from="1709272892089" duration="13330000" />
+      <workItem from="1709272892089" duration="17541000" />
+      <workItem from="1709533965029" duration="15410000" />
+      <workItem from="1709625789475" duration="28260000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -232,7 +274,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709146374841</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="finished car editing page with period KTG">
+      <option name="closed" value="true" />
+      <created>1709289772349</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1709289772349</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -283,16 +333,27 @@
     <MESSAGE value="media" />
     <MESSAGE value="car detail and list viw" />
     <MESSAGE value="KTG added" />
-    <option name="LAST_COMMIT_MESSAGE" value="KTG added" />
+    <MESSAGE value="finished car editing page with period KTG" />
+    <option name="LAST_COMMIT_MESSAGE" value="finished car editing page with period KTG" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/carzlayout/cars/views.py</url>
+          <line>207</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="kwargs" />
+        <watch expression="sites.query.model" />
       </configuration>
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1709286254818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
+    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1709723100245" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
   </component>
 </project>

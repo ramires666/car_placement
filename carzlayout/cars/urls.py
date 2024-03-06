@@ -41,7 +41,11 @@ urlpatterns = [
     path('mines/<slug:mine_slug>/', views.shafts_list, name='shafts_list'),
     path('shafts/<slug:shaft_slug>/', views.sites_list, name='sites_list'),
 
-    path('places/',views.places, name='places'),
+    path('places/',views.places1, name='places'),
+    # path('places/',views.places, name='places'),
+
+    path('edit-property/<str:mine>/<str:shaft>/<str:site>/', views.property_editor, name='property_editor'),
+
     path('mine/<slug:mine_slug>/', views.mine_detail, name='mine_detail'),
     path('shaft/<slug:shaft_slug>/', views.shaft_detail, name='shaft_detail'),
     path('site/<slug:site_slug>/', SiteDetail.as_view(), name='site_detail'),

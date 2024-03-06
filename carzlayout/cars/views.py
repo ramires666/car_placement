@@ -1,13 +1,17 @@
+from collections import defaultdict
+
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import F, OuterRef, Subquery
+from django.db.models import F, OuterRef, Subquery, Prefetch
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy, resolve
 from django.template.loader import render_to_string
-from django.template.defaultfilters import slugify
+# from django.template.defaultfilters import slugify
+from pytils.translit import slugify
+
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -29,6 +33,8 @@ import pandas as pd
 from django.conf import settings
 from .site_data_service import SiteDataService
 from django.utils.html import format_html_join, mark_safe
+
+from django.utils import timezone
 
 
 class CarListView(ListView):
@@ -91,7 +97,9 @@ def update_ktg(request, car_slug):
             car=car,
             KTG=ktg_value,  # Ensure this field name matches your model's field name
             period=period_instance,  # Assign the fetched YearMonth instance here
-            document=document
+            document=document,
+            changed_by = request.user,  # Set the current user
+
         )
 
         if ktg_record:
@@ -106,77 +114,117 @@ def update_ktg(request, car_slug):
     return JsonResponse({"success": response_message, "ktg_data": ktg_data})
 
 
+def get_ktg_data_for_car(car_id):
+    # Prefetch YearMonth objects to reduce database hits
+    year_months = YearMonth.objects.all().prefetch_related(
+        Prefetch('ktg_set', queryset=Ktg.objects.filter(car_id=car_id), to_attr='ktgs')
+    )
+
+    ktg_data = defaultdict(lambda: {str(month): None for month in range(1, 13)})  # Defaultdict with months
+
+    for ym in year_months:
+        for ktg in getattr(ym, 'ktgs', []):
+            ktg_data[ym.year][str(ym.month)] = ktg.KTG
+
+    return ktg_data
+
+
 def car_detail(request, car_slug):
     car = get_object_or_404(Car, slug=car_slug)
-    ktg_records = Ktg.objects.filter(car=car).order_by('-period__year', '-period__month')
+    V_objem_kuzova = car.V_objem_kuzova
+    ktg_records = Ktg.objects.filter(car=car).order_by('-period__year', '-period__month','-created')
     year_months = YearMonth.objects.all().order_by('-year', 'month')
+    current_year = now().year
+
 
     # Initially set ktg_html_table and most_recent_ktg to default values
     ktg_html_table = "<p>No KTG records found for this car.</p>"
     most_recent_ktg = {'KTG': 0, 'document': None}  # Default values for the form
+    month_names = dict(YearMonth.Month.choices)
 
     if ktg_records.exists():  # Check if there are any KTG records
-        # Convert KTG records to a DataFrame
+        # ktg_df = pd.DataFrame(list(ktg_records.values('period__year', 'period__month', 'KTG', 'document')))
         ktg_df = pd.DataFrame(list(ktg_records.values('period__year', 'period__month', 'KTG')))
 
-        # Map month numbers to names using the YearMonth.Month.choices, if the DataFrame is not empty
-        if not ktg_df.empty:
-            month_names = dict(YearMonth.Month.choices)
-            ktg_df['period__month'] = ktg_df['period__month'].map(month_names)
+        # ktg_df = ktg_df.pivot(index='period__year', columns='period__month', values='KTG').fillna('')
+        ktg_df = ktg_df.pivot_table(index='period__year', columns='period__month', values='KTG',aggfunc='first').fillna('')
 
-            # Convert the DataFrame to an HTML table
-            ktg_html_table = ktg_df.to_html(index=False,
+        if not ktg_df.empty:
+            full_table = ktg_df.copy()
+
+            # Latest records for each month of the current year
+            latest_records_df = ktg_df.loc[current_year:current_year] if current_year in ktg_df.index else pd.DataFrame()
+
+            full_table.rename(columns=month_names,inplace=True)
+            latest_records_df.rename(columns=month_names,inplace=True)
+
+            latest_records_df.columns.name=current_year
+
+            # Convert DataFrames to HTML tables
+            full_html_table = full_table.to_html(
+                                                header=True,
+                                                index_names=False, #ugly two layer index names
+                                                index=True,
+                                                border=0,
+                                                justify='center',
+                                                classes='content-table',
+                                                render_links=True,
+                                                escape=False)
+
+
+            latest_html_table = latest_records_df.to_html(
+                                                header=True,
+                                                index_names=True,
+                                                index=False,
+                                                border=0,
+                                                justify='center',
+                                                classes='content-table',
+                                                render_links=True,
+                                                escape=False)
+
+
+        else:
+            ktg_df.rename(columns=month_names,inplace=True)
+
+            ktg_html_table = ktg_df.to_html(index=True,
                                             border=0,
                                             justify='center',
                                             classes='content-table',
                                             render_links=True,
                                             escape=False)
-
-        # Fetch the most recent KTG record to prefill in the edit form
-        most_recent_ktg_record = ktg_records.latest('period__year', 'period__month')
-        most_recent_ktg = {
-            'KTG': most_recent_ktg_record.KTG,
-            'document': most_recent_ktg_record.document,
-            'period_year': most_recent_ktg_record.period.year,
-            'period_month': most_recent_ktg_record.period.get_month_display(),  # Assuming you have a get_month_display method or similar
-        }
+            full_html_table = ktg_html_table
+            latest_html_table = ktg_html_table
 
     context = {
         'car': car,
-        'ktg_html_table': ktg_html_table,
-        'most_recent_ktg': most_recent_ktg,  # Pass the most recent KTG or default values to the template
+        'V_objem_kuzova': V_objem_kuzova,
+        'full_ktg_table': full_html_table,
+        'latest_ktg_table': latest_html_table,
+        'current_year': current_year,
+        # 'ktg_html_table': ktg_html_table,
+        # 'most_recent_ktg': most_recent_ktg,  # Pass the most recent KTG or default values to the template
         'year_months': year_months,
     }
     return render(request, 'car_detail.html', context)
 
-
-
-# def update_ktg(request, ktg_id):
-#     if request.method == 'POST':
-#         ktg_value = request.POST.get('ktg_value')
-#         ktg = Ktg.objects.get(pk=ktg_id)
-#         ktg.KTG = ktg_value
-#         ktg.save()
-#         # Redirect back to the car detail page, adjust the redirect as necessary
-#         return HttpResponseRedirect(reverse('car_detail', args=[ktg.car.id]))
-
+models = {
+    'plan_zadanie': Plan_zadanie,
+    'plotnost_gruza': Plotnost_gruza,
+    'schema_otkatki': Schema_otkatki,
+    't_smeny': T_smeny,
+    't_regl_pereryv': T_regl_pereryv,
+    't_pereezd': T_pereezd,
+    't_vspom': T_vspom,
+    'nsmen': Nsmen,
+    'Vk': V_objem_kuzova,
+    'Kz': Kuzov_Coeff_Zapl,
+    'Vdv': V_Skorost_dvizh,
+    'Tpogr': T_pogruzki,
+    'Trazgr': T_razgruzki,
+}
 
 class UniversalPropertyView(View):
-    models = {
-        'plan_zadanie': Plan_zadanie,
-        'plotnost_gruza': Plotnost_gruza,
-        'schema_otkatki': Schema_otkatki,
-        't_smeny': T_smeny,
-        't_regl_pereryv': T_regl_pereryv,
-        't_pereezd': T_pereezd,
-        't_vspom': T_vspom,
-        'nsmen': Nsmen,
-        'Vk': V_objem_kuzova,
-        'Kz': Kuzov_Coeff_Zapl,
-        'Vdv': V_Skorost_dvizh,
-        'Tpogr': T_pogruzki,
-        'Trazgr': T_razgruzki,
-    }
+
 
     def get(self, request, property_type, *args, **kwargs):
         model_class = self.models.get(property_type)
@@ -595,8 +643,100 @@ def places(request):
         'sites' : Site.objects.all(),
         'df': html_table,
     }
-    return render(request, 'places.html', context=data)
+    return render(request, 'places1.html', context=data)
 
+def places1(request):
+    current_year = timezone.now().year
+    current_month = timezone.now().month
+    current_year_month = YearMonth.objects.get(year=current_year, month=current_month)
+
+    sites = Site.objects.prefetch_related(
+        Prefetch('plan_zadanie_set', queryset=Plan_zadanie.objects.filter(period=current_year_month), to_attr='plan_zadanie_'),
+        Prefetch('plotnost_gruza_set', queryset=Plotnost_gruza.objects.filter(period=current_year_month), to_attr='plotnost_gruza_'),
+        Prefetch('schema_otkatki_set', queryset=Schema_otkatki.objects.filter(period=current_year_month), to_attr='schema_otkatki_'),
+        Prefetch('t_smeny_set', queryset=T_smeny.objects.filter(period=current_year_month), to_attr='t_smeny_'),
+        Prefetch('t_regl_pereryv_set', queryset=T_regl_pereryv.objects.filter(period=current_year_month), to_attr='t_regl_pereryv_'),
+        Prefetch('t_pereezd_set', queryset=T_pereezd.objects.filter(period=current_year_month), to_attr='t_pereezd_'),
+        Prefetch('t_vspom_set', queryset=T_vspom.objects.filter(period=current_year_month), to_attr='t_vspom_'),
+        Prefetch('nsmen_set', queryset=Nsmen.objects.filter(period=current_year_month), to_attr='nsmen_'),
+        Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_year_month), to_attr='v_objem_kuzova_'),
+        Prefetch('kuzov_coeff_zapl_set', queryset=Kuzov_Coeff_Zapl.objects.filter(period=current_year_month), to_attr='kuzov_coeff_zapl_'),
+        Prefetch('v_skorost_dvizh_set', queryset=V_Skorost_dvizh.objects.filter(period=current_year_month), to_attr='v_skorost_dvizh_'),
+        Prefetch('t_pogruzki_set', queryset=T_pogruzki.objects.filter(period=current_year_month), to_attr='t_pogruzki_'),
+        Prefetch('t_razgruzki_set', queryset=T_razgruzki.objects.filter(period=current_year_month), to_attr='t_razgruzki_'),
+    )
+
+    # Convert to DataFrame
+    data = [
+        {
+            'Рудник': site.shaft.mine.title,
+            'Шахта': site.shaft.title,
+            'Участок': site.title,
+            'План задание': site.plan_zadanie_[0].Qpl if site.plan_zadanie_ else None,
+            'Плотность груза': site.plotnost_gruza_[0].d if site.plotnost_gruza_ else None,
+            'Плечо откатки': site.schema_otkatki_[0].L if site.schema_otkatki_ else None,
+            'Длительность смены': site.t_smeny_[0].Tsm if site.t_smeny_ else None,
+            'Регламент.перерывы': site.t_regl_pereryv_[0].Tregl if site.t_regl_pereryv_ else None,
+            'Время переезда': site.t_pereezd_[0].Tprz if site.t_pereezd_ else None,
+            'Время вспомогат.': site.t_vspom_[0].Tvsp if site.t_vspom_ else None,
+            'Кол-во смнен': site.nsmen_[0].Nsm if site.nsmen_ else None,
+            'Объем кузова': site.v_objem_kuzova_[0].Vk if site.v_objem_kuzova_ else None,
+            'КОэфф заполн. кузова': site.kuzov_coeff_zapl_[0].Kz if site.kuzov_coeff_zapl_ else None,
+            'Скорость движения': site.v_skorost_dvizh_[0].Vdv if site.v_skorost_dvizh_ else None,
+            'Время погрузки': site.t_pogruzki_[0].Tpogr if site.t_pogruzki_ else None,
+            'Время разгр.': site.t_razgruzki_[0].Trazgr if site.t_razgruzki_ else None,
+
+        }
+        for site in sites
+    ]
+    df = pd.DataFrame(data)
+    # Setting the index to mine, shaft, and site
+
+    df.set_index(['Рудник', 'Шахта', 'Участок'], inplace=True)
+
+    #### inserting links into db
+
+    for index, row in df.iterrows():
+        rudnik, shakhta, uchastok = index
+
+        address = f"/{slugify(rudnik)}/{slugify(shakhta)}/{slugify(uchastok)}/"
+
+        for column in row.index:
+            # Check if value is not null and column is not part of the multi-index
+            if pd.notnull(row[column]) and column not in ['Рудник', 'Шахта', 'Участок']:
+                # Update the DataFrame cell with the HTML link
+                df.at[index, column] = f"<a href='{address}{slugify(column)}'><div>{row[column]}</div></a>"
+            elif column not in ['Рудник', 'Шахта', 'Участок']:
+                df.at[index, column] = f"<a href='{address}{slugify(column)}'><div>-</div></a>"
+
+    #### inserting links into db
+
+    # Sorting the index to ensure the hierarchy is respected
+    df.sort_index(inplace=True)
+
+    # Now, pivot the DataFrame to have properties as rows and the hierarchical mine-shaft-site as columns
+    df = df.stack().unstack(level=[0, 1, 2])
+
+    # Replace NaN with a more suitable value for display if needed
+    df.fillna('-', inplace=True)
+    df.style.set_sticky(axis="index")
+
+    context = {'site_params':
+        df.to_html(
+                    header=True,
+                    index_names=True, #ugly two layer index names
+                    index=True,
+                    border=0,
+                    justify='center',
+                    classes='content-table',
+                    render_links=True,
+                    escape=False)}
+    return render(request, 'places.html', context)
+
+
+
+def property_editor():
+    pass
 
 def mine_detail():
     return None
