@@ -3,6 +3,7 @@ from collections import defaultdict
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.db.models import F, OuterRef, Subquery, Prefetch
 from django.forms import model_to_dict,ModelForm
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, JsonResponse
@@ -325,7 +326,33 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
     # last_10_records = sorted(last_10_records, key=lambda x: x.created, reverse=True)[:10]
     last_10_records = PropertyModel.objects.filter(site=site).order_by('-created')[:10]
     df10 = pd.DataFrame(list(last_10_records.values()))
-    df10html_table = df10.to_html(classes=["table", "table-bordered", "table-striped"], index=False)
+
+    period_titles = YearMonth.objects.in_bulk(list(df10['period_id']))
+    # Assuming User model for changed_by
+    user_names = User.objects.in_bulk(list(df10['changed_by_id']))
+
+    # Map period_id to period title
+    df10['period_id'] = df10['period_id'].map(lambda x: period_titles[x].title if x in period_titles else None)
+
+    # Map changed_by_id to user name (you can adjust this to use first_name, last_name, etc.)
+    df10['changed_by_id'] = df10['changed_by_id'].map(
+        lambda x: user_names[x].get_full_name() if x in user_names else None)
+    df10['created'] = df10['created'].dt.strftime('%Y-%m-%d %H:%M')
+    df10 = df10[['value','period_id','created','changed_by_id','document']]
+    df10['document'] = df10['document'].apply(lambda x: f"<a href=/media/{x} class=open-modal>{x.split('/')[-1]}</a>" if pd.notnull(x) else '')
+    df10.columns = ['Значение','Период','Внесено','Автор','Обоснование']
+
+
+    df10html_table = df10.to_html(
+        header=True,
+        index_names=True,  # ugly two layer index names
+        index=True,
+        border=0,
+        justify='center',
+        classes='content-table',
+        render_links=True,
+        escape=False)
+        # classes=["table", "table-bordered", "table-striped"], index=False)
 
     context = {
         'form': form,

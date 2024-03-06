@@ -22,4 +22,37 @@
     {% for field, value in changed_values.items %}
     <p>{{ field }}: {{ value }}</p>
 {% endfor %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Content will be loaded here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+$(document).ready(function() {
+  $('.open-modal').click(function(e) {
+    e.preventDefault();  // Prevent default link behavior
+    var url = $(this).attr('href');  // Get the href attribute
+
+    // Load content from the URL into the modal body
+    $('#myModal .modal-body').load(url, function() {
+        $('#myModal').modal({show:true});  // Show the modal
+    });
+  });
+});
+</script>
 {% endblock %}
