@@ -241,7 +241,12 @@ PROPERTY_SLUYGIFYED_MODEL_MAP = {
     'vremya-razgr': T_razgruzki,
 }
 
+
+@login_required
 def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
+
+    user = request.user
+
     site = get_object_or_404(Site, slug=f"{mine_slug}-{shaft_slug}-{site_slug}")#, shaft=shaft)
 
     current_year = timezone.now().year
@@ -261,10 +266,11 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
     PropertyForm = get_universal_property_form(PropertyModel)
 
     if request.method == 'POST':
-        form = PropertyForm(request.POST, request.FILES)
+        form = PropertyForm(request.POST, request.FILES, user=request.user)
 
         if form.is_valid():
             overwrite = form.cleaned_data.get('overwrite_existing', False)
+            form.instance.changed_by = request.user  # Ensure changed_by is always the current user
 
             with transaction.atomic():
                 if form.cleaned_data['mine']:
@@ -276,11 +282,6 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
                 else:
                     target_sites = [site]
 
-                # for target_site in target_sites:
-                #     # Prepare form data for model instantiation, excluding 'site' field if it exists
-                #     model_data = {k: v for k, v in form.cleaned_data.items() if k not in ['shaft', 'mine', 'site', 'period']}
-                #     new_record = PropertyModel(site=target_site, period=current_period, **model_data)
-                #
                 for target_site in target_sites:
                     if not overwrite:
                         # Check if a record for the current period already exists
@@ -291,27 +292,44 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
                     model_data = {k: v for k, v in form.cleaned_data.items() if k not in ['shaft', 'mine', 'site', 'period', 'overwrite_existing']}
                     new_record = PropertyModel(site=target_site, period=current_period, **model_data)
                     new_record.created = timezone.now()
-                    new_record.changed_by = request.user  # Set this according to your model's requirements
+                    new_record.changed_by = request.user
                     new_record.save()
 
-            return redirect('places')  # Adjust the redirect as needed
+            return redirect('places')
 
     else:
         if not property_instance:
             initial_data = {
                 'site': site,
                 'period': current_period,
-                'changed_by': request.user,  # Assuming you have a user field in your model
+                'changed_by': request.user,
             }
             form = PropertyForm(initial=initial_data)
         else:
-            form = PropertyForm(instance=property_instance)
+            form = PropertyForm(instance=property_instance, user=request.user)
+
+    # Automatically set or disable the 'changed_by' field based on user permissions
+    # if not user.is_superuser:
+    #     if 'changed_by' in form.fields:
+    form.fields['changed_by'].disabled = True  # Disable for non-admin user
+
+    # Fetch the last 10 records of the selected site across all property types
+    # property_types = [model for model in PROPERTY_SLUYGIFYED_MODEL_MAP.values()]
+    # last_10_records = []
+    # for model in property_types:
+    #     records = model.objects.filter(site=site).order_by('-created')[:10]
+    #     last_10_records.extend(records)
+
+
+    # Sort the combined list of records by the 'created' timestamp and limit to the last 10
+    # last_10_records = sorted(last_10_records, key=lambda x: x.created, reverse=True)[:10]
+    last_10_records = PropertyModel.objects.filter(site=site).order_by('-created')[:10]
+
 
     context = {
         'form': form,
-        'site': site,
-        'property_name': property_slug.replace('-', ' ').capitalize(),  # Adjust as needed
         'property_name_verbose': PropertyModel._meta.verbose_name,
+        'last_10_records': last_10_records,
     }
     return render(request, 'edit_property.html', context)
 
@@ -809,10 +827,9 @@ def places1(request):
 
     # Replace NaN with a more suitable value for display if needed
     df.fillna('-', inplace=True)
-    df.style.set_sticky(axis="index")
+    # df.style.set_sticky(axis="index")
 
-    context = {'site_params':
-        df.to_html(
+    html_df = df.to_html(
                     header=True,
                     index_names=True, #ugly two layer index names
                     index=True,
@@ -820,7 +837,11 @@ def places1(request):
                     justify='center',
                     classes='content-table',
                     render_links=True,
-                    escape=False)}
+                    escape=False)
+    # styled_html = f'<div style="max-width: 800px; overflow-x: auto;">{html_df}</div>'
+    # styled_html = f'<div style="max-width: 800px; overflow-x: auto;">{html_df}</div>'
+
+    context = {'site_params':html_df }
     return render(request, 'places.html', context)
 
 

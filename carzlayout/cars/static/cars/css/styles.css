@@ -106,15 +106,20 @@ ul.list-articles li {
 }
 
 .content-table {
-    width: 70%;
+    /*width: 100%;*/
+	/*max-width: 1080px;*/
+	/*max-width: 95%;*/
+    /*width: auto; !* Or a specific percentage less than 100% if needed *!*/
     border-collapse: collapse;
 	border: solid white;
+	overflow-x: auto; /* Ensure this is set on the table's container if not effective here */
+    /*table-layout: fixed; !* Can help with sticky positioning *!*/
 }
 
 .content-table th, .content-table td {
     padding: 8px;
     border: 1px solid maroon;
-    text-align: left;
+    text-align: center;
 }
 
 .content-table th {
@@ -123,9 +128,21 @@ ul.list-articles li {
 
 .content-table tr:hover {background-color: #f5f5f5;}
 
+.content-table th:first-child, .content-table td:first-child {
+    position: sticky;
+    left: 0;
+    background-color: white; /* or any color that matches your design */
+    z-index: 1;
+}
+
+.table-container {
+    /*max-width: 100%;*/
+    overflow-x: auto;
+    border: 1px solid #ddd;
+}
 
 .table-page {
-	width: 100%;
+	/*width: 100%;*/
 	height: 100%;
 	vertical-align: top;
 }
