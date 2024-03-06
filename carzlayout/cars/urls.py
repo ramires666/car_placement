@@ -44,14 +44,15 @@ urlpatterns = [
     path('places/',views.places1, name='places'),
     # path('places/',views.places, name='places'),
 
-    path('edit-property/<str:mine>/<str:shaft>/<str:site>/', views.property_editor, name='property_editor'),
+    # path('<str:mine>/<str:shaft>/<str:site>/', views.property_editor, name='property_editor'),
+    path('<slug:mine_slug>-<slug:shaft_slug>-<slug:site_slug>/<slug:property_slug>/', views.edit_property, name='edit_property'),
 
     path('mine/<slug:mine_slug>/', views.mine_detail, name='mine_detail'),
     path('shaft/<slug:shaft_slug>/', views.shaft_detail, name='shaft_detail'),
     path('site/<slug:site_slug>/', SiteDetail.as_view(), name='site_detail'),
     path('site/edit/<slug:site_slug>/', SiteUpdate.as_view(), name='site_edit'),
 
-    path('site/<slug:site_slug>/edit-property/<str:property_type>/', UniversalPropertyView.as_view(), name='edit_property'),
+    path('site/<slug:site_slug>edit-property/<str:property_type>/', UniversalPropertyView.as_view(), name='edit_property'),
 
 ]
 

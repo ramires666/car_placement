@@ -15,6 +15,8 @@ NsmenFormset = inlineformset_factory(Site, Nsmen, fields='__all__', extra=1, can
 
 
 from django.forms.models import modelform_factory
+from datetime import datetime as dt
+
 
 
 class KtgForm(forms.ModelForm):

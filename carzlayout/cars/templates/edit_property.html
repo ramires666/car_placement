@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Edit Property</h2>
-    <form method="post">
+    <h2>Внести/изменить {{ property_name_verbose }}</h2>
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Save changes</button>

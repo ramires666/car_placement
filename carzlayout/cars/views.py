@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import F, OuterRef, Subquery, Prefetch
-from django.forms import model_to_dict
+from django.forms import model_to_dict,ModelForm
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy, resolve
@@ -207,6 +207,7 @@ def car_detail(request, car_slug):
     }
     return render(request, 'car_detail.html', context)
 
+
 models = {
     'plan_zadanie': Plan_zadanie,
     'plotnost_gruza': Plotnost_gruza,
@@ -223,9 +224,80 @@ models = {
     'Trazgr': T_razgruzki,
 }
 
+PROPERTY_SLUYGIFYED_MODEL_MAP = {
+    'plan-zadanie': Plan_zadanie,
+    'plotnost-gruza': Plotnost_gruza,
+    'plecho-otkatki': Schema_otkatki,
+    'dlitelnost-smenyi': T_smeny,
+    'reglamentpereryivyi': T_regl_pereryv,
+    'vremya-pereezda': T_pereezd,
+    'vremya-vspomogat': T_vspom,
+    'kol-vo-smnen': Nsmen,
+    'obem-kuzova': V_objem_kuzova,
+    'koeff-zapoln-kuzova': Kuzov_Coeff_Zapl,
+    'skorost-dvizheniya': V_Skorost_dvizh,
+    'vremya-pogruzki': T_pogruzki,
+    'vremya-razgr': T_razgruzki,
+}
+
+def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
+    site = get_object_or_404(Site, slug=f"{mine_slug}-{shaft_slug}-{site_slug}")#, shaft=shaft)
+
+    current_year = timezone.now().year
+    current_month = timezone.now().month
+    current_period = YearMonth.objects.get(year=current_year, month=current_month)
+
+    # Fetch the correct model based on the property name
+    PropertyModel = PROPERTY_SLUYGIFYED_MODEL_MAP.get(property_slug)
+
+    if not PropertyModel:
+        raise Http404("Property model not found")
+
+    # Fetch the latest property instance for the given site and period
+    property_instance = PropertyModel.objects.filter(site=site, period=current_period).order_by('created').last()
+
+    # Get the appropriate form class
+    PropertyForm = get_universal_property_form(PropertyModel)
+
+    # If this is a POST request then process the Form data
+    if request.method == 'POST':
+        # form = PropertyForm(request.POST, instance=property_instance)
+        form = PropertyForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            new_record = form.save(commit=False)
+
+            model_fields = [field.name for field in PropertyModel._meta.get_fields()]
+            model_fields = [x for x in model_fields if x not in ['id', 'period', 'site', 'created', 'changed_by', 'document']]
+
+            for key, value in request.POST.items():
+                if key in model_fields:
+                    setattr(new_record, key, value)
+            new_record.created = timezone.now()
+
+            new_record.save()
+            return redirect('places')  # Adjust the redirect as needed
+    else:
+        if not property_instance:
+            initial_data = {
+                'site': site,
+                'period': current_period,
+                'changed_by': request.user,  # Assuming you have a user field in your model
+            }
+            form = PropertyForm(initial=initial_data)
+        else:
+            form = PropertyForm(instance=property_instance)
+
+    context = {
+        'form': form,
+        'site': site,
+        'property_name': property_slug.replace('-', ' ').capitalize(),  # Adjust as needed
+        'property_name_verbose': PropertyModel._meta.verbose_name,
+    }
+    return render(request, 'edit_property.html', context)
+
+
 class UniversalPropertyView(View):
-
-
     def get(self, request, property_type, *args, **kwargs):
         model_class = self.models.get(property_type)
         if not model_class:
@@ -645,6 +717,7 @@ def places(request):
     }
     return render(request, 'places1.html', context=data)
 
+
 def places1(request):
     current_year = timezone.now().year
     current_month = timezone.now().month
@@ -672,19 +745,19 @@ def places1(request):
             'Рудник': site.shaft.mine.title,
             'Шахта': site.shaft.title,
             'Участок': site.title,
-            'План задание': site.plan_zadanie_[0].Qpl if site.plan_zadanie_ else None,
-            'Плотность груза': site.plotnost_gruza_[0].d if site.plotnost_gruza_ else None,
-            'Плечо откатки': site.schema_otkatki_[0].L if site.schema_otkatki_ else None,
-            'Длительность смены': site.t_smeny_[0].Tsm if site.t_smeny_ else None,
-            'Регламент.перерывы': site.t_regl_pereryv_[0].Tregl if site.t_regl_pereryv_ else None,
-            'Время переезда': site.t_pereezd_[0].Tprz if site.t_pereezd_ else None,
-            'Время вспомогат.': site.t_vspom_[0].Tvsp if site.t_vspom_ else None,
-            'Кол-во смнен': site.nsmen_[0].Nsm if site.nsmen_ else None,
-            'Объем кузова': site.v_objem_kuzova_[0].Vk if site.v_objem_kuzova_ else None,
-            'КОэфф заполн. кузова': site.kuzov_coeff_zapl_[0].Kz if site.kuzov_coeff_zapl_ else None,
-            'Скорость движения': site.v_skorost_dvizh_[0].Vdv if site.v_skorost_dvizh_ else None,
-            'Время погрузки': site.t_pogruzki_[0].Tpogr if site.t_pogruzki_ else None,
-            'Время разгр.': site.t_razgruzki_[0].Trazgr if site.t_razgruzki_ else None,
+            'План задание': site.plan_zadanie_[-1].Qpl if site.plan_zadanie_ else None,
+            'Плотность груза': site.plotnost_gruza_[1].d if site.plotnost_gruza_ else None,
+            'Плечо откатки': site.schema_otkatki_[-1].L if site.schema_otkatki_ else None,
+            'Длительность смены': site.t_smeny_[-1].Tsm if site.t_smeny_ else None,
+            'Регламент.перерывы': site.t_regl_pereryv_[-1].Tregl if site.t_regl_pereryv_ else None,
+            'Время переезда': site.t_pereezd_[-1].Tprz if site.t_pereezd_ else None,
+            'Время вспомогат.': site.t_vspom_[-1].Tvsp if site.t_vspom_ else None,
+            'Кол-во смнен': site.nsmen_[-1].Nsm if site.nsmen_ else None,
+            'Объем кузова': site.v_objem_kuzova_[-1].Vk if site.v_objem_kuzova_ else None,
+            'КОэфф заполн. кузова': site.kuzov_coeff_zapl_[-1].Kz if site.kuzov_coeff_zapl_ else None,
+            'Скорость движения': site.v_skorost_dvizh_[-1].Vdv if site.v_skorost_dvizh_ else None,
+            'Время погрузки': site.t_pogruzki_[-1].Tpogr if site.t_pogruzki_ else None,
+            'Время разгр.': site.t_razgruzki_[-1].Trazgr if site.t_razgruzki_ else None,
 
         }
         for site in sites
@@ -697,14 +770,12 @@ def places1(request):
     #### inserting links into db
 
     for index, row in df.iterrows():
-        rudnik, shakhta, uchastok = index
+        rudnik, shahta, uchastok = index
 
-        address = f"/{slugify(rudnik)}/{slugify(shakhta)}/{slugify(uchastok)}/"
+        address = f"/{slugify(rudnik)}-{slugify(shahta)}-{slugify(uchastok)}/"
 
         for column in row.index:
-            # Check if value is not null and column is not part of the multi-index
             if pd.notnull(row[column]) and column not in ['Рудник', 'Шахта', 'Участок']:
-                # Update the DataFrame cell with the HTML link
                 df.at[index, column] = f"<a href='{address}{slugify(column)}'><div>{row[column]}</div></a>"
             elif column not in ['Рудник', 'Шахта', 'Участок']:
                 df.at[index, column] = f"<a href='{address}{slugify(column)}'><div>-</div></a>"
@@ -712,7 +783,7 @@ def places1(request):
     #### inserting links into db
 
     # Sorting the index to ensure the hierarchy is respected
-    df.sort_index(inplace=True)
+    # df.sort_index(inplace=True)
 
     # Now, pivot the DataFrame to have properties as rows and the hierarchical mine-shaft-site as columns
     df = df.stack().unstack(level=[0, 1, 2])

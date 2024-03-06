@@ -38,7 +38,7 @@ class Command(BaseCommand):
     def update_site_slugs(self):
         for site in Site.objects.all():
             # if not site.slug:
-            site.slug = slugify(f'{site.shaft.title}-{site.title}')
+            site.slug = slugify(f'{site.shaft.mine.title}-{site.shaft.title}-{site.title}')
             try:
                 site.save()
             except IntegrityError:
