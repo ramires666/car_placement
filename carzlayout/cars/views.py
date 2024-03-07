@@ -242,78 +242,7 @@ PROPERTY_SLUYGIFYED_MODEL_MAP = {
     'vremya-razgr': T_razgruzki,
 }
 
-
-@login_required
-def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug, period_id=None):
-    user = request.user
-    site = get_object_or_404(Site, slug=f"{mine_slug}-{shaft_slug}-{site_slug}")#, shaft=shaft)
-
-    if period_id:
-        current_period = YearMonth.objects.get(id=period_id)
-    else:
-        current_year = timezone.now().year
-        current_month = timezone.now().month
-        current_period = YearMonth.objects.get(year=current_year, month=current_month)
-
-    # Fetch the correct model based on the property name
-    PropertyModel = PROPERTY_SLUYGIFYED_MODEL_MAP.get(property_slug)
-
-    if not PropertyModel:
-        raise Http404("Property model not found")
-
-    # Fetch the latest property instance for the given site and period
-    property_instance = PropertyModel.objects.filter(site=site, period=current_period).order_by('created').last()
-
-    # Get the appropriate form class
-    PropertyForm = get_universal_property_form(PropertyModel)
-
-    if request.method == 'POST':
-        form = PropertyForm(request.POST, request.FILES, user=request.user)
-        form.instance.changed_by = request.user
-        if form.is_valid():
-            overwrite = form.cleaned_data.get('overwrite_existing', False)
-             # Ensure changed_by is always the current user
-
-            with transaction.atomic():
-                if form.cleaned_data['mine']:
-                    mine_ = form.cleaned_data['mine'].slug
-                    target_sites = Site.objects.filter(shaft__mine__slug=mine_)
-                elif form.cleaned_data['shaft']:
-                    shaft_ = form.cleaned_data['shaft'].slug
-                    target_sites = Site.objects.filter(shaft__slug=shaft_)
-                else:
-                    target_sites = [site]
-
-                for target_site in target_sites:
-                    if not overwrite:
-                        # Check if a record for the current period already exists
-                        exists = PropertyModel.objects.filter(site=target_site, period=current_period, value__isnull=False).exists()
-                        if exists:
-                            continue  # Skip to the next site if a record exists and we're not overwriting
-
-                    model_data = {k: v for k, v in form.cleaned_data.items() if k not in ['shaft', 'mine', 'site', 'period', 'overwrite_existing']}
-                    new_record = PropertyModel(site=target_site, period=current_period, **model_data)
-                    new_record.created = timezone.now()
-                    new_record.changed_by = request.user
-                    new_record.save()
-
-            return redirect('places')
-
-    else:
-        if not property_instance:
-            initial_data = {
-                'site': site,
-                'period': current_period,
-                'changed_by': request.user,
-            }
-            form = PropertyForm(initial=initial_data)
-        else:
-            form = PropertyForm(instance=property_instance, user=request.user)
-
-
-    form.fields['changed_by'].disabled = True  # Disable for non-admin user
-
-
+def render_df2html(last_10_records):
     columns = {
         'value': pd.Series(dtype='float'),
         'period_id': pd.Series(dtype='object'),  # Use 'object' for strings and mixed types
@@ -323,14 +252,17 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug, peri
     }
     df10 = pd.DataFrame(columns)
 
-    last_10_records = PropertyModel.objects.filter(site=site).order_by('-created')[:10]
     if last_10_records.exists():
         df10 = pd.DataFrame(list(last_10_records.values()))
 
 
     period_titles = YearMonth.objects.in_bulk(list(df10['period_id']))
     # Assuming User model for changed_by
-    user_names = User.objects.in_bulk(list(df10['changed_by_id']))
+
+    # Adjusted to exclude None values
+    changed_by_ids = [id for id in df10['changed_by_id'] if pd.notnull(id) and not pd.isna(id)]
+
+    user_names = User.objects.in_bulk(changed_by_ids)
 
     # Map period_id to period title
     df10['period_id'] = df10['period_id'].map(lambda x: period_titles[x].title if x in period_titles else None)
@@ -355,6 +287,77 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug, peri
         escape=False)
         # classes=["table", "table-bordered", "table-striped"], index=False)
 
+    return df10html_table
+
+
+@login_required
+def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug, period_id=None):
+    user = request.user
+    site = get_object_or_404(Site, slug=f"{mine_slug}-{shaft_slug}-{site_slug}")#, shaft=shaft)
+
+    if period_id:
+        current_period = YearMonth.objects.get(id=period_id)
+    else:
+        current_year = timezone.now().year
+        current_month = timezone.now().month
+        current_period = YearMonth.objects.get(year=current_year, month=current_month)
+
+    # Fetch the correct model based on the property name
+    PropertyModel = PROPERTY_SLUYGIFYED_MODEL_MAP.get(property_slug)
+    if not PropertyModel:
+        raise Http404("Property model not found")
+
+    # Fetch the latest property instance for the given site and period
+    property_instance = PropertyModel.objects.filter(site=site, period=current_period).order_by('created').last()
+    # Get the appropriate form class
+    PropertyForm = get_universal_property_form(PropertyModel)
+
+    if request.method == 'POST':
+        form = PropertyForm(request.POST, request.FILES, user=request.user)
+        form.instance.changed_by = request.user
+        if form.is_valid():
+
+            # The period should be fetched from the form
+            selected_period = form.cleaned_data['period']
+            overwrite = form.cleaned_data.get('overwrite_existing', False)
+            # overwrite = form.cleaned_data.get('overwrite_existing', False)
+
+            with transaction.atomic():
+                if form.cleaned_data['mine']:
+                    mine_ = form.cleaned_data['mine'].slug
+                    target_sites = Site.objects.filter(shaft__mine__slug=mine_)
+                elif form.cleaned_data['shaft']:
+                    shaft_ = form.cleaned_data['shaft'].slug
+                    target_sites = Site.objects.filter(shaft__slug=shaft_)
+                else:
+                    target_sites = [site]
+
+                if selected_period.month == 0:
+                    # Handle whole year: iterate through all months
+                    save_property_for_whole_year(form, target_sites, selected_period, overwrite, PropertyModel)
+                else:
+                    # Handle specific month
+                    save_property_value(form, target_sites, selected_period, overwrite, PropertyModel)
+
+            return redirect('places')
+
+    else:
+        if not property_instance:
+            initial_data = {
+                'site': site,
+                'period': current_period,
+                'changed_by': request.user,
+            }
+            form = PropertyForm(initial=initial_data)
+        else:
+            form = PropertyForm(instance=property_instance, user=request.user)
+
+    form.fields['changed_by'].disabled = True  # Disable for non-admin user
+
+
+    last_10_records = PropertyModel.objects.filter(site=site).order_by('-created')[:10]
+    df10html_table = render_df2html(last_10_records)
+
     context = {
         'form': form,
         'property_name_verbose': PropertyModel._meta.verbose_name,
@@ -362,6 +365,75 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug, peri
         'tab': '\t',
     }
     return render(request, 'edit_property.html', context)
+
+
+def save_property_for_whole_year(form, target_sites, year_period, overwrite, PropertyModel):
+    """
+    Saves a property value for the whole year with month=0.
+    """
+    # Ensure we get or create a period for the whole year with month=0.
+    period, created = YearMonth.objects.get_or_create(year=year_period.year, month=0)
+
+    # Call the function to save the property value for the whole year period.
+    save_property_value(form, target_sites, period, overwrite, PropertyModel)
+
+    # """
+    # Distributes a property value across all months of the selected year.
+    # """
+    # for month in range(1, 13):
+    #     # Ensure we get or create a period for each month within the given year.
+    #     period, created = YearMonth.objects.get_or_create(year=year_period.year, month=month)
+    #
+    #     # Call the function to save the property value for the current period.
+    #     save_property_value(form, target_sites, period, overwrite, PropertyModel)
+
+
+def save_property_value(form, target_sites, period, overwrite, PropertyModel):
+    """
+    Save or update property values for given sites and period.
+    """
+    # Ensure PropertyModel is actually a model class and not mistakenly a boolean or other type.
+    if not callable(PropertyModel):
+        raise ValueError(f"PropertyModel is not callable. Received: {PropertyModel}")
+
+    for target_site in target_sites:
+        if not overwrite:
+            # Check if a property record for the given period already exists.
+            exists = PropertyModel.objects.filter(site=target_site, period=period).exists()
+            if exists:
+                # Skip creating a new record if one already exists and we're not overwriting.
+                continue
+
+        # Prepare model data excluding specific form fields and csrfmiddlewaretoken.
+        model_data = {k: v for k, v in form.cleaned_data.items() if
+                      k not in ['shaft', 'mine', 'site', 'period', 'overwrite_existing', 'csrfmiddlewaretoken']}
+
+        # Create and save a new record for the property model.
+        model_data['changed_by'] = form.instance.changed_by
+
+        # Create and save the new record
+        new_record = PropertyModel(site=target_site, period=period, **model_data)
+        new_record.save()
+
+# def save_property_for_whole_year(form, site, year_period, overwrite, PropertyModel):
+#     # Implement the logic to distribute a property value across all months of the selected year
+#     for month in range(1, 13):
+#         period, _ = YearMonth.objects.get_or_create(year=year_period.year, month=month)
+#         save_property_value(form, site, period, PropertyModel, overwrite)
+#
+# def save_property_value(form, target_sites, period, overwrite, PropertyModel):
+#     """
+#     Save or update property values for given sites and period.
+#     """
+#     for target_site in target_sites:
+#         if not overwrite:
+#             exists = PropertyModel.objects.filter(site=target_site, period=period).exists()
+#             if exists:
+#                 continue
+#
+#         model_data = {k: v for k, v in form.cleaned_data.items() if k not in ['shaft', 'mine', 'site', 'period', 'overwrite_existing', 'csrfmiddlewaretoken']}
+#         new_record = PropertyModel(site=target_site, period=period, **model_data)
+#         new_record.save()
 
 
 class UniversalPropertyView(View):
@@ -785,96 +857,105 @@ def places(request):
     return render(request, 'places1.html', context=data)
 
 
+
 def places1(request, period_id=None):
-    # current_year = timezone.now().year
-    # current_month = timezone.now().month
-    # current_period = YearMonth.objects.get(year=current_year, month=current_month)
-
-    # Fetch all available periods sorted by year and month
     periods = YearMonth.objects.all().order_by('year', 'month')
-
     if period_id:
-        # If a specific period ID is provided, use it
         current_period = YearMonth.objects.get(id=period_id)
     else:
-        # Default to the latest period if no ID is provided
         current_period = periods.last()
+    yearly_period = YearMonth.objects.filter(year=current_period.year, month=0).first()
 
-    # Find the index of the current period in the periods queryset
     current_index = list(periods).index(current_period)
-
-    # Determine previous and next period based on index
     previous_period = periods[current_index - 1] if current_index > 0 else None
     next_period = periods[current_index + 1] if current_index < len(periods) - 1 else None
 
-    sites = Site.objects.prefetch_related(
-        Prefetch('plan_zadanie_set', queryset=Plan_zadanie.objects.filter(period=current_period), to_attr='plan_zadanie_'),
-        Prefetch('plotnost_gruza_set', queryset=Plotnost_gruza.objects.filter(period=current_period), to_attr='plotnost_gruza_'),
-        Prefetch('schema_otkatki_set', queryset=Schema_otkatki.objects.filter(period=current_period), to_attr='schema_otkatki_'),
-        Prefetch('t_smeny_set', queryset=T_smeny.objects.filter(period=current_period), to_attr='t_smeny_'),
-        Prefetch('t_regl_pereryv_set', queryset=T_regl_pereryv.objects.filter(period=current_period), to_attr='t_regl_pereryv_'),
-        Prefetch('t_pereezd_set', queryset=T_pereezd.objects.filter(period=current_period), to_attr='t_pereezd_'),
-        Prefetch('t_vspom_set', queryset=T_vspom.objects.filter(period=current_period), to_attr='t_vspom_'),
-        Prefetch('nsmen_set', queryset=Nsmen.objects.filter(period=current_period), to_attr='nsmen_'),
-        Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_period), to_attr='v_objem_kuzova_'),
-        Prefetch('kuzov_coeff_zapl_set', queryset=Kuzov_Coeff_Zapl.objects.filter(period=current_period), to_attr='kuzov_coeff_zapl_'),
-        Prefetch('v_skorost_dvizh_set', queryset=V_Skorost_dvizh.objects.filter(period=current_period), to_attr='v_skorost_dvizh_'),
-        Prefetch('t_pogruzki_set', queryset=T_pogruzki.objects.filter(period=current_period), to_attr='t_pogruzki_'),
-        Prefetch('t_razgruzki_set', queryset=T_razgruzki.objects.filter(period=current_period), to_attr='t_razgruzki_'),
-    )
+    # Define prefetch queries for both monthly and yearly data across multiple properties
+    properties_prefetch = [
+        Prefetch('plan_zadanie_set', queryset=Plan_zadanie.objects.filter(period=current_period), to_attr='plan_zadanie_monthly'),
+        Prefetch('plan_zadanie_set', queryset=Plan_zadanie.objects.filter(period=yearly_period), to_attr='plan_zadanie_yearly'),
+        Prefetch('plotnost_gruza_set', queryset=Plotnost_gruza.objects.filter(period=current_period), to_attr='plotnost_gruza_monthly'),
+        Prefetch('plotnost_gruza_set', queryset=Plotnost_gruza.objects.filter(period=yearly_period), to_attr='plotnost_gruza_yearly'),
+        Prefetch('schema_otkatki_set', queryset=Schema_otkatki.objects.filter(period=current_period), to_attr='schema_otkatki_monthly'),
+        Prefetch('schema_otkatki_set', queryset=Schema_otkatki.objects.filter(period=yearly_period), to_attr='schema_otkatki_yearly'),
+        Prefetch('t_smeny_set', queryset=T_smeny.objects.filter(period=current_period), to_attr='t_smeny_monthly'),
+        Prefetch('t_smeny_set', queryset=T_smeny.objects.filter(period=yearly_period), to_attr='t_smeny_yearly'),
+        Prefetch('t_regl_pereryv_set', queryset=T_regl_pereryv.objects.filter(period=current_period), to_attr='t_regl_pereryv_monthly'),
+        Prefetch('t_regl_pereryv_set', queryset=T_regl_pereryv.objects.filter(period=current_period), to_attr='t_regl_pereryv_yearly'),
+        Prefetch('t_pereezd_set', queryset=T_pereezd.objects.filter(period=current_period), to_attr='t_pereezd_monthly'),
+        Prefetch('t_pereezd_set', queryset=T_pereezd.objects.filter(period=current_period), to_attr='t_pereezd_yearly'),
+        Prefetch('t_vspom_set', queryset=T_vspom.objects.filter(period=current_period), to_attr='t_vspom_monthly'),
+        Prefetch('t_vspom_set', queryset=T_vspom.objects.filter(period=current_period), to_attr='t_vspom_yearly'),
+        Prefetch('nsmen_set', queryset=Nsmen.objects.filter(period=current_period), to_attr='nsmen_monthly'),
+        Prefetch('nsmen_set', queryset=Nsmen.objects.filter(period=current_period), to_attr='nsmen_yearly'),
+        Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_period), to_attr='v_objem_kuzova_monthly'),
+        Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_period), to_attr='v_objem_kuzova_yearly'),
+        Prefetch('kuzov_coeff_zapl_set', queryset=Kuzov_Coeff_Zapl.objects.filter(period=current_period), to_attr='kuzov_coeff_zapl_monthly'),
+        Prefetch('kuzov_coeff_zapl_set', queryset=Kuzov_Coeff_Zapl.objects.filter(period=current_period), to_attr='kuzov_coeff_zapl_yearly'),
+        Prefetch('v_skorost_dvizh_set', queryset=V_Skorost_dvizh.objects.filter(period=current_period), to_attr='v_skorost_dvizh_monthly'),
+        Prefetch('v_skorost_dvizh_set', queryset=V_Skorost_dvizh.objects.filter(period=current_period), to_attr='v_skorost_dvizh_yearly'),
+        Prefetch('t_pogruzki_set', queryset=T_pogruzki.objects.filter(period=current_period), to_attr='t_pogruzki_monthly'),
+        Prefetch('t_pogruzki_set', queryset=T_pogruzki.objects.filter(period=current_period), to_attr='t_pogruzki_yearly'),
+        Prefetch('t_razgruzki_set', queryset=T_razgruzki.objects.filter(period=current_period), to_attr='t_razgruzki_monthly'),
+        Prefetch('t_razgruzki_set', queryset=T_razgruzki.objects.filter(period=current_period), to_attr='t_razgruzki_yearly'),
 
-    # Convert to DataFrame
-    data = [
-        {
+    ]
+
+    # sites = Site.objects.all()
+    sites = Site.objects.prefetch_related(*properties_prefetch)
+
+    data = []
+    # Constructing data list for the DataFrame, to access both monthly and yearly data:
+    for site in sites:
+        site_data = {
             'Рудник': site.shaft.mine.title,
             'Шахта': site.shaft.title,
             'Участок': site.title,
-            'План задание': site.plan_zadanie_[-1].value if site.plan_zadanie_ else None,
-            'Плотность груза': site.plotnost_gruza_[-1].value if site.plotnost_gruza_ else None,
-            'Плечо откатки': site.schema_otkatki_[-1].value if site.schema_otkatki_ else None,
-            'Длительность смены': site.t_smeny_[-1].value if site.t_smeny_ else None,
-            'Регламент.перерывы': site.t_regl_pereryv_[-1].value if site.t_regl_pereryv_ else None,
-            'Время переезда': site.t_pereezd_[-1].value if site.t_pereezd_ else None,
-            'Время вспомогат.': site.t_vspom_[-1].value if site.t_vspom_ else None,
-            'Кол-во смнен': site.nsmen_[-1].value if site.nsmen_ else None,
-            'Объем кузова': site.v_objem_kuzova_[-1].value if site.v_objem_kuzova_ else None,
-            'КОэфф заполн. кузова': site.kuzov_coeff_zapl_[-1].value if site.kuzov_coeff_zapl_ else None,
-            'Скорость движения': site.v_skorost_dvizh_[-1].value if site.v_skorost_dvizh_ else None,
-            'Время погрузки': site.t_pogruzki_[-1].value if site.t_pogruzki_ else None,
-            'Время разгр.': site.t_razgruzki_[-1].value if site.t_razgruzki_ else None,
-
+            'План задание': (site.plan_zadanie_monthly[0].value if site.plan_zadanie_monthly else None) or
+                            (site.plan_zadanie_yearly[0].value if site.plan_zadanie_yearly else None),
+            'Плотность груза': (site.plotnost_gruza_monthly[0].value if site.plotnost_gruza_monthly else None) or
+                            (site.plotnost_gruza_yearly[0].value if site.plotnost_gruza_yearly else None),
+            'Плечо откатки': (site.schema_otkatki_monthly[0].value if site.schema_otkatki_monthly else None) or
+                            (site.schema_otkatki_yearly[0].value if site.schema_otkatki_yearly else None),
+            'Длительность смены': (site.t_smeny_monthly[0].value if site.t_smeny_monthly else None) or
+                            (site.t_smeny_yearly[0].value if site.t_smeny_yearly else None),
+            'Регламент.перерывы': (site.t_regl_pereryv_monthly[0].value if site.t_regl_pereryv_monthly else None) or
+                            (site.t_regl_pereryv_yearly[0].value if site.t_regl_pereryv_yearly else None),
+            'Время переезда': (site.t_pereezd_monthly[0].value if site.t_pereezd_monthly else None) or
+                            (site.t_pereezd_yearly[0].value if site.t_pereezd_yearly else None),
+            'Время вспомогат.': (site.t_vspom_monthly[0].value if site.t_vspom_monthly else None) or
+                            (site.t_vspom_yearly[0].value if site.t_vspom_yearly else None),
+            'Кол-во смнен': (site.nsmen_monthly[0].value if site.nsmen_monthly else None) or
+                            (site.nsmen_yearly[0].value if site.nsmen_yearly else None),
+            'Объем кузова': (site.v_objem_kuzova_monthly[0].value if site.v_objem_kuzova_monthly else None) or
+                            (site.v_objem_kuzova_yearly[0].value if site.v_objem_kuzova_yearly else None),
+            'КОэфф заполн. кузова': (site.kuzov_coeff_zapl_monthly[0].value if site.kuzov_coeff_zapl_monthly else None) or
+                            (site.kuzov_coeff_zapl_yearly[0].value if site.kuzov_coeff_zapl_yearly else None),
+            'Скорость движения': (site.v_skorost_dvizh_monthly[0].value if site.v_skorost_dvizh_monthly else None) or
+                            (site.v_skorost_dvizh_yearly[0].value if site.v_skorost_dvizh_yearly else None),
+            'Время погрузки': (site.t_pogruzki_monthly[0].value if site.t_pogruzki_monthly else None) or
+                            (site.t_pogruzki_yearly[0].value if site.t_pogruzki_yearly else None),
+            'Время разгр.': (site.t_razgruzki_monthly[0].value if site.t_razgruzki_monthly else None) or
+                            (site.t_razgruzki_yearly[0].value if site.t_razgruzki_yearly else None),
         }
-        for site in sites
-    ]
-    df = pd.DataFrame(data)
-    # Setting the index to mine, shaft, and site
+        data.append(site_data)
 
+    df = pd.DataFrame(data)
     df.set_index(['Рудник', 'Шахта', 'Участок'], inplace=True)
 
-    #### inserting links into db
-
+    # Generating links as before, adjusting for the current logic
     for index, row in df.iterrows():
         rudnik, shahta, uchastok = index
-
         address = f"/{slugify(rudnik)}-{slugify(shahta)}-{slugify(uchastok)}/"
-
         for column in row.index:
             if pd.notnull(row[column]) and column not in ['Рудник', 'Шахта', 'Участок']:
-                df.at[index, column] = f"<a href='{address}{slugify(column)}/{current_period.id}/'><div>{row[column]}</div></a>"
+                df.at[
+                    index, column] = f"<a href='{address}{slugify(column)}/{current_period.id}/'><div>{row[column]}</div></a>"
             elif column not in ['Рудник', 'Шахта', 'Участок']:
                 df.at[index, column] = f"<a href='{address}{slugify(column)}/{current_period.id}/'><div>-</div></a>"
 
-    #### inserting links into db
-
-    # Sorting the index to ensure the hierarchy is respected
-    # df.sort_index(inplace=True)
-
-    # Now, pivot the DataFrame to have properties as rows and the hierarchical mine-shaft-site as columns
     df = df.stack().unstack(level=[0, 1, 2])
 
-    # Replace NaN with a more suitable value for display if needed
-    df.fillna('-', inplace=True)
-    # df.style.set_sticky(axis="index")
 
     html_df = df.to_html(
                     header=True,
@@ -885,16 +966,45 @@ def places1(request, period_id=None):
                     classes='content-table',
                     render_links=True,
                     escape=False)
-    # styled_html = f'<div style="max-width: 800px; overflow-x: auto;">{html_df}</div>'
-    # styled_html = f'<div style="max-width: 800px; overflow-x: auto;">{html_df}</div>'
-
     context = {
         'current_period': current_period,
         'previous_period': previous_period,
         'next_period': next_period,
-        'site_params':html_df }
+        'site_params': html_df
+    }
     return render(request, 'places.html', context)
 
+
+def fetch_site_properties(site, period):
+    # Define a dictionary of property models for easier access
+    property_models = {
+        'plan_zadanie': Plan_zadanie,
+        'plotnost_gruza': Plotnost_gruza,
+        'schema_otkatki': Schema_otkatki,
+        't_smeny': T_smeny,
+        't_regl_pereryv': T_regl_pereryv,
+        't_pereezd': T_pereezd,
+        't_vspom': T_vspom,
+        'nsmen': Nsmen,
+        'v_objem_kuzova': V_objem_kuzova,
+        'kuzov_coeff_zapl': Kuzov_Coeff_Zapl,
+        'v_skorost_dvizh': V_Skorost_dvizh,
+        't_pogruzki': T_pogruzki,
+        't_razgruzki': T_razgruzki,
+    }
+
+    properties = {}
+    for prop, model in property_models.items():
+        value = model.objects.filter(site=site, period=period).first()
+        if not value and period.month == 0:  # If it's a yearly request and no data found, no need to look for monthly data
+            properties[prop] = None
+            continue
+        if not value:  # If no specific month data, try to get yearly data
+            yearly_period = YearMonth.objects.filter(year=period.year, month=0).first()
+            value = model.objects.filter(site=site, period=yearly_period).first()
+        properties[prop] = value.value if value else None  # Assuming each property model has a 'value' attribute
+
+    return properties
 
 
 def property_editor():

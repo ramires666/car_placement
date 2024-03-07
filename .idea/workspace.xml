@@ -4,23 +4,159 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="last10 records df">
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_xIu4S1W.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-04_в_14.55.53_8b4c3063_43Y38vj.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-04_в_14.55.53_8b4c3063_Gduj8z7.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-04_в_14.55.53_8b4c3063_gzGV2nT.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-04_в_14.55.53_8b4c3063_irbfh9H.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-04_в_14.55.53_8b4c3063_sAvLizK.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-04_в_14.55.53_8b4c3063_t57GijW.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-04_в_14.55.53_8b4c3063_ulqC79C.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-04_в_14.55.53_8b4c3063_zlO4MD8.jpg" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="polishing places and property editor">
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_0Xhymvn.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_31r847V.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_87Wcfi9.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_8HrFlDC.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_B4Gonm2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_BPGj8mr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_F0KXDmi.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_Py0caYP.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_SovI0kU.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_SqoWwx4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_095245_VmW1DgM.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_0TGjgbt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_0XIOFfm.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_0xX86oK.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_1608Ggn.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_1vBtz5F.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_2F5XfhI.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_3hVR5Zs.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_3lHaJd7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_4YM6exI.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_4jKtv6D.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_6QAbWYq.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_7jylOdN.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_7nlJFpf.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_8XwwdV7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_8Xy6Br0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_8r4yXzp.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_9U9IJgW.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_9rnFEkj.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_A0BWzIv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_AQJuc56.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_AQqtFxq.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_BXvUqVF.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_BteNYme.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_C5wmsK1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_CUuySOl.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_CWmmzHP.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_Cl2yGA7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_CsT8DXq.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_CvG5VS8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_DBiO83h.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_DNeSZfK.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_Dm6hlwB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_E0gntgE.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_E1eQfff.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_EJQfwFP.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_EuHz4Va.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_F4MqC1Q.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_F4k5xA3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_GTAi5ME.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_GzXne5O.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_HCWPFXD.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_IOvlrBj.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_IaE4NoU.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_JDw8MgO.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_JdPSL5G.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_K7818d1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_KBl0ZGv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_KQxynX1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_KW1ZUn0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_L2pv8nL.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_LgGgiav.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_LxPB4X0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_MIvW0rY.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_Mr7Mgft.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_P1vyo50.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_Q1EU0fr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_QAU3d6t.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_Qt2sXcX.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_R3na4PH.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_S2DfrCq.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_SaTL8Zg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_SudHuqa.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_TAQAQeb.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_Te3KpCs.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_Ublpvgs.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_UkiwVS7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_V0saMF7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_V7XCBIV.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_VB8r7Ug.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_VLyBncw.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_WDnorBV.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_XHHsIx3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_XgRdSPW.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_XnUsWOJ.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_Y9LbGn8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_a2dtG3S.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_a4WGrq4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_aKSWMr4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_bBCkvpt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_bIG91EA.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_bLOEiMt.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_cTwQ6iv.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_cjuVOJM.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_cmq7OxP.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_d1plV69.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_dQO8OVB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_dlvAYu4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_eo9cjt5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_f6ABaGi.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_fGxDIjb.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_fn7jb0D.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_fxxcsa3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_gu4Ruva.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_h8UGhvr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_hSPjbey.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_hUlfGbD.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_hy4deMS.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_j6QJctl.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_kqOcevc.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_l2BXP2O.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_l7ovZoq.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_lGFSnZ6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_luNpV6C.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_m8FfjrA.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_mTUnojk.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_myJfsHX.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_nbhHWCQ.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_pi8lyhW.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_qwaxWON.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_qzkFszK.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_sHq6Gba.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_t1XUve4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_uBGDNTO.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_uKTcroR.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_uu9OMeO.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_v4SY8iK.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_v5oFCW3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_vIK2W46.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_vJ1oIZH.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_w6alRim.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_wUHVomu.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_wWXbKyy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_wpaZIi0.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_wqecm6I.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_wwrlPwK.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_xC4vfOr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_xfFTQAM.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_y6F7xNy.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_100915_zKFln1u.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-10-31_142503.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100426_3iTJYgA.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100426_4K4z2mN.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100426_K9wsmXM.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100426_U5vq9HB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100426_VSoFTP7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100426_gpwuAjI.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100426_kWB9ziw.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-01_100426_lJWytmp.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/static/cars/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/static/cars/css/styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/places.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/places.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/templates/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +280,7 @@
       <workItem from="1709201097848" duration="3990000" />
       <workItem from="1709272892089" duration="17541000" />
       <workItem from="1709533965029" duration="15410000" />
-      <workItem from="1709625789475" duration="70508000" />
+      <workItem from="1709625789475" duration="85120000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -298,7 +434,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709766650637</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="polishing places and property editor">
+      <option name="closed" value="true" />
+      <created>1709802270106</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1709802270106</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -357,18 +501,10 @@
     <MESSAGE value="switching to universal property value filed" />
     <MESSAGE value="switched to universal property value filed" />
     <MESSAGE value="last10 records df" />
-    <option name="LAST_COMMIT_MESSAGE" value="last10 records df" />
+    <MESSAGE value="polishing places and property editor" />
+    <option name="LAST_COMMIT_MESSAGE" value="polishing places and property editor" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/carzlayout/cars/views.py</url>
-          <line>291</line>
-          <option name="timeStamp" value="54" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="kwargs" />
@@ -377,6 +513,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1709799024331" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
+    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1709822850548" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
   </component>
 </project>
