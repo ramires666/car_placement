@@ -244,15 +244,16 @@ PROPERTY_SLUYGIFYED_MODEL_MAP = {
 
 
 @login_required
-def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
-
+def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug, period_id=None):
     user = request.user
-
     site = get_object_or_404(Site, slug=f"{mine_slug}-{shaft_slug}-{site_slug}")#, shaft=shaft)
 
-    current_year = timezone.now().year
-    current_month = timezone.now().month
-    current_period = YearMonth.objects.get(year=current_year, month=current_month)
+    if period_id:
+        current_period = YearMonth.objects.get(id=period_id)
+    else:
+        current_year = timezone.now().year
+        current_month = timezone.now().month
+        current_period = YearMonth.objects.get(year=current_year, month=current_month)
 
     # Fetch the correct model based on the property name
     PropertyModel = PROPERTY_SLUYGIFYED_MODEL_MAP.get(property_slug)
@@ -309,23 +310,23 @@ def edit_property(request, mine_slug, shaft_slug, site_slug, property_slug):
         else:
             form = PropertyForm(instance=property_instance, user=request.user)
 
-    # Automatically set or disable the 'changed_by' field based on user permissions
-    # if not user.is_superuser:
-    #     if 'changed_by' in form.fields:
+
     form.fields['changed_by'].disabled = True  # Disable for non-admin user
 
-    # Fetch the last 10 records of the selected site across all property types
-    # property_types = [model for model in PROPERTY_SLUYGIFYED_MODEL_MAP.values()]
-    # last_10_records = []
-    # for model in property_types:
-    #     records = model.objects.filter(site=site).order_by('-created')[:10]
-    #     last_10_records.extend(records)
 
+    columns = {
+        'value': pd.Series(dtype='float'),
+        'period_id': pd.Series(dtype='object'),  # Use 'object' for strings and mixed types
+        'changed_by_id': pd.Series(dtype='object'),
+        'created': pd.Series(dtype='datetime64[ns]'),  # Use 'datetime64[ns]' for datetime columns
+        'document': pd.Series(dtype='object'),
+    }
+    df10 = pd.DataFrame(columns)
 
-    # Sort the combined list of records by the 'created' timestamp and limit to the last 10
-    # last_10_records = sorted(last_10_records, key=lambda x: x.created, reverse=True)[:10]
     last_10_records = PropertyModel.objects.filter(site=site).order_by('-created')[:10]
-    df10 = pd.DataFrame(list(last_10_records.values()))
+    if last_10_records.exists():
+        df10 = pd.DataFrame(list(last_10_records.values()))
+
 
     period_titles = YearMonth.objects.in_bulk(list(df10['period_id']))
     # Assuming User model for changed_by
@@ -784,25 +785,42 @@ def places(request):
     return render(request, 'places1.html', context=data)
 
 
-def places1(request):
-    current_year = timezone.now().year
-    current_month = timezone.now().month
-    current_year_month = YearMonth.objects.get(year=current_year, month=current_month)
+def places1(request, period_id=None):
+    # current_year = timezone.now().year
+    # current_month = timezone.now().month
+    # current_period = YearMonth.objects.get(year=current_year, month=current_month)
+
+    # Fetch all available periods sorted by year and month
+    periods = YearMonth.objects.all().order_by('year', 'month')
+
+    if period_id:
+        # If a specific period ID is provided, use it
+        current_period = YearMonth.objects.get(id=period_id)
+    else:
+        # Default to the latest period if no ID is provided
+        current_period = periods.last()
+
+    # Find the index of the current period in the periods queryset
+    current_index = list(periods).index(current_period)
+
+    # Determine previous and next period based on index
+    previous_period = periods[current_index - 1] if current_index > 0 else None
+    next_period = periods[current_index + 1] if current_index < len(periods) - 1 else None
 
     sites = Site.objects.prefetch_related(
-        Prefetch('plan_zadanie_set', queryset=Plan_zadanie.objects.filter(period=current_year_month), to_attr='plan_zadanie_'),
-        Prefetch('plotnost_gruza_set', queryset=Plotnost_gruza.objects.filter(period=current_year_month), to_attr='plotnost_gruza_'),
-        Prefetch('schema_otkatki_set', queryset=Schema_otkatki.objects.filter(period=current_year_month), to_attr='schema_otkatki_'),
-        Prefetch('t_smeny_set', queryset=T_smeny.objects.filter(period=current_year_month), to_attr='t_smeny_'),
-        Prefetch('t_regl_pereryv_set', queryset=T_regl_pereryv.objects.filter(period=current_year_month), to_attr='t_regl_pereryv_'),
-        Prefetch('t_pereezd_set', queryset=T_pereezd.objects.filter(period=current_year_month), to_attr='t_pereezd_'),
-        Prefetch('t_vspom_set', queryset=T_vspom.objects.filter(period=current_year_month), to_attr='t_vspom_'),
-        Prefetch('nsmen_set', queryset=Nsmen.objects.filter(period=current_year_month), to_attr='nsmen_'),
-        Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_year_month), to_attr='v_objem_kuzova_'),
-        Prefetch('kuzov_coeff_zapl_set', queryset=Kuzov_Coeff_Zapl.objects.filter(period=current_year_month), to_attr='kuzov_coeff_zapl_'),
-        Prefetch('v_skorost_dvizh_set', queryset=V_Skorost_dvizh.objects.filter(period=current_year_month), to_attr='v_skorost_dvizh_'),
-        Prefetch('t_pogruzki_set', queryset=T_pogruzki.objects.filter(period=current_year_month), to_attr='t_pogruzki_'),
-        Prefetch('t_razgruzki_set', queryset=T_razgruzki.objects.filter(period=current_year_month), to_attr='t_razgruzki_'),
+        Prefetch('plan_zadanie_set', queryset=Plan_zadanie.objects.filter(period=current_period), to_attr='plan_zadanie_'),
+        Prefetch('plotnost_gruza_set', queryset=Plotnost_gruza.objects.filter(period=current_period), to_attr='plotnost_gruza_'),
+        Prefetch('schema_otkatki_set', queryset=Schema_otkatki.objects.filter(period=current_period), to_attr='schema_otkatki_'),
+        Prefetch('t_smeny_set', queryset=T_smeny.objects.filter(period=current_period), to_attr='t_smeny_'),
+        Prefetch('t_regl_pereryv_set', queryset=T_regl_pereryv.objects.filter(period=current_period), to_attr='t_regl_pereryv_'),
+        Prefetch('t_pereezd_set', queryset=T_pereezd.objects.filter(period=current_period), to_attr='t_pereezd_'),
+        Prefetch('t_vspom_set', queryset=T_vspom.objects.filter(period=current_period), to_attr='t_vspom_'),
+        Prefetch('nsmen_set', queryset=Nsmen.objects.filter(period=current_period), to_attr='nsmen_'),
+        Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_period), to_attr='v_objem_kuzova_'),
+        Prefetch('kuzov_coeff_zapl_set', queryset=Kuzov_Coeff_Zapl.objects.filter(period=current_period), to_attr='kuzov_coeff_zapl_'),
+        Prefetch('v_skorost_dvizh_set', queryset=V_Skorost_dvizh.objects.filter(period=current_period), to_attr='v_skorost_dvizh_'),
+        Prefetch('t_pogruzki_set', queryset=T_pogruzki.objects.filter(period=current_period), to_attr='t_pogruzki_'),
+        Prefetch('t_razgruzki_set', queryset=T_razgruzki.objects.filter(period=current_period), to_attr='t_razgruzki_'),
     )
 
     # Convert to DataFrame
@@ -811,19 +829,6 @@ def places1(request):
             'Рудник': site.shaft.mine.title,
             'Шахта': site.shaft.title,
             'Участок': site.title,
-            # 'План задание': site.plan_zadanie_[-1].Qpl if site.plan_zadanie_ else None,
-            # 'Плотность груза': site.plotnost_gruza_[-1].d if site.plotnost_gruza_ else None,
-            # 'Плечо откатки': site.schema_otkatki_[-1].L if site.schema_otkatki_ else None,
-            # 'Длительность смены': site.t_smeny_[-1].Tsm if site.t_smeny_ else None,
-            # 'Регламент.перерывы': site.t_regl_pereryv_[-1].Tregl if site.t_regl_pereryv_ else None,
-            # 'Время переезда': site.t_pereezd_[-1].Tprz if site.t_pereezd_ else None,
-            # 'Время вспомогат.': site.t_vspom_[-1].Tvsp if site.t_vspom_ else None,
-            # 'Кол-во смнен': site.nsmen_[-1].Nsm if site.nsmen_ else None,
-            # 'Объем кузова': site.v_objem_kuzova_[-1].Vk if site.v_objem_kuzova_ else None,
-            # 'КОэфф заполн. кузова': site.kuzov_coeff_zapl_[-1].Kz if site.kuzov_coeff_zapl_ else None,
-            # 'Скорость движения': site.v_skorost_dvizh_[-1].Vdv if site.v_skorost_dvizh_ else None,
-            # 'Время погрузки': site.t_pogruzki_[-1].Tpogr if site.t_pogruzki_ else None,
-            # 'Время разгр.': site.t_razgruzki_[-1].Trazgr if site.t_razgruzki_ else None,
             'План задание': site.plan_zadanie_[-1].value if site.plan_zadanie_ else None,
             'Плотность груза': site.plotnost_gruza_[-1].value if site.plotnost_gruza_ else None,
             'Плечо откатки': site.schema_otkatki_[-1].value if site.schema_otkatki_ else None,
@@ -855,9 +860,9 @@ def places1(request):
 
         for column in row.index:
             if pd.notnull(row[column]) and column not in ['Рудник', 'Шахта', 'Участок']:
-                df.at[index, column] = f"<a href='{address}{slugify(column)}'><div>{row[column]}</div></a>"
+                df.at[index, column] = f"<a href='{address}{slugify(column)}/{current_period.id}/'><div>{row[column]}</div></a>"
             elif column not in ['Рудник', 'Шахта', 'Участок']:
-                df.at[index, column] = f"<a href='{address}{slugify(column)}'><div>-</div></a>"
+                df.at[index, column] = f"<a href='{address}{slugify(column)}/{current_period.id}/'><div>-</div></a>"
 
     #### inserting links into db
 
@@ -883,7 +888,11 @@ def places1(request):
     # styled_html = f'<div style="max-width: 800px; overflow-x: auto;">{html_df}</div>'
     # styled_html = f'<div style="max-width: 800px; overflow-x: auto;">{html_df}</div>'
 
-    context = {'site_params':html_df }
+    context = {
+        'current_period': current_period,
+        'previous_period': previous_period,
+        'next_period': next_period,
+        'site_params':html_df }
     return render(request, 'places.html', context)
 
 

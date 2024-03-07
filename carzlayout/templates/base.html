@@ -53,13 +53,13 @@
 <!-- Sidebar слева -->
 	<td valign="top" class="left-chapters">
 	<ul id="leftchapters">
-		<li><a href="{% url 'places' %}">Все места</a></li>
+		<li><a href="{% url 'places' %}">Участки</a></li>
 
-		{% if cat_selected == 0 %}
-			<li class="selected">Все категории</li>
-		{% else %}
-			<li><a href="{% url 'home' %}">Все категории машин</a></li>
-		{% endif %}
+{#		{% if cat_selected == 0 %}#}
+{#			<li class="selected">Все категории</li>#}
+{#		{% else %}#}
+			<li><a href="{% url 'home' %}">Машины</a></li>
+{#		{% endif %}#}
 
 		{% show_categories cat_selected %}
 	</ul>
@@ -84,7 +84,7 @@
 <!-- Footer -->
 <tr><td valign=top>
 	<div id="footer">
-		<p>&copy; 2023 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго рекомендуется.</p>
+		<p>&copy; 2023 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго запрещено.</p>
 	</div>
 </td></tr></table>
 

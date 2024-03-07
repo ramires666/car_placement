@@ -107,7 +107,7 @@ ul.list-articles li {
 
 .content-table {
     /*width: 100%;*/
-	/*max-width: 1080px;*/
+	max-width: 1920px;
 	/*max-width: 95%;*/
     /*width: auto; !* Or a specific percentage less than 100% if needed *!*/
     border-collapse: collapse;

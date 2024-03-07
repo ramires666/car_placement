@@ -41,11 +41,15 @@ urlpatterns = [
     path('mines/<slug:mine_slug>/', views.shafts_list, name='shafts_list'),
     path('shafts/<slug:shaft_slug>/', views.sites_list, name='sites_list'),
 
-    path('places/',views.places1, name='places'),
+    # path('places/',views.places1, name='places'),
+    path('places/', views.places1, name='places'),
+    path('places/<int:period_id>/', views.places1, name='places_with_period'),
     # path('places/',views.places, name='places'),
 
     # path('<str:mine>/<str:shaft>/<str:site>/', views.property_editor, name='property_editor'),
-    path('<slug:mine_slug>-<slug:shaft_slug>-<slug:site_slug>/<slug:property_slug>/', views.edit_property, name='edit_property'),
+    # path('<slug:mine_slug>-<slug:shaft_slug>-<slug:site_slug>/<slug:property_slug>/', views.edit_property, name='edit_property'),
+    path('<slug:mine_slug>-<slug:shaft_slug>-<slug:site_slug>/<slug:property_slug>/<int:period_id>/', views.edit_property, name='edit_property_with_period'),
+
 
     path('mine/<slug:mine_slug>/', views.mine_detail, name='mine_detail'),
     path('shaft/<slug:shaft_slug>/', views.shaft_detail, name='shaft_detail'),

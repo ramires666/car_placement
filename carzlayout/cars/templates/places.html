@@ -1,9 +1,20 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Места расстановки</h2>
+{#<h2>Места расстановки</h2>#}
 
-    <h1>Свойства участков:</h1>
+    <h1>Свойства всех участков по периодам:</h1>
+<div>
+    {% if previous_period %}
+    <a href="{% url 'places_with_period' previous_period.id %}" class="btn btn-primary">&lt; Предыдущий период</a>
+    {% endif %}
+    <h1>Период: {{ current_period.title }}</h1>
+    {% if next_period %}
+    <a href="{% url 'places_with_period' next_period.id %}" class="btn btn-primary">Следующий период &gt;</a>
+    {% endif %}
+</div>
+
+{#    <h1>Свойства участков:</h1>#}
     <div class="content-table table-container">
         {{ site_params|safe }}
     </div>
