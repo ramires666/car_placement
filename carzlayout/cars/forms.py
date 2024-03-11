@@ -186,7 +186,7 @@ class PlacementForm(forms.ModelForm):
     )
     class Meta:
         model = Placement
-        fields = ['changed_by', 'site','cars','period']
+        fields = ['site','period', 'changed_by', 'cars']
         widgets = {
             'period': forms.Select(choices=[(period.id, period.title) for period in YearMonth.objects.all()]),
         }

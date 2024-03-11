@@ -4,19 +4,33 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement alpha">
-      <change afterPath="$PROJECT_DIR$/carzlayout/cars/migrations/0034_historicalplacement_period_placement_period.py" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement alpha.2">
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_0CtbpzM.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_7w9m4hE.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_8Wb07BZ.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_JjlJX9Z.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_UMQI0cB.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_WSKmNfc.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_aKwz5HV.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_iOYdTPz.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_jnr52eO.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Screenshot_2023-11-06_004423_razgLpr.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_6Xhug7F.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_T9WADYx.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_VK3ZRJF.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_YICU8Kn.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_YRyXB29.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_hXFRGBF.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_j4XtGr7.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_vnG2XTx.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_wOdX9Cl.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/media/property_documents/Изображение_WhatsApp_2024-03-06_в_16.31.40_b6e8916c_xcopuau.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_create.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_edit.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/carzlayout/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/carzlayout/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/carzlayout/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/templates/base.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +155,7 @@
       <workItem from="1709272892089" duration="17541000" />
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
-      <workItem from="1710141131350" duration="22258000" />
+      <workItem from="1710141131350" duration="24963000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -319,7 +333,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710148056673</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="placement alpha.2">
+      <option name="closed" value="true" />
+      <created>1710167600711</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1710167600711</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -381,7 +403,8 @@
     <MESSAGE value="polishing places and property editor" />
     <MESSAGE value="finished integrating new year monthly data fetching in places and property editor" />
     <MESSAGE value="placement alpha" />
-    <option name="LAST_COMMIT_MESSAGE" value="placement alpha" />
+    <MESSAGE value="placement alpha.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="placement alpha.2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -406,6 +429,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1710165386388" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
+    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1710168058121" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
   </component>
 </project>

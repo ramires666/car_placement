@@ -1098,8 +1098,14 @@ class PlacementListView(ListView):
         # Assuming 'id' is one of the columns
         df['edit_link'] = df.apply(lambda row: f'<a href="/placement/edit/{row["id"]}">Редактировать документ</a>', axis=1)
 
+        df = df[['edit_link', 'created', 'username', 'mine_title', 'shaft_title', 'site_title']]
+        # df['created'] = df['created'].dt.floor("D")
+        df['created'] = df['created'].dt.strftime('%Y-%m-%d')
+
+        df.columns = (['Редактировать','Создано','Автор','Рудник','Шахта','Участок'])
+
         # Select columns to display and convert DataFrame to HTML
-        df_html = df[['edit_link', 'created', 'username', 'mine_title', 'shaft_title', 'site_title']].to_html(
+        df_html = df.to_html(
                     header=True,
                     index_names=True, #ugly two layer index names
                     index=True,

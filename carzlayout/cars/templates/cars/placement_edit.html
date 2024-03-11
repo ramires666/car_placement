@@ -7,10 +7,10 @@
     <h3>Документ "Расстановка" № {{ placement.id }} от {{ placement.created|date:'d.m.Y' }} автор: {{ placement.username }}</h3>
 <form method="post">
     {% csrf_token %}
-        {{ form.period }}  <!-- Assuming your form includes a period field -->
-    {{ form.site }}
-    {{ form.cars.as_p }}  <!-- Rendering the cars field as paragraph -->
-{#    {{ form.as_p }}#}
+{#    {{ form.period }}#}
+{#    {{ form.site }}#}
+    {{ form.cars.as_p }}
+    {{ form.as_p }}
     <!-- Handling the many-to-many relationship with cars -->
 {#    {{ cars_form.as_p }}#}
     <button type="submit">Save changes</button>

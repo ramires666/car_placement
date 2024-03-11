@@ -2,22 +2,11 @@
 
 {% block content %}
 
-    <h1>Available Placements</h1>
-{#    <ul>#}
-{#        {% for placement in placements %}#}
-{#            <li>#}
-{#                <!-- Make each placement a link to the edit page -->#}
-{#                <a href="{% url 'placement-edit' placement.pk %}">#}
-{#                    {{ placement.site }} - Created by: {{ placement.changed_by }} on {{ placement.created }}#}
-{#                </a>#}
-{#            </li>#}
-{#        {% empty %}#}
-{#            <li>No placements available.</li>#}
-{#        {% endfor %}#}
-{#    </ul>#}
-{{ placements_table|safe }}
+    <h1>Все расстановки:</h1>
 
-    <a href="{% url 'placement-create' %}">Create New Placement</a>
+{{ placements_table|safe }}
+<p></p>
+    <a href="{% url 'placement-create' %}">Создать новый документ "Расстановка"</a>
 
 
 
