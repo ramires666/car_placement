@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms.models import inlineformset_factory
 from .models import Mine, Shaft, Car, YearMonth, Site, Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, \
-    T_regl_pereryv, T_pereezd, T_vspom, Nsmen, Ktg
+    T_regl_pereryv, T_pereezd, T_vspom, Nsmen, Ktg, Placement, PlacementCar
 
 PlanZadanieFormset = inlineformset_factory(Site, Plan_zadanie, fields='__all__', extra=1, can_delete=True)
 Plotnost_gruzaFormset = inlineformset_factory(Site, Plotnost_gruza, fields='__all__', extra=1, can_delete=True)
@@ -175,3 +175,23 @@ class PropertyEditForm(forms.ModelForm):
         if model_class:
             self._meta.model = model_class
             self.fields = model_class._meta.get_fields()
+
+
+class PlacementForm(forms.ModelForm):
+    cars = forms.ModelMultipleChoiceField(
+        queryset=Car.objects.all(),
+        required=False,
+        widget=forms.CheckboxSelectMultiple,  # Use checkboxes for selection
+        label="Select Cars"
+    )
+    class Meta:
+        model = Placement
+        fields = ['changed_by', 'site','cars']
+        # You can add more fields as needed
+
+class PlacementCarForm(forms.ModelForm):
+    car = forms.ModelMultipleChoiceField(queryset=Car.objects.all(), required=False)
+
+    class Meta:
+        model = PlacementCar
+        fields = ['car']

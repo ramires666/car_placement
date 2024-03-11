@@ -1,7 +1,7 @@
 from django.urls import path, re_path, register_converter
 from cars import views
 from cars.views import CarsHome, SiteDetail, SiteUpdate, edit_property_view, UniversalPropertyView, CarDetailView, \
-    CarListView, update_ktg
+    CarListView, update_ktg, PlacementDetailView, PlacementUpdateView, PlacementCreateView, PlacementListView
 
 from cars import converter
 # from models import Car
@@ -57,6 +57,12 @@ urlpatterns = [
     path('site/edit/<slug:site_slug>/', SiteUpdate.as_view(), name='site_edit'),
 
     path('site/<slug:site_slug>edit-property/<str:property_type>/', UniversalPropertyView.as_view(), name='edit_property'),
+
+    path('placement/<int:pk>/', PlacementDetailView.as_view(), name='placement-detail'),
+    path('placement/edit/<int:pk>/', PlacementUpdateView.as_view(), name='placement-edit'),
+
+    path('placement/new/', PlacementCreateView.as_view(), name='placement-create'),
+    path('placements/', PlacementListView.as_view(), name='placement-list'),  # Make sure this line exists
 
 ]
 

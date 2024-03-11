@@ -16,13 +16,13 @@ from pytils.translit import slugify
 from django.utils.timezone import now
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import ListView, DetailView, FormView, UpdateView
+from django.views.generic import ListView, DetailView, FormView, UpdateView, CreateView
 from cars.models import Mine, Shaft, Site, Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, \
     T_pereezd, T_vspom, Nsmen, YearMonth, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki, \
-    Ktg
+    Ktg, Placement, PlacementCar
 from .forms import SiteEditForm, PlanZadanieFormset, Plotnost_gruzaFormset, Schema_otkatkiFormset, T_smenyFormset, \
     T_regl_pereryvFormset, T_pereezdFormset, T_vspomFormset, NsmenFormset, PropertyEditForm, UniversalPropertyForm, \
-    KtgForm
+    KtgForm, PlacementForm, PlacementCarForm
 from itertools import chain
 from django.apps import apps
 
@@ -1018,3 +1018,62 @@ def shaft_detail():
     return None
 
 
+class PlacementDetailView(DetailView):
+    model = Placement
+    template_name = 'cars/placement_detail.html'
+    context_object_name = 'placement'
+
+class PlacementUpdateView(UpdateView):
+    model = Placement
+    form_class = PlacementForm
+    template_name = 'cars/placement_edit.html'
+    success_url = reverse_lazy('your_success_url_name')  # Adjust the URL as needed
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.POST:
+            context['cars_form'] = PlacementCarForm(self.request.POST)
+        else:
+            context['cars_form'] = PlacementCarForm()
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        cars_form = context['cars_form']
+        if cars_form.is_valid():
+            self.object = form.save()
+            cars_form.instance = self.object
+            cars_form.save()
+            # Here you may need to handle adding/removing cars to/from PlacementCar manually
+        return super().form_valid(form)
+
+
+class PlacementCreateView(CreateView):
+    model = Placement
+    form_class = PlacementForm
+    template_name = 'cars/placement_create.html'
+    success_url = reverse_lazy('placement-list')  # Redirect to placement list view on success
+
+    def form_valid(self, form):
+        # Save the Placement instance first without committing to the database
+        placement = form.save(commit=False)
+        placement.save()  # Now the Placement instance is saved and has an ID
+
+        # Get the selected cars from the form
+        cars = form.cleaned_data['cars']
+
+        # Create PlacementCar instances for each selected car
+        for car in cars:
+            PlacementCar.objects.create(placement=placement, car=car)
+
+        return super(CreateView, self).form_valid(form)
+
+# class PlacementCreateView(CreateView):
+#     # Your view definition...
+#     success_url = reverse_lazy('placements')  # Make sure this matches your URL pattern name
+
+
+class PlacementListView(ListView):
+    model = Placement
+    template_name = 'cars/placement_list.html'
+    context_object_name = 'placements'

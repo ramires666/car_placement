@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<!-- Display placement details -->
+<p>Created by: {{ placement.changed_by }}</p>
+<p>Site: {{ placement.site }}</p>
+<!-- List the cars -->
+<h3>Cars in this placement:</h3>
+<ul>
+    {% for car in placement.cars.all %}
+    <li>{{ car }}</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

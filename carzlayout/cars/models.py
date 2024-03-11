@@ -10,6 +10,9 @@ from simple_history.models import HistoricalRecords
 
 
 
+
+
+
 @reversion.register()
 class Mine(models.Model):
     title = models.CharField(max_length=255, verbose_name='Рудник')
@@ -317,3 +320,30 @@ class TagPost(models.Model):
 class UploadFiles(models.Model):
     file = models.FileField(upload_to='uploads_model')
     history = HistoricalRecords()
+
+
+class Placement(models.Model):
+    created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Автор")
+    site = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name="Участок")
+    cars = models.ManyToManyField('Car', through='PlacementCar', verbose_name="Машины")
+    history = HistoricalRecords()
+
+    class Meta:
+        verbose_name = "Размещение"
+        verbose_name_plural = "Размещения"
+
+    def __str__(self):
+        return f"Placement at {self.site} on {self.created.strftime('%Y-%m-%d')}"
+
+class PlacementCar(models.Model):
+    placement = models.ForeignKey(Placement, on_delete=models.CASCADE, verbose_name="Размещение")
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Машина")
+    # Here you can add additional fields if needed, such as a timestamp for when the car was added to the placement.
+
+    class Meta:
+        verbose_name = "Размещенные машины"
+        verbose_name_plural = "Размещенные машины"
+
+    def __str__(self):
+        return f"{self.car} in {self.placement}"

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<!-- This form allows editing the placement's details -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <!-- Handling the many-to-many relationship with cars -->
+    {{ cars_form.as_p }}
+    <button type="submit">Save changes</button>
+</form>
+
+{% endblock %}
