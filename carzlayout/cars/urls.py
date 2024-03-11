@@ -1,7 +1,8 @@
 from django.urls import path, re_path, register_converter
 from cars import views
 from cars.views import CarsHome, SiteDetail, SiteUpdate, edit_property_view, UniversalPropertyView, CarDetailView, \
-    CarListView, update_ktg, PlacementDetailView, PlacementUpdateView, PlacementCreateView, PlacementListView
+    CarListView, update_ktg, PlacementDetailView, PlacementUpdateView, PlacementCreateView, PlacementListView, \
+    get_site_properties
 
 from cars import converter
 # from models import Car
@@ -63,6 +64,8 @@ urlpatterns = [
 
     path('placement/new/', PlacementCreateView.as_view(), name='placement-create'),
     path('placements/', PlacementListView.as_view(), name='placement-list'),  # Make sure this line exists
+
+    path('ajax/get_site_properties/<int:site_id>/<int:period_id>/', get_site_properties, name='get_site_properties'),
 
 ]
 

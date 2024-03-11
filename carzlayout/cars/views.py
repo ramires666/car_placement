@@ -1,10 +1,12 @@
 from collections import defaultdict
+from django.db.models.functions import Concat
+
 
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.db.models import F, OuterRef, Subquery, Prefetch
+from django.db.models import F, OuterRef, Subquery, Prefetch, Value, CharField
 from django.forms import model_to_dict,ModelForm
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -1027,7 +1029,7 @@ class PlacementUpdateView(UpdateView):
     model = Placement
     form_class = PlacementForm
     template_name = 'cars/placement_edit.html'
-    success_url = reverse_lazy('your_success_url_name')  # Adjust the URL as needed
+    success_url = reverse_lazy('placement-list')  # Adjust the URL as needed
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -1040,10 +1042,14 @@ class PlacementUpdateView(UpdateView):
     def form_valid(self, form):
         context = self.get_context_data()
         cars_form = context['cars_form']
+        placement = form.save(commit=False)
+        placement.changed_by = self.request.user  # Set the current user as the author
+        placement.save()  # Now save the Placement instance
+        form.save_m2m()  # Save any many-to-many fields on the form
+
         if cars_form.is_valid():
-            self.object = form.save()
-            cars_form.instance = self.object
-            cars_form.save()
+            cars_form.instance = placement
+            cars_form.save()  # Save the related cars through the intermediate model PlacementCar
             # Here you may need to handle adding/removing cars to/from PlacementCar manually
         return super().form_valid(form)
 
@@ -1077,3 +1083,53 @@ class PlacementListView(ListView):
     model = Placement
     template_name = 'cars/placement_list.html'
     context_object_name = 'placements'
+
+    def get_context_data(self, **kwargs):
+        context = super(PlacementListView, self).get_context_data(**kwargs)
+        placements = Placement.objects.select_related('site__shaft__mine', 'changed_by').annotate(
+            username=Concat(F('changed_by__first_name'), Value(' '), F('changed_by__last_name')),
+            site_title=F('site__title'),
+            shaft_title=F('site__shaft__title'),
+            mine_title=F('site__shaft__mine__title')
+        ).values('id', 'created', 'username', 'site_title', 'shaft_title', 'mine_title')
+
+        df = pd.DataFrame(list(placements))
+
+        # Assuming 'id' is one of the columns
+        df['edit_link'] = df.apply(lambda row: f'<a href="/placement/edit/{row["id"]}">Редактировать документ</a>', axis=1)
+
+        # Select columns to display and convert DataFrame to HTML
+        df_html = df[['edit_link', 'created', 'username', 'mine_title', 'shaft_title', 'site_title']].to_html(
+                    header=True,
+                    index_names=True, #ugly two layer index names
+                    index=True,
+                    border=0,
+                    justify='center',
+                    classes='content-table',
+                    render_links=True,
+                    escape=False)
+
+        context['placements_table'] = df_html
+        return context
+
+
+def get_site_properties(request, site_id, period_id):
+    try:
+        site = Site.objects.get(pk=site_id)
+        period = YearMonth.objects.get(pk=period_id)
+
+        # Now fetch each property closest to the given period. This is an example approach.
+        plan_zadanie = Plan_zadanie.objects.filter(site=site, period__lte=period).order_by('-period').first()
+        plotnost_gruza = Plotnost_gruza.objects.filter(site=site, period__lte=period).order_by('-period').first()
+        schema_otkatki = Schema_otkatki.objects.filter(site=site, period__lte=period).order_by('-period').first()
+
+        data = {
+            "plan_zadanie": plan_zadanie.value if plan_zadanie else "N/A",
+            "plotnost_gruza": plotnost_gruza.value if plotnost_gruza else "N/A",
+            "schema_otkatki": schema_otkatki.value if schema_otkatki else "N/A",
+        }
+
+        return JsonResponse(data)
+
+    except Site.DoesNotExist:
+        return JsonResponse({'error': 'Site not found'}, status=404)

@@ -2,12 +2,22 @@
 
 {% block content %}
 
-    <h1>Create New Placement</h1>
+{#    <h1>Create New Placement</h1>#}
+{#    <form method="post">#}
+{#        {% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <button type="submit">Create</button>#}
+{#    </form>#}
     <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Create</button>
-    </form>
+    {% csrf_token %}
+    <p>{{ form.period.label_tag }} {{ form.period }}</p>  <!-- Render the period field explicitly -->
+    <p>{{ form.site.label_tag }} {{ form.site }}</p>
+    <!-- Render other fields as needed -->
+    {{ form.cars }}
+    <button type="submit">Save changes</button>
+</form>
+
+
     <a href="{% url 'placement-list' %}">Back to list</a>
 
 {% endblock %}

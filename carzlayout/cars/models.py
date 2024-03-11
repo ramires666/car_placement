@@ -323,6 +323,7 @@ class UploadFiles(models.Model):
 
 
 class Placement(models.Model):
+    period = models.ForeignKey(YearMonth,on_delete=models.PROTECT,verbose_name="Период")
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Автор")
     site = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name="Участок")

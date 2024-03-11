@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-INTERNAL_IPS = ["127.0.0.1",]
+INTERNAL_IPS = ["0.0.0.0"]
 # Application definition
 
 INSTALLED_APPS = [
