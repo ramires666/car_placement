@@ -13,11 +13,11 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /PLACEMENT
 
 # Install dependencies
-COPY requirements.txt /code/
+COPY requirements.txt /PLACEMENT/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project
-COPY . /code/
+COPY . /PLACEMENT/
 
 # Run the application
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

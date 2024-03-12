@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement beta">
-      <change afterPath="$PROJECT_DIR$/carzlayout/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement beta + docker" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -136,7 +132,7 @@
       <workItem from="1709272892089" duration="17541000" />
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
-      <workItem from="1710141131350" duration="59419000" />
+      <workItem from="1710141131350" duration="59715000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -338,7 +334,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710285092438</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="placement beta + docker">
+      <option name="closed" value="true" />
+      <created>1710285871792</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1710285871792</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -403,7 +407,8 @@
     <MESSAGE value="placement alpha.2" />
     <MESSAGE value="placement alpha.3" />
     <MESSAGE value="placement beta" />
-    <option name="LAST_COMMIT_MESSAGE" value="placement beta" />
+    <MESSAGE value="placement beta + docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="placement beta + docker" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
