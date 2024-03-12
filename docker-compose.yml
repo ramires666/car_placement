@@ -2,10 +2,10 @@ version: '3.8'
 
 services:
   web:
-    build: .
+    build: carzlayout/carzlayout
     command: python ./manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/PLACEMENT
+      - ./carzlayout:/PLACEMENT
       - static_volume:/PLACEMENT/static
       - media_volume:/PLACEMENT/media
     ports:
