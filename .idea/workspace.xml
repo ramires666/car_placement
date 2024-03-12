@@ -4,20 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement alpha.3">
-      <change afterPath="$PROJECT_DIR$/carzlayout/cars/migrations/0035_car_artikul_car_garnom_car_vvod_and_more.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/cars/migrations/0036_remove_car_tags.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/cars/migrations/0037_alter_car_artikul_alter_historicalcar_artikul.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/carzlayout/db.sqlite3.backup" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/django.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/django.iml" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement beta">
+      <change afterPath="$PROJECT_DIR$/carzlayout/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/carzlayout/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +19,7 @@
       <list>
         <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
@@ -145,7 +136,7 @@
       <workItem from="1709272892089" duration="17541000" />
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
-      <workItem from="1710141131350" duration="57944000" />
+      <workItem from="1710141131350" duration="59419000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -339,7 +330,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710170444468</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="placement beta">
+      <option name="closed" value="true" />
+      <created>1710285092438</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1710285092438</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -403,7 +402,8 @@
     <MESSAGE value="placement alpha" />
     <MESSAGE value="placement alpha.2" />
     <MESSAGE value="placement alpha.3" />
-    <option name="LAST_COMMIT_MESSAGE" value="placement alpha.3" />
+    <MESSAGE value="placement beta" />
+    <option name="LAST_COMMIT_MESSAGE" value="placement beta" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

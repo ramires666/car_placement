@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/PLACEMENT
+      - static_volume:/PLACEMENT/static
+      - media_volume:/PLACEMENT/media
+    ports:
+      - "8000:8000"
+    environment:
+      DEBUG: 'true'
+
+volumes:
+  static_volume:
+  media_volume:
