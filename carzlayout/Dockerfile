@@ -1,10 +1,5 @@
-
-LABEL authors="grom"
-
-#ENTRYPOINT ["top", "-b"]
-# Use the official Python image with your Python version
 FROM python:3.12-slim
-
+LABEL authors="grom"
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1

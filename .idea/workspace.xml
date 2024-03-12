@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement beta + docker" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement beta + docker">
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,10 +77,10 @@
       <recent name="C:\PYTHON\Projects\django\carzlayout" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\PYTHON\Projects\django" />
       <recent name="C:\PYTHON\Projects\django\carzlayout\cars\templates\cars" />
       <recent name="C:\PYTHON\Projects\django\carzlayout\cars\templates" />
       <recent name="C:\PYTHON\Projects\django\carzlayout" />
-      <recent name="C:\PYTHON\Projects\django" />
       <recent name="C:\PYTHON\Projects\django\carzlayout\carzlayout" />
     </key>
   </component>
@@ -132,7 +134,7 @@
       <workItem from="1709272892089" duration="17541000" />
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
-      <workItem from="1710141131350" duration="60154000" />
+      <workItem from="1710141131350" duration="60500000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -358,7 +360,31 @@
       <option name="project" value="LOCAL" />
       <updated>1710286343571</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="placement beta + docker">
+      <option name="closed" value="true" />
+      <created>1710286694238</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1710286694238</updated>
+    </task>
+    <task id="LOCAL-00030" summary="placement beta + docker">
+      <option name="closed" value="true" />
+      <created>1710286821427</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1710286821427</updated>
+    </task>
+    <task id="LOCAL-00031" summary="placement beta + docker">
+      <option name="closed" value="true" />
+      <created>1710286860304</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1710286860304</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
