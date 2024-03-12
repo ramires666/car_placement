@@ -174,7 +174,9 @@ class PropertyEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         if model_class:
             self._meta.model = model_class
-            self.fields = model_class._meta.get_fields()
+            self.fields = {field.name: field.formfield() for field in model_class._meta.get_fields() if field.name != 'changed_by'}
+            if 'changed_by' in self.fields:
+                self.fields['changed_by'].disabled = True
 
 
 class PlacementForm(forms.ModelForm):
@@ -182,15 +184,22 @@ class PlacementForm(forms.ModelForm):
         queryset=Car.objects.all(),
         required=False,
         widget=forms.CheckboxSelectMultiple,  # Use checkboxes for selection
-        label="Select Cars"
+        label="Выберите машины"
     )
     class Meta:
         model = Placement
-        fields = ['site','period', 'changed_by', 'cars']
+        fields = ['site', 'period',  'cars']
         widgets = {
             'period': forms.Select(choices=[(period.id, period.title) for period in YearMonth.objects.all()]),
         }
         # You can add more fields as needed
+    def __init__(self, *args, **kwargs):
+        super(PlacementForm, self).__init__(*args, **kwargs)
+        # self.fields['changed_by'].disabled = True
+        # self.fields['changed_by'].widget.attrs['readonly'] = True
+
+
+
 
 class PlacementCarForm(forms.ModelForm):
     car = forms.ModelMultipleChoiceField(queryset=Car.objects.all(), required=False)

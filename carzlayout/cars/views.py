@@ -33,6 +33,7 @@ from cars.forms import AddPostForm, UploadFilesForm, SiteEditForm, get_universal
 from cars.models import Car, Category, TagPost, UploadFiles
 
 import pandas as pd
+
 from django.conf import settings
 from .site_data_service import SiteDataService
 from django.utils.html import format_html_join, mark_safe
@@ -1025,36 +1026,93 @@ class PlacementDetailView(DetailView):
     template_name = 'cars/placement_detail.html'
     context_object_name = 'placement'
 
-class PlacementUpdateView(UpdateView):
+
+
+# @login_required
+class PlacementUpdateView(LoginRequiredMixin, UpdateView):
     model = Placement
     form_class = PlacementForm
     template_name = 'cars/placement_edit.html'
-    success_url = reverse_lazy('placement-list')  # Adjust the URL as needed
+    success_url = reverse_lazy('placement-list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Prepopulate cars_form with the current placement instance
         if self.request.POST:
-            context['cars_form'] = PlacementCarForm(self.request.POST)
+            context['cars_form'] = PlacementCarForm(self.request.POST, instance=self.object)
         else:
-            context['cars_form'] = PlacementCarForm()
+            # Initial queryset for cars should be the current cars in this placement
+            context['cars_form'] = PlacementCarForm(instance=self.object, initial={'car': self.object.cars.all()})
+
+            cars_qs = Car.objects.all().values('pk', 'artikul', 'garnom', 'title')
+            context['cars_qs'] = Car.objects.all()
+
+
+            # Convert queryset to a list of dictionaries
+            cars_list = list(cars_qs)
+
+            # Convert the list of dictionaries to a DataFrame
+            df = pd.DataFrame(cars_list)
+
+            # Add a 'selected' column based on whether the car is selected in the current placement
+
+            context['selected_cars_ids'] = list(self.object.cars.values_list('id', flat=True))
+
+            selected_cars = self.object.cars.all().values_list('pk', flat=True)
+            df['selected'] = df['pk'].isin(selected_cars)
+
+            # Render DataFrame to HTML
+            df_html = df.to_html(classes=["table", "table-bordered"], escape=False, index=False,
+                                 formatters={'selected': lambda
+                                     x: f'<input type="checkbox" name="cars" value="{x}" checked>' if x else '<input type="checkbox" name="cars" value="{x}">'})
+
+            context['cars_table'] = df_html
+
+            # Fetch and prepare site properties DataFrame
+            site = self.object.site
+            period = self.object.period
+            df_properties = get_site_properties(self.request,site.id, period.id)#,json=False,html=False)
+
+            # Render the properties DataFrame to HTML
+            properties_html = df_properties.to_html(escape=False, index=False, header=False, border=0,
+                                                    classes="table table-bordered")
+
+            context['site_properties_table'] = properties_html
+
+            # if self.object:
+            #     context['selected_cars'] = list(self.object.cars.values_list('pk', flat=True))
+            # else:
+            #     context['selected_cars'] = []
         return context
 
     def form_valid(self, form):
         context = self.get_context_data()
         cars_form = context['cars_form']
-        placement = form.save(commit=False)
-        placement.changed_by = self.request.user  # Set the current user as the author
-        placement.save()  # Now save the Placement instance
-        form.save_m2m()  # Save any many-to-many fields on the form
+        form.instance.changed_by = self.request.user  # Update the author
 
-        if cars_form.is_valid():
-            cars_form.instance = placement
-            cars_form.save()  # Save the related cars through the intermediate model PlacementCar
-            # Here you may need to handle adding/removing cars to/from PlacementCar manually
+        # Use transaction.atomic to ensure database integrity during the multiple operations
+        with transaction.atomic():
+            placement = form.save(commit=False)
+            placement.changed_by = self.request.user  # Assuming a 'changed_by' field to track the user
+            placement.save()  # Save the Placement instance
+
+            form.save_m2m()  # Save form's many-to-many data
+
+            if cars_form.is_valid():
+                # This step assumes that you are manually handling the creation/updation of PlacementCar instances.
+                # Clear existing cars from this placement
+                placement.cars.clear()
+                # Add new cars to the placement
+                cars = cars_form.cleaned_data['car']
+                for car in cars:
+                    PlacementCar.objects.create(placement=placement, car=car)
         return super().form_valid(form)
 
 
-class PlacementCreateView(CreateView):
+
+
+# @login_required
+class PlacementCreateView(LoginRequiredMixin, CreateView):
     model = Placement
     form_class = PlacementForm
     template_name = 'cars/placement_create.html'
@@ -1065,6 +1123,8 @@ class PlacementCreateView(CreateView):
         placement = form.save(commit=False)
         placement.save()  # Now the Placement instance is saved and has an ID
 
+        form.instance.changed_by = self.request.user  # Set the current user as the author
+        form.save_m2m()
         # Get the selected cars from the form
         cars = form.cleaned_data['cars']
 
@@ -1094,17 +1154,12 @@ class PlacementListView(ListView):
         ).values('id', 'created', 'username', 'site_title', 'shaft_title', 'mine_title')
 
         df = pd.DataFrame(list(placements))
+        df['created'] = df['created'].dt.strftime('%Y-%m-%d %H-%M')
+        df['created'] = df.apply(lambda row: f'<a href="/placement/edit/{row["id"]}">{row["created"]}</a>',axis=1)
 
-        # Assuming 'id' is one of the columns
-        df['edit_link'] = df.apply(lambda row: f'<a href="/placement/edit/{row["id"]}">Редактировать документ</a>', axis=1)
+        df = df[['created', 'username', 'mine_title', 'shaft_title', 'site_title']]
+        df.columns = (['Создано','Автор','Рудник','Шахта','Участок'])
 
-        df = df[['edit_link', 'created', 'username', 'mine_title', 'shaft_title', 'site_title']]
-        # df['created'] = df['created'].dt.floor("D")
-        df['created'] = df['created'].dt.strftime('%Y-%m-%d')
-
-        df.columns = (['Редактировать','Создано','Автор','Рудник','Шахта','Участок'])
-
-        # Select columns to display and convert DataFrame to HTML
         df_html = df.to_html(
                     header=True,
                     index_names=True, #ugly two layer index names
@@ -1119,23 +1174,30 @@ class PlacementListView(ListView):
         return context
 
 
+
 def get_site_properties(request, site_id, period_id):
     try:
         site = Site.objects.get(pk=site_id)
         period = YearMonth.objects.get(pk=period_id)
+        is_whole_year = period.month == 0
 
-        # Now fetch each property closest to the given period. This is an example approach.
-        plan_zadanie = Plan_zadanie.objects.filter(site=site, period__lte=period).order_by('-period').first()
-        plotnost_gruza = Plotnost_gruza.objects.filter(site=site, period__lte=period).order_by('-period').first()
-        schema_otkatki = Schema_otkatki.objects.filter(site=site, period__lte=period).order_by('-period').first()
+        properties_data = []
 
-        data = {
-            "plan_zadanie": plan_zadanie.value if plan_zadanie else "N/A",
-            "plotnost_gruza": plotnost_gruza.value if plotnost_gruza else "N/A",
-            "schema_otkatki": schema_otkatki.value if schema_otkatki else "N/A",
-        }
+        for prop in [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]:
+            qs = prop.objects.filter(site=site)
+            property_record = qs.filter(period=period).first() if not is_whole_year else qs.filter(period__year=period.year, period__month=0).first()
+            property_value = property_record.value if property_record else "N/A"
+            properties_data.append([prop._meta.verbose_name, property_value])
 
-        return JsonResponse(data)
+        df_properties = pd.DataFrame(properties_data, columns=['Property', 'Value'])
+        return df_properties
 
-    except Site.DoesNotExist:
-        return JsonResponse({'error': 'Site not found'}, status=404)
+    except (Site.DoesNotExist, YearMonth.DoesNotExist):
+        return pd.DataFrame([['Error', 'Site or Period not found']], columns=['Property', 'Value'])
+
+
+
+def ajax_get_site_properties(request, site_id, period_id):
+    df_properties = get_site_properties(request,site_id, period_id)
+    properties_html = df_properties.to_html(escape=False, classes="table", index=False)
+    return JsonResponse({'html': properties_html})

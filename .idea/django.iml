@@ -9,6 +9,7 @@
     <option name="TEMPLATE_FOLDERS">
       <list>
         <option value="$MODULE_DIR$/carzlayout/cars/templates" />
+        <option value="$MODULE_DIR$/carzlayout/cars/templates/cars" />
       </list>
     </option>
   </component>

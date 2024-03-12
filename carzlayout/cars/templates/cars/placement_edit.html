@@ -2,65 +2,75 @@
 
 {% block content %}
 
-
-<!-- This form allows editing the placement's details -->
-    <h3>Документ "Расстановка" № {{ placement.id }} от {{ placement.created|date:'d.m.Y' }} автор: {{ placement.username }}</h3>
+<h3>Документ "Расстановка" № {{ placement.id }} от {{ placement.created|date:'d.m.Y' }}</h3>
 <form method="post">
+    <div>
+        <strong>Автор: </strong> {{ form.instance.changed_by.first_name }} {{ form.instance.changed_by.last_name }}
+    </div>
     {% csrf_token %}
-{#    {{ form.period }}#}
-{#    {{ form.site }}#}
-    {{ form.cars.as_p }}
-    {{ form.as_p }}
-    <!-- Handling the many-to-many relationship with cars -->
-{#    {{ cars_form.as_p }}#}
-    <button type="submit">Save changes</button>
-</form>
+    <p>{{ form.period }}</p>
+    <p>{{ form.site }}</p>
+{#    {{ form.cars.as_p }}#}
 
-
-<div id="site_properties">
-<p></p>
-    <div id="placement_period" data-period-id="{{ placement.period.id }}">{{ placement.period.title }}</div>
-    <div id="plan_zadanie"> </div>
-    <div id="plotnost_gruza"> </div>
-    <div id="schema_otkatki"> </div>
+<div>
+    <strong>Машины:</strong>
+        <p></p>
+{#    {{ cars_table|safe }}#}
+        {% for car in cars_qs %}
+        <label>
+            <input type="checkbox" name="cars" value="{{ car.id }}" {% if car.id in selected_cars_ids %}checked{% endif %}>
+            {{ car.title }} арт-л.:{{ car.artikul }} гаражн.№{{ car.garnom }}
+        </label><br>
+    {% endfor %}
 </div>
 
+<button type="submit">Сохранить</button>
+</form>
 
+<strong>Свойства участка:</strong>
+<div id="site_properties_table">
+</div>
+
+{{ placement.errors }}
+
+{% if form.errors %}
+<div class="alert alert-danger">
+    <p>There were some problems with your data:</p>
+    {{ form.non_field_errors }}
+    {% for field in form %}
+        {{ field.errors }}
+    {% endfor %}
+</div>
+{% endif %}
 
 <script>
+
 document.addEventListener("DOMContentLoaded", function() {
     const siteSelect = document.getElementById('id_site');
-    // Optional: If implementing dynamic period selection, uncomment the following line
     const periodSelect = document.getElementById('id_period');
 
     const updateSiteProperties = function() {
         const siteId = siteSelect.value;
-        // Use a fixed period ID from the placement's data attribute
-        // const periodId = document.getElementById('placement_period').getAttribute('data-period-id');
-        // Optional: For dynamic period selection, use the selected period's value
         const periodId = periodSelect.value;
-
         const url = `/ajax/get_site_properties/${siteId}/${periodId}/`;
 
         fetch(url)
-            .then(response => response.json())
+            .then(response => response.json()) // Change to .text() since we're expecting HTML
             .then(data => {
-                document.getElementById('plan_zadanie').textContent = `План задание: ${data.plan_zadanie}`;
-                document.getElementById('plotnost_gruza').textContent = `Плотность груза: ${data.plotnost_gruza}`;
-                document.getElementById('schema_otkatki').textContent = `Плечо откатки: ${data.schema_otkatki}`;
+                const htmlContent = data.html;
+                document.getElementById('site_properties_table').innerHTML = htmlContent;
             })
             .catch(error => console.error('Error:', error));
     };
 
     if (siteSelect) {
         siteSelect.addEventListener('change', updateSiteProperties);
-
-        // Optional: If implementing dynamic period selection, add a listener for the period selector
-        if (periodSelect) {
-            periodSelect.addEventListener('change', updateSiteProperties);
+        if (siteSelect.value) {
+            updateSiteProperties();
         }
-
-        // Trigger an update on initial load if a site is already selected
+    }
+    if (periodSelect) {
+            periodSelect.addEventListener('change', updateSiteProperties);
         if (siteSelect.value) {
             updateSiteProperties();
         }

@@ -75,7 +75,7 @@ class Site(models.Model):
         super(Site, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.title+" "+self.shaft.title
+        return f'Участок "{self.title}"   на шахте {self.shaft.title}'
 
     class Meta:
         verbose_name = "Участок"
@@ -237,7 +237,10 @@ class Car(models.Model):
         DRAFT = 0, 'Черновик'
         PUBLISHED = 1, 'Опубликовано'
 
+    artikul = models.CharField(max_length=13, verbose_name='Артикул',  unique=True,null=True)
+    garnom = models.CharField(max_length=6, verbose_name='Гаражный номер',null=True)
     title = models.CharField(max_length=255, verbose_name='Название')
+    vvod = models.DateTimeField(verbose_name='Дата ввода в эксплуатацию',null=True)
     # KTG = models.FloatField(blank=True,null=True,verbose_name='КТГ')
     V_objem_kuzova = models.FloatField(blank=True, null=True, verbose_name='Емкость кузова с шапкой')
     slug = models.SlugField(max_length=255,unique=True, db_index=True)
@@ -247,7 +250,7 @@ class Car(models.Model):
     time_update = models.DateTimeField(auto_now=True)
     is_published = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]),x[1]), Status.choices)), default=Status.DRAFT)
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, related_name='cars',verbose_name='Категория')
-    tags = models.ManyToManyField('TagPost',blank=True,related_name='tags')
+    # tags = models.ManyToManyField('TagPost',blank=True,related_name='tags')
     history = HistoricalRecords()
 
     def __str__(self):
@@ -323,9 +326,9 @@ class UploadFiles(models.Model):
 
 
 class Placement(models.Model):
+    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Автор")
     period = models.ForeignKey(YearMonth,on_delete=models.PROTECT,verbose_name="Период")
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
-    changed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Автор")
     site = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name="Участок")
     cars = models.ManyToManyField('Car', through='PlacementCar', verbose_name="Машины")
     history = HistoricalRecords()

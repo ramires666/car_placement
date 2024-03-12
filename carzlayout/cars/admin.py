@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import Car, Category, Mine, Shaft, Site, YearMonth, Plan_zadanie
+from .models import Car, Category, Mine, Shaft, Site, YearMonth, Plan_zadanie, Placement
 from simple_history.admin import SimpleHistoryAdmin
 
 
 @admin.register(Car)
 class CarAdmin (SimpleHistoryAdmin):
-    list_display =('id','title', 'time_create', 'time_update', 'is_published','cat','breaf_info')
-    list_display_links = ('id','title')
+    list_display =('artikul','title', 'time_create', 'time_update', 'is_published','cat','breaf_info')
+    list_display_links = ('artikul','title')
     ordering = ['time_create','title']
     list_editable = ['is_published','cat']
     list_per_page = 50
@@ -65,3 +65,9 @@ class CarAdmin (SimpleHistoryAdmin):
     list_display =('id','title','year','month')
     # list_display_links = ('id','title','year','month')
     list_editable = ['year','month']
+
+@admin.register(Placement)
+class CarAdmin (SimpleHistoryAdmin):
+    list_display =('id','created','changed_by','site','period')
+    list_display_links = ('id','created',)
+    list_editable = ['changed_by','site','period']

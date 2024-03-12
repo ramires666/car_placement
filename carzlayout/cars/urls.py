@@ -2,7 +2,7 @@ from django.urls import path, re_path, register_converter
 from cars import views
 from cars.views import CarsHome, SiteDetail, SiteUpdate, edit_property_view, UniversalPropertyView, CarDetailView, \
     CarListView, update_ktg, PlacementDetailView, PlacementUpdateView, PlacementCreateView, PlacementListView, \
-    get_site_properties
+    get_site_properties, ajax_get_site_properties
 
 from cars import converter
 # from models import Car
@@ -15,7 +15,9 @@ urlpatterns = [
     path('', CarsHome.as_view(), name='home'),
     path('about/',views.about, name='about'),
     # path('cars/',views.cars,name='cars'),
-    path('cars/<int:car_id>/', views.cars,name='car_id'),
+    # path('cars/<int:car_id>/', views.cars,name='car_id'),
+    path('cars/<int:id>/', views.cars,name='car_id'),
+
     # path('cars/<slug:car_slug>/', views.cars_by_producer,name='cars_by_producer'),
     # re_path(r"^archive/(?P<year>[0-9]{4})/", views.archive)
     path('archive/<year4:year>/', views.archive,name='archive'),
@@ -65,7 +67,7 @@ urlpatterns = [
     path('placement/new/', PlacementCreateView.as_view(), name='placement-create'),
     path('placements/', PlacementListView.as_view(), name='placement-list'),  # Make sure this line exists
 
-    path('ajax/get_site_properties/<int:site_id>/<int:period_id>/', get_site_properties, name='get_site_properties'),
+    path('ajax/get_site_properties/<int:site_id>/<int:period_id>/', ajax_get_site_properties, name='get_site_properties'),
 
 ]
 
