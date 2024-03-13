@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="docker production server">
-      <change afterPath="$PROJECT_DIR$/config/nginx" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="docker production server 2">
+      <change beforePath="$PROJECT_DIR$/config/nginx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,7 +134,7 @@
       <workItem from="1709272892089" duration="17541000" />
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
-      <workItem from="1710141131350" duration="62207000" />
+      <workItem from="1710141131350" duration="62590000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -408,7 +408,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710289256607</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="docker production server 2">
+      <option name="closed" value="true" />
+      <created>1710289545858</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1710289545858</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -449,7 +457,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/carzlayout" />
     </ignored-roots>
-    <MESSAGE value="1" />
     <MESSAGE value="new site/car properties" />
     <MESSAGE value="disable submit for not logged in" />
     <MESSAGE value="disable user changeing for non admin" />
@@ -474,7 +481,8 @@
     <MESSAGE value="placement beta" />
     <MESSAGE value="placement beta + docker" />
     <MESSAGE value="docker production server" />
-    <option name="LAST_COMMIT_MESSAGE" value="docker production server" />
+    <MESSAGE value="docker production server 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="docker production server 2" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
