@@ -1,19 +1,27 @@
 version: '3.8'
+
 services:
   web:
     build: ./carzlayout
-    command: python ./manage.py runserver 0.0.0.0:8000
+    command: gunicorn carzlayout.wsgi:application --bind 0.0.0.0:8000
     volumes:
-      - ./carzlayout:/PLACEMENT  # Assuming your project code is in the ./carzlayout directory
-      - static_volume:/PLACEMENT/static  # Persistent volume for static files
-      - media_volume:/PLACEMENT/media  # Persistent volume for media files
-      - db_volume:/PLACEMENT/db.sqlite3  # Persistent volume for database
+      - ./carzlayout:/PLACEMENT
+      - static_volume:/PLACEMENT/static
+      - media_volume:/PLACEMENT/media
+    expose:
+      - "8000"
+
+  nginx:
+    image: nginx:alpine
     ports:
-      - "8000:8000"
-    environment:
-      DEBUG: 'true'  # Set this to 'false' in production for security
+      - "80:80"
+    volumes:
+      - ./config/nginx:/etc/nginx/conf.d
+      - static_volume:/PLACEMENT/static
+      - media_volume:/PLACEMENT/media
+    depends_on:
+      - web
 
 volumes:
   static_volume:
   media_volume:
-  db_volume:
