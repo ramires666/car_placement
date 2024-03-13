@@ -4,14 +4,16 @@ services:
     build: ./carzlayout
     command: python ./manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./carzlayout:/PLACEMENT
-      - static_volume:/PLACEMENT/static
-      - media_volume:/PLACEMENT/media
+      - ./carzlayout:/PLACEMENT  # Assuming your project code is in the ./carzlayout directory
+      - static_volume:/PLACEMENT/static  # Persistent volume for static files
+      - media_volume:/PLACEMENT/media  # Persistent volume for media files
+      - db_volume:/PLACEMENT/db.sqlite3  # Persistent volume for database
     ports:
       - "8000:8000"
     environment:
-      DEBUG: 'true'
+      DEBUG: 'true'  # Set this to 'false' in production for security
 
 volumes:
   static_volume:
   media_volume:
+  db_volume:
