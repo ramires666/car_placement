@@ -10,6 +10,9 @@
       <list>
         <option value="$MODULE_DIR$/carzlayout/cars/templates" />
         <option value="$MODULE_DIR$/carzlayout/cars/templates/cars" />
+        <option value="$MODULE_DIR$/carzlayout/users/Templates" />
+        <option value="$MODULE_DIR$/carzlayout/cars/templates/cars/includes" />
+        <option value="$MODULE_DIR$/carzlayout/users/Templates/users" />
       </list>
     </option>
   </component>

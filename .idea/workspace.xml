@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="docker production server 5" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="docker production server 6">
+      <change beforePath="$PROJECT_DIR$/.idea/django.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/django.iml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -132,7 +134,7 @@
       <workItem from="1709272892089" duration="17541000" />
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
-      <workItem from="1710141131350" duration="64106000" />
+      <workItem from="1710141131350" duration="64485000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -438,7 +440,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710291123300</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="docker production server 6">
+      <option name="closed" value="true" />
+      <created>1710291572892</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1710291572892</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -479,7 +489,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/carzlayout" />
     </ignored-roots>
-    <MESSAGE value="disable user changeing for non admin" />
     <MESSAGE value="added KTG property" />
     <MESSAGE value="chnaged post to cars&#10;added class view and new template for car" />
     <MESSAGE value="media" />
@@ -504,7 +513,8 @@
     <MESSAGE value="docker production server 2" />
     <MESSAGE value="docker production server 3" />
     <MESSAGE value="docker production server 5" />
-    <option name="LAST_COMMIT_MESSAGE" value="docker production server 5" />
+    <MESSAGE value="docker production server 6" />
+    <option name="LAST_COMMIT_MESSAGE" value="docker production server 6" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
