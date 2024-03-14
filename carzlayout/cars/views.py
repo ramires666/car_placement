@@ -1143,7 +1143,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
                                                   (' checked' if row['selected'] else '') +
                                                   '>', axis=1)
 
-            df.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'KTG','В работе']
+            df.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'КТГ','В работе']
 
             kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'КТГ', 'В работе'],'index':False}
             df_html = format_table(df,**kwargs)

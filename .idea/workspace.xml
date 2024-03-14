@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="isolated the KTG property acquisition into a function" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="minor translations">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -133,23 +135,7 @@
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
       <workItem from="1710141131350" duration="65541000" />
-      <workItem from="1710407733744" duration="29543000" />
-    </task>
-    <task id="LOCAL-00005" summary="disable submit for not logged in">
-      <option name="closed" value="true" />
-      <created>1709134591548</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1709134591548</updated>
-    </task>
-    <task id="LOCAL-00006" summary="disable user changeing for non admin">
-      <option name="closed" value="true" />
-      <created>1709137852074</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1709137852074</updated>
+      <workItem from="1710407733744" duration="30332000" />
     </task>
     <task id="LOCAL-00007" summary="added KTG property">
       <option name="closed" value="true" />
@@ -527,7 +513,23 @@
       <option name="project" value="LOCAL" />
       <updated>1710450858435</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="minor translations">
+      <option name="closed" value="true" />
+      <created>1710451073388</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1710451073388</updated>
+    </task>
+    <task id="LOCAL-00055" summary="minor translations">
+      <option name="closed" value="true" />
+      <created>1710451135297</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1710451135297</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -568,7 +570,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/carzlayout" />
     </ignored-roots>
-    <MESSAGE value="almost finished mass editiong of properties in a big table" />
     <MESSAGE value="almost finished mass editiong of properties in a big table ШШ" />
     <MESSAGE value="switching to universal property value filed" />
     <MESSAGE value="switched to universal property value filed" />
@@ -593,7 +594,8 @@
     <MESSAGE value="minor beutyfications" />
     <MESSAGE value="fixed properties getter" />
     <MESSAGE value="isolated the KTG property acquisition into a function" />
-    <option name="LAST_COMMIT_MESSAGE" value="isolated the KTG property acquisition into a function" />
+    <MESSAGE value="minor translations" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor translations" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
