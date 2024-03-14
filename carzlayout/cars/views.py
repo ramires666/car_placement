@@ -1085,7 +1085,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
             df.drop('latest_ktg_year',inplace=True,axis=1)
             df.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'KTG','В работе']
 
-            kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'KTG', 'В работе']}
+            kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'KTG', 'В работе'],'index':False}
             df_html = format_table(df,**kwargs)
             context['cars_table'] = mark_safe(df_html)
 
@@ -1202,7 +1202,7 @@ def get_site_properties(request, site_id, period_id):
             properties_data.append([prop._meta.verbose_name, property_value])
 
         df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
-        return format_table(df_properties)
+        return format_table(df_properties,**{'index':False})
 
     except (Site.DoesNotExist, YearMonth.DoesNotExist):
         return pd.DataFrame([['Error', 'Site or Period not found']], columns=['Свойство', 'Величина'])

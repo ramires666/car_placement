@@ -207,7 +207,7 @@ class Kuzov_Coeff_Zapl(PropertyBase):
 class V_Skorost_dvizh(PropertyBase):
     # Vdv = models.FloatField(verbose_name="Средн. скорость движения")
     class Meta:
-        verbose_name="Vdv - Средн. скорость движения"
+        verbose_name="Vdv - Средняя скорость движения"
 
 
 
@@ -220,7 +220,7 @@ class T_pogruzki(PropertyBase):
 class T_razgruzki(PropertyBase):
     # Trazgr = models.FloatField(verbose_name="Прожолжит. разгрузки с маневрами")
     class Meta:
-        verbose_name="Trazgr - Прожолжит. разгрузки с маневрами"
+        verbose_name="Trazgr - Продолжит. разгрузки с маневрами"
 
 
 
