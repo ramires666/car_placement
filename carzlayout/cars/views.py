@@ -6,7 +6,7 @@ from django import forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.db.models import F, OuterRef, Subquery, Prefetch, Value, CharField
+from django.db.models import F, OuterRef, Subquery, Prefetch, Value, CharField, Max, Q
 from django.forms import model_to_dict,ModelForm
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -1027,6 +1027,23 @@ class PlacementDetailView(DetailView):
     context_object_name = 'placement'
 
 
+def format_table(df,**kwargs):
+    params = {
+        'header':True,
+        'index_names':True, #ugly two layer index names
+        'index':True,
+        'border':0,
+        'justify':'center',
+        'classes':'content-table',
+        'render_links':True,
+        'escape':False,
+    }
+    # Remove any duplicate parameters from kwargs
+    for key in kwargs.keys():
+        if key in params:  # Check if the parameter is also a local variable
+            del params[key]
+    return df.to_html(**params,**kwargs)
+
 
 # @login_required
 class PlacementUpdateView(LoginRequiredMixin, UpdateView):
@@ -1040,52 +1057,63 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
         # Prepopulate cars_form with the current placement instance
         if self.request.POST:
             context['cars_form'] = PlacementCarForm(self.request.POST, instance=self.object)
+            print(self.request.POST)
         else:
-            # Initial queryset for cars should be the current cars in this placement
-            context['cars_form'] = PlacementCarForm(instance=self.object, initial={'car': self.object.cars.all()})
 
-            cars_qs = Car.objects.all().values('pk', 'artikul', 'garnom', 'title')
-            context['cars_qs'] = Car.objects.all()
-
-
-            # Convert queryset to a list of dictionaries
-            cars_list = list(cars_qs)
-
-            # Convert the list of dictionaries to a DataFrame
-            df = pd.DataFrame(cars_list)
-
-            # Add a 'selected' column based on whether the car is selected in the current placement
-
-            context['selected_cars_ids'] = list(self.object.cars.values_list('id', flat=True))
-
-            selected_cars = self.object.cars.all().values_list('pk', flat=True)
-            df['selected'] = df['pk'].isin(selected_cars)
-
-            # Render DataFrame to HTML
-            df_html = df.to_html(classes=["table", "table-bordered"], escape=False, index=False,
-                                 formatters={'selected': lambda
-                                     x: f'<input type="checkbox" name="cars" value="{x}" checked>' if x else '<input type="checkbox" name="cars" value="{x}">'})
-
-            context['cars_table'] = df_html
-
-            # Fetch and prepare site properties DataFrame
             site = self.object.site
-            period = self.object.period
-            df_properties = get_site_properties(self.request,site.id, period.id)#,json=False,html=False)
+            placement_period = self.object.period
 
-            # Render the properties DataFrame to HTML
-            properties_html = df_properties.to_html(escape=False, index=False, header=False, border=0,
-                                                    classes="table table-bordered")
+            # Get the KTG values for the exact period or the yearly period if the month is not available
+            ktg_subquery = Ktg.objects.filter(
+                car=OuterRef('pk'),
+                period__year=placement_period.year,
+                period__month=0  # Assuming 0 denotes a yearly period
+            ).order_by('-created').values('KTG')[:1]
 
+            # Get the exact KTG values if they exist for the month
+            ktg_month_subquery = Ktg.objects.filter(
+                car=OuterRef('pk'),
+                period=placement_period
+            ).order_by('-created').values('KTG')[:1]
+
+            # Annotate the cars with the latest KTG value
+            cars_qs = Car.objects.annotate(
+                latest_ktg_month=Subquery(ktg_month_subquery),
+                latest_ktg_year=Subquery(ktg_subquery),
+            ).values('pk', 'artikul', 'garnom', 'title', 'latest_ktg_month', 'latest_ktg_year')
+
+            # Prepare the DataFrame
+            cars_list = list(cars_qs)
+            df = pd.DataFrame(cars_list)
+            df['selected'] = df['pk'].isin(self.object.cars.values_list('pk', flat=True))
+
+            # Determine the correct KTG value to use
+            df['KTG'] = df.apply(
+                lambda row: row['latest_ktg_month'] if row['latest_ktg_month'] is not None else row['latest_ktg_year'],
+                axis=1)
+
+            # Add a 'checkbox' column to the DataFrame
+            df['checkbox'] = df.apply(lambda row: f'<input type="checkbox" name="cars" value="{row["pk"]}"' + (
+                ' checked' if row['selected'] else '') + '>', axis=1)
+            df.drop('latest_ktg_month',inplace=True,axis=1)
+            df.drop('latest_ktg_year',inplace=True,axis=1)
+            df.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'KTG','В работе']
+
+            kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'KTG', 'В работе']}
+            df_html = format_table(df,**kwargs)
+            context['cars_table'] = mark_safe(df_html)
+
+            df_properties = get_site_properties(self.request,site.id, placement_period.id)
+            kwargs = {'index':False}
+            properties_html = format_table(df_properties,**kwargs)
             context['site_properties_table'] = properties_html
 
-            # if self.object:
-            #     context['selected_cars'] = list(self.object.cars.values_list('pk', flat=True))
-            # else:
-            #     context['selected_cars'] = []
         return context
 
     def form_valid(self, form):
+        print(self.request.POST)
+            # Continue with your logic
+
         context = self.get_context_data()
         cars_form = context['cars_form']
         form.instance.changed_by = self.request.user  # Update the author
@@ -1146,31 +1174,25 @@ class PlacementListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PlacementListView, self).get_context_data(**kwargs)
-        placements = Placement.objects.select_related('site__shaft__mine', 'changed_by').annotate(
+        placements = Placement.objects.select_related('site__shaft__mine', 'changed_by','period').annotate(
             username=Concat(F('changed_by__first_name'), Value(' '), F('changed_by__last_name')),
             site_title=F('site__title'),
             shaft_title=F('site__shaft__title'),
-            mine_title=F('site__shaft__mine__title')
-        ).values('id', 'created', 'username', 'site_title', 'shaft_title', 'mine_title')
+            mine_title=F('site__shaft__mine__title'),
+            period_title=F('period__title')  # Annotate with the period title
+        ).values(
+            'id', 'created', 'username', 'site_title', 'shaft_title', 'mine_title', 'period_title'  # Include period_title in the values list
+        ).order_by('-created')
 
         df = pd.DataFrame(list(placements))
         df['created'] = df['created'].dt.strftime('%Y-%m-%d %H-%M')
         df['created'] = df.apply(lambda row: f'<a href="/placement/edit/{row["id"]}">{row["created"]}</a>',axis=1)
 
-        df = df[['created', 'username', 'mine_title', 'shaft_title', 'site_title']]
-        df.columns = (['Создано','Автор','Рудник','Шахта','Участок'])
+        df = df[['period_title', 'created', 'username', 'mine_title', 'shaft_title', 'site_title', ]]
+        df.columns = (['Период','Создано','Автор', 'Рудник','Шахта','Участок', ])
 
-        df_html = df.to_html(
-                    header=True,
-                    index_names=True, #ugly two layer index names
-                    index=True,
-                    border=0,
-                    justify='center',
-                    classes='content-table',
-                    render_links=True,
-                    escape=False)
 
-        context['placements_table'] = df_html
+        context['placements_table'] = format_table(df)
         return context
 
 

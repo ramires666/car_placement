@@ -8,20 +8,20 @@
         <strong>Автор: </strong> {{ form.instance.changed_by.first_name }} {{ form.instance.changed_by.last_name }}
     </div>
     {% csrf_token %}
-    <p>{{ form.period }}</p>
-    <p>{{ form.site }}</p>
+    <p>Период: {{ form.period }}</p>
+    <p>Участок: {{ form.site }}</p>
 {#    {{ form.cars.as_p }}#}
 
 <div>
     <strong>Машины:</strong>
         <p></p>
-{#    {{ cars_table|safe }}#}
-        {% for car in cars_qs %}
-        <label>
-            <input type="checkbox" name="cars" value="{{ car.id }}" {% if car.id in selected_cars_ids %}checked{% endif %}>
-            {{ car.title }} арт-л.:{{ car.artikul }} гаражн.№{{ car.garnom }}
-        </label><br>
-    {% endfor %}
+    {{ cars_table|safe }}
+{#        {% for car in cars_qs %}#}
+{#        <label>#}
+{#            <input type="checkbox" name="cars" value="{{ car.id }}" {% if car.id in selected_cars_ids %}checked{% endif %}>#}
+{#            {{ car.title }} арт-л.:{{ car.artikul }} гаражн.№{{ car.garnom }}#}
+{#        </label><br>#}
+{#    {% endfor %}#}
 </div>
 
 <button type="submit">Сохранить</button>
@@ -31,7 +31,7 @@
 <div id="site_properties_table">
 </div>
 
-{{ placement.errors }}
+{{ form.errors }}
 
 {% if form.errors %}
 <div class="alert alert-danger">

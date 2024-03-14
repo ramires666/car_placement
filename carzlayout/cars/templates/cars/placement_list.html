@@ -3,10 +3,11 @@
 {% block content %}
 
     <h1>Все расстановки:</h1>
-
-{{ placements_table|safe }}
 <p></p>
     <a href="{% url 'placement-create' %}">Создать новый документ "Расстановка"</a>
+    <p></p>
+{{ placements_table|safe }}
+
 
 
 
