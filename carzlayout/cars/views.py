@@ -145,48 +145,33 @@ def car_detail(request, car_slug):
     # Initially set ktg_html_table and most_recent_ktg to default values
     ktg_html_table = "<p>No KTG records found for this car.</p>"
     most_recent_ktg = {'KTG': 0, 'document': None}  # Default values for the form
+    # Default messages
+    default_message = "<p>No detailed KTG records available.</p>"
+    full_html_table = latest_html_table = default_message
+    # month_names = dict(YearMonth.Month.choices)
+
     month_names = dict(YearMonth.Month.choices)
 
     if ktg_records.exists():  # Check if there are any KTG records
         # ktg_df = pd.DataFrame(list(ktg_records.values('period__year', 'period__month', 'KTG', 'document')))
         ktg_df = pd.DataFrame(list(ktg_records.values('period__year', 'period__month', 'KTG')))
-
-        # ktg_df = ktg_df.pivot(index='period__year', columns='period__month', values='KTG').fillna('')
-        ktg_df = ktg_df.pivot_table(index='period__year', columns='period__month', values='KTG',aggfunc='first').fillna('')
-
         if not ktg_df.empty:
-            full_table = ktg_df.copy()
+            # ktg_df = ktg_df.pivot(index='period__year', columns='period__month', values='KTG').fillna('')
+            ktg_df = ktg_df.pivot_table(index='period__year', columns='period__month', values='KTG',aggfunc='first').fillna('')
 
-            # Latest records for each month of the current year
-            latest_records_df = ktg_df.loc[current_year:current_year] if current_year in ktg_df.index else pd.DataFrame()
+            if not ktg_df.empty:
+                full_table = ktg_df.copy()
 
-            full_table.rename(columns=month_names,inplace=True)
-            latest_records_df.rename(columns=month_names,inplace=True)
+                # Latest records for each month of the current year
+                latest_records_df = ktg_df.loc[current_year:current_year] if current_year in ktg_df.index else pd.DataFrame()
 
-            latest_records_df.columns.name=current_year
+                full_table.rename(columns=month_names,inplace=True)
+                latest_records_df.rename(columns=month_names,inplace=True)
 
-            # Convert DataFrames to HTML tables
-            full_html_table = full_table.to_html(
-                                                header=True,
-                                                index_names=False, #ugly two layer index names
-                                                index=True,
-                                                border=0,
-                                                justify='center',
-                                                classes='content-table',
-                                                render_links=True,
-                                                escape=False)
+                latest_records_df.columns.name=current_year
 
-
-            latest_html_table = latest_records_df.to_html(
-                                                header=True,
-                                                index_names=True,
-                                                index=False,
-                                                border=0,
-                                                justify='center',
-                                                classes='content-table',
-                                                render_links=True,
-                                                escape=False)
-
+                full_html_table = format_table(full_table,**{'index_names':False})
+                latest_html_table = format_table(latest_records_df,**{'index':False})
 
         else:
             ktg_df.rename(columns=month_names,inplace=True)
@@ -206,8 +191,6 @@ def car_detail(request, car_slug):
         'full_ktg_table': full_html_table,
         'latest_ktg_table': latest_html_table,
         'current_year': current_year,
-        # 'ktg_html_table': ktg_html_table,
-        # 'most_recent_ktg': most_recent_ktg,  # Pass the most recent KTG or default values to the template
         'year_months': year_months,
     }
     return render(request, 'car_detail.html', context)

@@ -33,7 +33,7 @@
 
 <form id="ktgEditForm" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <label for="period">Period:</label>
+    <label for="period">Период: </label>
     <select id="period" name="period" required>
         {% for ym in year_months %}
         <option value="{{ ym.id }}">{{ ym.year }} - {{ ym.get_month_display }}</option>
@@ -41,10 +41,10 @@
     </select>
 
 
-    <label for="ktg_value">KTG Value:</label>
+    <label for="ktg_value"> КТГ: </label>
     <input type="text" id="ktg_value" name="ktg_value" value="{{ most_recent_ktg.KTG }}" required>
 
-    <label for="document">Document:</label>
+    <label for="document"> Документ основание: </label>
     <input type="file" id="document" name="document">
 
     <input type="submit" value="Submit">
