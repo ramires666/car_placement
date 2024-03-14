@@ -1178,11 +1178,11 @@ class PlacementListView(ListView):
         df['created'] = df['created'].dt.strftime('%Y-%m-%d %H-%M')
         df['created'] = df.apply(lambda row: f'<a href="/placement/edit/{row["id"]}">{row["created"]}</a>',axis=1)
 
-        df = df[['period_title', 'created', 'username', 'mine_title', 'shaft_title', 'site_title', ]]
-        df.columns = (['Период','Создано','Автор', 'Рудник','Шахта','Участок', ])
+        df = df[['id','period_title', 'created', 'username', 'mine_title', 'shaft_title', 'site_title', ]]
+        df.columns = (['№','Период','Создано','Автор', 'Рудник','Шахта','Участок', ])
 
 
-        context['placements_table'] = format_table(df)
+        context['placements_table'] = format_table(df,**{'index':False})
         return context
 
 
@@ -1205,7 +1205,7 @@ def get_site_properties(request, site_id, period_id):
         return format_table(df_properties,**{'index':False})
 
     except (Site.DoesNotExist, YearMonth.DoesNotExist):
-        return pd.DataFrame([['Error', 'Site or Period not found']], columns=['Свойство', 'Величина'])
+        return pd.DataFrame([['Error', 'Участок или Период не найдены']], columns=['Свойство', 'Величина'])
 
 
 
