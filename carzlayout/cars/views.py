@@ -1028,6 +1028,42 @@ def format_table(df,**kwargs):
     return df.to_html(**params,**kwargs)
 
 
+
+
+def get_latest_ktg_for_car(car_id, period):
+    """
+    Fetches the latest KTG value for a given car and period directly.
+    """
+    # Attempt to fetch the month-specific KTG value
+    latest_ktg_month = Ktg.objects.filter(
+        car_id=car_id,
+        period=period
+    ).order_by('-created').first()
+
+    if latest_ktg_month:
+        return latest_ktg_month.KTG
+
+    # If no month-specific KTG, try to fetch the yearly KTG value
+    latest_ktg_year = Ktg.objects.filter(
+        car_id=car_id,
+        period__year=period.year,
+        period__month=0
+    ).order_by('-created').first()
+
+    if latest_ktg_year:
+        return latest_ktg_year.KTG
+
+    # If neither month-specific nor yearly KTG values are found, return a default value
+    return "-"
+
+
+def ajax_get_latest_ktg_for_car(request, car_id, period_id):
+    df_properties = get_latest_ktg_for_car(car_id, YearMonth.objects.get(pk=period_id))
+
+    return JsonResponse({'html': df_properties})
+
+
+
 # @login_required
 class PlacementUpdateView(LoginRequiredMixin, UpdateView):
     model = Placement
@@ -1046,43 +1082,67 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
             site = self.object.site
             placement_period = self.object.period
 
-            # Get the KTG values for the exact period or the yearly period if the month is not available
-            ktg_subquery = Ktg.objects.filter(
-                car=OuterRef('pk'),
-                period__year=placement_period.year,
-                period__month=0  # Assuming 0 denotes a yearly period
-            ).order_by('-created').values('KTG')[:1]
+            # # Get the KTG values for the exact period or the yearly period if the month is not available
+            # ktg_subquery = Ktg.objects.filter(
+            #     car=OuterRef('pk'),
+            #     period__year=placement_period.year,
+            #     period__month=0  # Assuming 0 denotes a yearly period
+            # ).order_by('-created').values('KTG')[:1]
+            #
+            # # Get the exact KTG values if they exist for the month
+            # ktg_month_subquery = Ktg.objects.filter(
+            #     car=OuterRef('pk'),
+            #     period=placement_period
+            # ).order_by('-created').values('KTG')[:1]
+            #
+            # # Annotate the cars with the latest KTG value
+            # cars_qs = Car.objects.annotate(
+            #     latest_ktg_month=Subquery(ktg_month_subquery),
+            #     latest_ktg_year=Subquery(ktg_subquery),
+            # ).values('pk', 'artikul', 'garnom', 'title', 'latest_ktg_month', 'latest_ktg_year')
+            #
+            # # Prepare the DataFrame
+            # cars_list = list(cars_qs)
+            # df = pd.DataFrame(cars_list)
+            # df['selected'] = df['pk'].isin(self.object.cars.values_list('pk', flat=True))
+            #
+            # # Determine the correct KTG value to use
+            # df['KTG'] = df.apply(
+            #     lambda row: row['latest_ktg_month'] if row['latest_ktg_month'] is not None else row['latest_ktg_year'],
+            #     axis=1)
 
-            # Get the exact KTG values if they exist for the month
-            ktg_month_subquery = Ktg.objects.filter(
-                car=OuterRef('pk'),
-                period=placement_period
-            ).order_by('-created').values('KTG')[:1]
+            # Fetch cars related to the placement
+            # Fetch ALL cars
+            cars_qs = Car.objects.all().values('id', 'artikul', 'garnom', 'title')
 
-            # Annotate the cars with the latest KTG value
-            cars_qs = Car.objects.annotate(
-                latest_ktg_month=Subquery(ktg_month_subquery),
-                latest_ktg_year=Subquery(ktg_subquery),
-            ).values('pk', 'artikul', 'garnom', 'title', 'latest_ktg_month', 'latest_ktg_year')
+            # Get IDs of cars currently selected in this placement
+            selected_car_ids = set(self.object.cars.values_list('id', flat=True))
 
-            # Prepare the DataFrame
-            cars_list = list(cars_qs)
+            # cars_qs = Car.objects.filter(placement=self.object).values('id', 'artikul', 'garnom', 'title')
+            # selected_car_ids = self.object.cars.values_list('id', flat=True)
+
+            # Prepare a list to hold KTG values and other car information
+            cars_list = [
+                {
+                'id': car['id'],
+                'artikul': car['artikul'],
+                'garnom': car['garnom'],
+                'title': car['title'],
+                'selected': car['id'] in selected_car_ids,  # Properly compute 'selected'
+                'KTG': get_latest_ktg_for_car(car['id'], placement_period)
+                }
+                for car in cars_qs
+            ]
+
             df = pd.DataFrame(cars_list)
-            df['selected'] = df['pk'].isin(self.object.cars.values_list('pk', flat=True))
 
-            # Determine the correct KTG value to use
-            df['KTG'] = df.apply(
-                lambda row: row['latest_ktg_month'] if row['latest_ktg_month'] is not None else row['latest_ktg_year'],
-                axis=1)
-
-            # Replace NaN values in the 'KTG' column with your desired default value
-            df['KTG'].fillna("-", inplace=True)  # or use 0 or any other placeholder value
+            df['KTG'].fillna("-", inplace=True)
 
             # Add a 'checkbox' column to the DataFrame
-            df['checkbox'] = df.apply(lambda row: f'<input type="checkbox" name="cars" value="{row["pk"]}"' + (
-                ' checked' if row['selected'] else '') + '>', axis=1)
-            df.drop('latest_ktg_month',inplace=True,axis=1)
-            df.drop('latest_ktg_year',inplace=True,axis=1)
+            df['checkbox'] = df.apply(lambda row: f'<input type="checkbox" name="cars" value="{row["id"]}"'+
+                                                  (' checked' if row['selected'] else '') +
+                                                  '>', axis=1)
+
             df.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'KTG','В работе']
 
             kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'KTG', 'В работе'],'index':False}
@@ -1090,9 +1150,6 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
             context['cars_table'] = mark_safe(df_html)
 
             df_properties = get_site_properties(self.request,site.id, placement_period.id)
-            # kwargs = {'index':False}
-            # properties_html = format_table(df_properties,**kwargs)
-            # context['site_properties_table'] = properties_html
             context['site_properties_table'] = df_properties
 
 
@@ -1218,8 +1275,7 @@ def get_site_properties(request, site_id, period_id):
 
     # Generate the DataFrame and format as HTML table
     df_properties = pd.DataFrame(properties_data, columns=['Property', 'Value'])
-    html_table = format_table(df_properties,
-                              index=False)  # Assuming format_table is a function that formats your DataFrame as HTML
+    html_table = format_table(df_properties, index=False)  # Assuming format_table is a function that formats your DataFrame as HTML
 
     return html_table
 
