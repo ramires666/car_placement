@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="fixed properties getter">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/carzlayout/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/carzlayout/settings.py" afterDir="false" />
-    </list>
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="isolated the KTG property acquisition into a function" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -138,15 +133,7 @@
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
       <workItem from="1710141131350" duration="65541000" />
-      <workItem from="1710407733744" duration="29231000" />
-    </task>
-    <task id="LOCAL-00004" summary="new site/car properties">
-      <option name="closed" value="true" />
-      <created>1709131696805</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1709131696805</updated>
+      <workItem from="1710407733744" duration="29543000" />
     </task>
     <task id="LOCAL-00005" summary="disable submit for not logged in">
       <option name="closed" value="true" />
@@ -532,7 +519,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710445959636</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="isolated the KTG property acquisition into a function">
+      <option name="closed" value="true" />
+      <created>1710450858435</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1710450858435</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -573,7 +568,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/carzlayout" />
     </ignored-roots>
-    <MESSAGE value="fixing mass propertis table edit" />
     <MESSAGE value="almost finished mass editiong of properties in a big table" />
     <MESSAGE value="almost finished mass editiong of properties in a big table ШШ" />
     <MESSAGE value="switching to universal property value filed" />
@@ -598,7 +592,8 @@
     <MESSAGE value="placement by year and month" />
     <MESSAGE value="minor beutyfications" />
     <MESSAGE value="fixed properties getter" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed properties getter" />
+    <MESSAGE value="isolated the KTG property acquisition into a function" />
+    <option name="LAST_COMMIT_MESSAGE" value="isolated the KTG property acquisition into a function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

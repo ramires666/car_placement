@@ -1274,7 +1274,7 @@ def get_site_properties(request, site_id, period_id):
         properties_data.append([prop._meta.verbose_name, property_value])
 
     # Generate the DataFrame and format as HTML table
-    df_properties = pd.DataFrame(properties_data, columns=['Property', 'Value'])
+    df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
     html_table = format_table(df_properties, index=False)  # Assuming format_table is a function that formats your DataFrame as HTML
 
     return html_table
