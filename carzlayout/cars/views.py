@@ -1145,7 +1145,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
 
             df.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'KTG','В работе']
 
-            kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'KTG', 'В работе'],'index':False}
+            kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'КТГ', 'В работе'],'index':False}
             df_html = format_table(df,**kwargs)
             context['cars_table'] = mark_safe(df_html)
 
