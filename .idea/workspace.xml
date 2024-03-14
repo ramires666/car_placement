@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement by year and month">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_edit.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="minor beutyfications">
+      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_create.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +135,7 @@
       <workItem from="1709533965029" duration="15410000" />
       <workItem from="1709625789475" duration="86132000" />
       <workItem from="1710141131350" duration="65541000" />
-      <workItem from="1710407733744" duration="18822000" />
+      <workItem from="1710407733744" duration="19185000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <option name="closed" value="true" />
@@ -499,7 +497,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710438868968</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="minor beutyfications">
+      <option name="closed" value="true" />
+      <created>1710439855705</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1710439855705</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -540,7 +546,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/carzlayout" />
     </ignored-roots>
-    <MESSAGE value="finished car editing page with period KTG" />
     <MESSAGE value="building common ste properties table" />
     <MESSAGE value="fixing mass propertis table edit" />
     <MESSAGE value="almost finished mass editiong of properties in a big table" />
@@ -565,7 +570,8 @@
     <MESSAGE value="placement beutyfier +KTG +period" />
     <MESSAGE value="2 prod" />
     <MESSAGE value="placement by year and month" />
-    <option name="LAST_COMMIT_MESSAGE" value="placement by year and month" />
+    <MESSAGE value="minor beutyfications" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor beutyfications" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -577,6 +583,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1710439242646" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
+    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1710440053284" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
   </component>
 </project>
