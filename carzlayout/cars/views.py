@@ -1179,10 +1179,12 @@ class PlacementListView(ListView):
             site_title=F('site__title'),
             shaft_title=F('site__shaft__title'),
             mine_title=F('site__shaft__mine__title'),
-            period_title=F('period__title')  # Annotate with the period title
+            period_title=F('period__title'),  # Annotate with the period title
+            year = F('period__year'),  # Annotate with the year
+            month = F('period__month')  # Annotate with the month
         ).values(
-            'id', 'created', 'username', 'site_title', 'shaft_title', 'mine_title', 'period_title'  # Include period_title in the values list
-        ).order_by('-created')
+            'id', 'created', 'username', 'site_title', 'shaft_title', 'mine_title', 'period_title', 'year', 'month'  # Include period_title in the values list
+        ).order_by('-year', '-month')  # Order by year and month
 
         df = pd.DataFrame(list(placements))
         df['created'] = df['created'].dt.strftime('%Y-%m-%d %H-%M')
