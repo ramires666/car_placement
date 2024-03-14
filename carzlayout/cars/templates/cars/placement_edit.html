@@ -13,21 +13,19 @@
 {#    {{ form.cars.as_p }}#}
 
 <div>
-    <strong>Машины:</strong>
-        <p></p>
+<strong>Машины:</strong>
+<p></p>
     {{ cars_table|safe }}
-{#        {% for car in cars_qs %}#}
-{#        <label>#}
-{#            <input type="checkbox" name="cars" value="{{ car.id }}" {% if car.id in selected_cars_ids %}checked{% endif %}>#}
-{#            {{ car.title }} арт-л.:{{ car.artikul }} гаражн.№{{ car.garnom }}#}
-{#        </label><br>#}
-{#    {% endfor %}#}
 </div>
+<p></p>
 
 <button type="submit">Сохранить</button>
 </form>
 
+    <p></p>
 <strong>Свойства участка:</strong>
+    <p></p>
+
 <div id="site_properties_table">
 </div>
 
@@ -36,10 +34,7 @@
 {% if form.errors %}
 <div class="alert alert-danger">
     <p>There were some problems with your data:</p>
-    {{ form.non_field_errors }}
-    {% for field in form %}
         {{ field.errors }}
-    {% endfor %}
 </div>
 {% endif %}
 

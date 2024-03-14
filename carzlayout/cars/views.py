@@ -1092,6 +1092,9 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
                 lambda row: row['latest_ktg_month'] if row['latest_ktg_month'] is not None else row['latest_ktg_year'],
                 axis=1)
 
+            # Replace NaN values in the 'KTG' column with your desired default value
+            df['KTG'].fillna("-", inplace=True)  # or use 0 or any other placeholder value
+
             # Add a 'checkbox' column to the DataFrame
             df['checkbox'] = df.apply(lambda row: f'<input type="checkbox" name="cars" value="{row["pk"]}"' + (
                 ' checked' if row['selected'] else '') + '>', axis=1)
@@ -1104,9 +1107,11 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
             context['cars_table'] = mark_safe(df_html)
 
             df_properties = get_site_properties(self.request,site.id, placement_period.id)
-            kwargs = {'index':False}
-            properties_html = format_table(df_properties,**kwargs)
-            context['site_properties_table'] = properties_html
+            # kwargs = {'index':False}
+            # properties_html = format_table(df_properties,**kwargs)
+            # context['site_properties_table'] = properties_html
+            context['site_properties_table'] = df_properties
+
 
         return context
 
@@ -1210,18 +1215,19 @@ def get_site_properties(request, site_id, period_id):
         for prop in [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]:
             qs = prop.objects.filter(site=site)
             property_record = qs.filter(period=period).first() if not is_whole_year else qs.filter(period__year=period.year, period__month=0).first()
-            property_value = property_record.value if property_record else "N/A"
+            property_value = property_record.value if property_record else "-"
             properties_data.append([prop._meta.verbose_name, property_value])
 
-        df_properties = pd.DataFrame(properties_data, columns=['Property', 'Value'])
-        return df_properties
+        df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
+        return format_table(df_properties)
 
     except (Site.DoesNotExist, YearMonth.DoesNotExist):
-        return pd.DataFrame([['Error', 'Site or Period not found']], columns=['Property', 'Value'])
+        return pd.DataFrame([['Error', 'Site or Period not found']], columns=['Свойство', 'Величина'])
 
 
 
 def ajax_get_site_properties(request, site_id, period_id):
     df_properties = get_site_properties(request,site_id, period_id)
-    properties_html = df_properties.to_html(escape=False, classes="table", index=False)
-    return JsonResponse({'html': properties_html})
+    # properties_html = df_properties.to_html(escape=False, classes="table", index=False)
+    # return JsonResponse({'html': properties_html})
+    return JsonResponse({'html': df_properties})
