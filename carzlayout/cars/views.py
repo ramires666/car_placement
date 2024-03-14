@@ -1122,7 +1122,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
             # selected_car_ids = self.object.cars.values_list('id', flat=True)
 
             # Prepare a list to hold KTG values and other car information
-            cars_list = [
+            cars_list_full = [
                 {
                 'id': car['id'],
                 'artikul': car['artikul'],
@@ -1134,20 +1134,23 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
                 for car in cars_qs
             ]
 
-            df = pd.DataFrame(cars_list)
+            df_full = pd.DataFrame(cars_list_full)
 
-            df['KTG'].fillna("-", inplace=True)
+            df_full['KTG'].fillna("-", inplace=True)
 
             # Add a 'checkbox' column to the DataFrame
-            df['checkbox'] = df.apply(lambda row: f'<input type="checkbox" name="cars" value="{row["id"]}"'+
+            df_full['checkbox'] = df_full.apply(lambda row: f'<input type="checkbox" name="cars" value="{row["id"]}"'+
                                                   (' checked' if row['selected'] else '') +
                                                   '>', axis=1)
 
-            df.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'КТГ','В работе']
+            df_full.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'КТГ','В работе']
+            df_selected_cars = df_full[df_full['Выбрано'] == True]
 
             kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'КТГ', 'В работе'],'index':False}
-            df_html = format_table(df,**kwargs)
-            context['cars_table'] = mark_safe(df_html)
+            df_full_html = format_table(df_full,**kwargs)
+            context['cars_table_full'] = mark_safe(df_full_html)
+            df_selected_cars_html = format_table(df_selected_cars,**kwargs)
+            context['cars_table_selected'] = mark_safe(df_selected_cars_html)
 
             df_properties = get_site_properties(self.request,site.id, placement_period.id)
             context['site_properties_table'] = df_properties

@@ -15,11 +15,21 @@
 <div>
 <strong>Машины:</strong>
 <p></p>
-    {{ cars_table|safe }}
+    <button type="button" id="toggleCarsTable">Показать все машины</button>
+    <div id="fullCarsTable" style="display:none;">
+        <h5>Все машины :</h5>
+        {{ cars_table_full|safe }}
+    </div>
+    <div id="selectedCarsTable" style="display:block;">
+        <h5>Машины документа:</h5>
+        {{ cars_table_selected|safe }}
+    </div>
+{#    {{ cars_table|safe }}#}
 </div>
 <p></p>
-
+    <div>
 <button type="submit">Сохранить</button>
+    </div>
 </form>
 
     <p></p>
@@ -71,6 +81,24 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 });
+
+
+// Toggle between latest and full Cars tables
+document.getElementById("toggleCarsTable").addEventListener("click", function() {
+    var selectedTable = document.getElementById("selectedCarsTable");
+    var fullTable = document.getElementById("fullCarsTable");
+    if (fullTable.style.display === "none") {
+        fullTable.style.display = "block";
+        selectedTable.style.display = "none";
+        this.textContent = "Показать машины документа";
+    } else {
+        fullTable.style.display = "none";
+        selectedTable.style.display = "block";
+        this.textContent = "Показать все машины";
+    }
+});
+
+
 </script>
 
 
