@@ -146,7 +146,7 @@ def car_detail(request, car_slug):
     ktg_html_table = "<p>No KTG records found for this car.</p>"
     most_recent_ktg = {'KTG': 0, 'document': None}  # Default values for the form
     # Default messages
-    default_message = "<p>No detailed KTG records available.</p>"
+    default_message = "<p>Нет доступных записей КТГ</p>"
     full_html_table = latest_html_table = default_message
     # month_names = dict(YearMonth.Month.choices)
 
