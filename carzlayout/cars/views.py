@@ -1186,26 +1186,91 @@ class PlacementListView(ListView):
         return context
 
 
-
 def get_site_properties(request, site_id, period_id):
-    try:
-        site = Site.objects.get(pk=site_id)
-        period = YearMonth.objects.get(pk=period_id)
-        is_whole_year = period.month == 0
+    site = get_object_or_404(Site, pk=site_id)
+    period = get_object_or_404(YearMonth, pk=period_id)
 
-        properties_data = []
+    # Check if the selected period represents a whole year
+    is_whole_year = period.month == 0
 
-        for prop in [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]:
-            qs = prop.objects.filter(site=site)
-            property_record = qs.filter(period=period).first() if not is_whole_year else qs.filter(period__year=period.year, period__month=0).first()
-            property_value = property_record.value if property_record else "-"
-            properties_data.append([prop._meta.verbose_name, property_value])
+    properties_data = []
+    properties_models = [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom,
+                         Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]
 
-        df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
-        return format_table(df_properties,**{'index':False})
+    for prop in properties_models:
+        # First, try to get the property for the exact month (if not a whole year period)
+        if not is_whole_year:
+            property_record = prop.objects.filter(site=site, period=period).order_by('-created').first()
 
-    except (Site.DoesNotExist, YearMonth.DoesNotExist):
-        return pd.DataFrame([['Error', 'Участок или Период не найдены']], columns=['Свойство', 'Величина'])
+        # If no record found for the month or it's a whole year period, try to get the yearly record
+        if is_whole_year or not property_record:
+            yearly_period = YearMonth.objects.filter(year=period.year, month=0).first()
+            property_record = (prop
+                                   .objects
+                                   .filter(site=site,period=yearly_period)
+                                   .order_by('-created')
+                                   .first()
+                               ) if yearly_period else None
+
+        # Use the property value if found, otherwise use a placeholder
+        property_value = property_record.value if property_record else "-"
+        properties_data.append([prop._meta.verbose_name, property_value])
+
+    # Generate the DataFrame and format as HTML table
+    df_properties = pd.DataFrame(properties_data, columns=['Property', 'Value'])
+    html_table = format_table(df_properties,
+                              index=False)  # Assuming format_table is a function that formats your DataFrame as HTML
+
+    return html_table
+
+#
+# def get_site_properties(request, site_id, period_id):
+#     try:
+#         site = Site.objects.get(pk=site_id)
+#         period = YearMonth.objects.get(pk=period_id)
+#         is_whole_year = period.month == 0
+#
+#         properties_data = []
+#
+#         for prop in [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]:
+#             qs = prop.objects.filter(site=site, period__year=period.year)
+#
+#             if not is_whole_year:
+#                 # Attempt to get the record for the exact month first
+#                 property_record = qs.filter(period__month=period.month).order_by('-created').first()
+#             elif is_whole_year or property_record==None:
+#                 # For a whole year, get the yearly record or the most recent record within the year if no specific yearly record is found
+#                 property_record = qs.filter(period__month=0).order_by('-created').first() or qs.order_by('-period__month', '-created').first()
+#
+#             property_value = property_record.value if property_record else "-"
+#             properties_data.append([prop._meta.verbose_name, property_value])
+#
+#         df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
+#         return format_table(df_properties, **{'index':False})
+#
+#     except (Site.DoesNotExist, YearMonth.DoesNotExist):
+#         return pd.DataFrame([['Error', 'Участок или Период не найдены']], columns=['Свойство', 'Величина'])
+
+
+# def get_site_properties(request, site_id, period_id):
+#     try:
+#         site = Site.objects.get(pk=site_id)
+#         period = YearMonth.objects.get(pk=period_id)
+#         is_whole_year = period.month == 0
+#
+#         properties_data = []
+#
+#         for prop in [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]:
+#             qs = prop.objects.filter(site=site)
+#             property_record = qs.filter(period=period).first() if not is_whole_year else qs.filter(period__year=period.year, period__month=0).first()
+#             property_value = property_record.value if property_record else "-"
+#             properties_data.append([prop._meta.verbose_name, property_value])
+#
+#         df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
+#         return format_table(df_properties,**{'index':False})
+#
+#     except (Site.DoesNotExist, YearMonth.DoesNotExist):
+#         return pd.DataFrame([['Error', 'Участок или Период не найдены']], columns=['Свойство', 'Величина'])
 
 
 
