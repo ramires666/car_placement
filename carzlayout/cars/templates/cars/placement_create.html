@@ -6,9 +6,24 @@
 <p></p>
     <form method="post">
     {% csrf_token %}
-    <p>{{ form.period.label_tag }} {{ form.period }}</p>  <!-- Render the period field explicitly -->
+    <p>Период:  {{ form.period }}</p>  <!-- Render the period field explicitly -->
     <p>{{ form.site.label_tag }} {{ form.site }}</p>
-    <!-- Render other fields as needed -->
+    <!-- Render  other fields as needed -->
+
+<p></p>
+<strong>Свойства участка:</strong>
+<p></p>
+
+<div id="site_properties_table">
+
+</div>
+
+
+{#<div id="placement_properties_table">#}
+{##}
+{#</div>#}
+
+
         <p></p>
     <h3>Выберите машины на участок:</h3>
     {{ form.cars }}
@@ -16,7 +31,74 @@
     <button type="submit">Сохранить</button>
 </form>
 
+
+
+
+
+
+
+
 <p></p>
     <a href="{% url 'placement-list' %}">Назад в список расстановок</a>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const siteSelect = document.getElementById('id_site');
+    const periodSelect = document.getElementById('id_period');
+
+    const updateSiteProperties = function() {
+        const siteId = siteSelect.value;
+        const periodId = periodSelect.value;
+        const propertiesUrl = `/ajax/get_site_properties/${siteId}/${periodId}/`;
+
+        fetch(propertiesUrl)
+            .then(response => response.json()) // Make sure the response is in JSON format
+            .then(data => {
+                // Ensure 'html' key exists in the JSON response and contains your HTML content
+                const htmlContent = data.html;
+                document.getElementById('site_properties_table').innerHTML = htmlContent;
+            })
+            .catch(error => console.error('Error:', error));
+    };
+
+    if (siteSelect) {
+        siteSelect.addEventListener('change', updateSiteProperties);
+        if (siteSelect.value) {
+            updateSiteProperties(); // Initial call in case there's a default selection
+        }
+    }
+
+    if (periodSelect) {
+        periodSelect.addEventListener('change', updateSiteProperties);
+        // This additional check might be unnecessary unless you want to trigger updates when the period changes AND a site is already selected
+        if (siteSelect.value) {
+            updateSiteProperties();
+        }
+    }
+});
+
+// Assuming you have an element with ID "toggleCarsTable" for toggling the visibility of car tables
+document.getElementById("toggleCarsTable").addEventListener("click", function() {
+    var selectedTable = document.getElementById("selectedCarsTable"); // Ensure this ID matches your element
+    var fullTable = document.getElementById("fullCarsTable"); // Ensure this ID matches your element
+    if (fullTable.style.display === "none") {
+        fullTable.style.display = "block";
+        selectedTable.style.display = "none";
+        this.textContent = "Показать машины документа";
+    } else {
+        fullTable.style.display = "none";
+        selectedTable.style.display = "block";
+        this.textContent = "Показать все машины";
+    }
+
+});
+</script>
+
+
+
+
+
+</script>
 
 {% endblock %}

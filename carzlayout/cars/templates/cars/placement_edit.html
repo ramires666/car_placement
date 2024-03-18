@@ -4,6 +4,7 @@
 
 <h3>Документ "Расстановка" № {{ placement.id }} от {{ placement.created|date:'d.m.Y' }}</h3>
 <form method="post">
+{% csrf_token %}
     <div>
         <strong>Автор: </strong> {{ form.instance.changed_by.first_name }} {{ form.instance.changed_by.last_name }}
     </div>
@@ -57,11 +58,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const updateSiteProperties = function() {
         const siteId = siteSelect.value;
         const periodId = periodSelect.value;
-        const url = `/ajax/get_site_properties/${siteId}/${periodId}/`;
+        const propertiesUrl = `/ajax/get_site_properties/${siteId}/${periodId}/`;
 
-        fetch(url)
-            .then(response => response.json()) // Change to .text() since we're expecting HTML
+        fetch(propertiesUrl)
+            .then(response => response.json()) // Make sure the response is in JSON format
             .then(data => {
+                // Ensure 'html' key exists in the JSON response and contains your HTML content
                 const htmlContent = data.html;
                 document.getElementById('site_properties_table').innerHTML = htmlContent;
             })
@@ -71,22 +73,23 @@ document.addEventListener("DOMContentLoaded", function() {
     if (siteSelect) {
         siteSelect.addEventListener('change', updateSiteProperties);
         if (siteSelect.value) {
-            updateSiteProperties();
+            updateSiteProperties(); // Initial call in case there's a default selection
         }
     }
+
     if (periodSelect) {
-            periodSelect.addEventListener('change', updateSiteProperties);
+        periodSelect.addEventListener('change', updateSiteProperties);
+        // This additional check might be unnecessary unless you want to trigger updates when the period changes AND a site is already selected
         if (siteSelect.value) {
             updateSiteProperties();
         }
     }
 });
 
-
-// Toggle between latest and full Cars tables
+// Assuming you have an element with ID "toggleCarsTable" for toggling the visibility of car tables
 document.getElementById("toggleCarsTable").addEventListener("click", function() {
-    var selectedTable = document.getElementById("selectedCarsTable");
-    var fullTable = document.getElementById("fullCarsTable");
+    var selectedTable = document.getElementById("selectedCarsTable"); // Ensure this ID matches your element
+    var fullTable = document.getElementById("fullCarsTable"); // Ensure this ID matches your element
     if (fullTable.style.display === "none") {
         fullTable.style.display = "block";
         selectedTable.style.display = "none";

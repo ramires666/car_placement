@@ -12,6 +12,7 @@ from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpRespons
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy, resolve
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_http_methods
 # from django.template.defaultfilters import slugify
 from pytils.translit import slugify
 
@@ -33,6 +34,7 @@ from cars.forms import AddPostForm, UploadFilesForm, SiteEditForm, get_universal
 from cars.models import Car, Category, TagPost, UploadFiles
 
 import pandas as pd
+import json
 
 from django.conf import settings
 from .site_data_service import SiteDataService
@@ -117,6 +119,24 @@ def update_ktg(request, car_slug):
             response_message = "KTG record update failed."  # Adjust according to your logic
 
     return JsonResponse({"success": response_message, "ktg_data": ktg_data})
+
+
+def ajax_get_cars_properties(request):
+    # This example assumes you receive the car IDs as a comma-separated list in a GET parameter. Adjust as needed.
+    car_ids = request.GET.get('car_ids', '')
+    car_ids = [int(id) for id in car_ids.split(',') if id.isdigit()]
+
+    cars_properties = []
+    for car_id in car_ids:
+        car = get_object_or_404(Car, id=car_id)
+        ktg = get_latest_ktg_for_car(car_id, current_period)  # Assume current_period is defined
+        kuzov_volume = car.V_objem_kuzova or "-"
+        cars_properties.append([car.title, ktg, kuzov_volume])
+
+    df = pd.DataFrame(cars_properties, columns=['Car', 'KTG', 'Kuzov Volume'])
+    html_table = df.to_html(classes='table')
+
+    return JsonResponse({'html': html_table})
 
 
 def get_ktg_data_for_car(car_id):
