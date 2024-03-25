@@ -73,6 +73,9 @@ urlpatterns = [
 
     path('ajax/get_cars_properties/', views.ajax_get_cars_properties, name='get_cars_properties'),
 
+    path('ajax/get_cars_for_period/', views.get_cars_for_period, name='get_cars_for_period'),
+
+
 
 ]
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Car, Category, Mine, Shaft, Site, YearMonth, Plan_zadanie, Placement
+from .models import Car, Category, Mine, Shaft, Site, YearMonth, Plan_zadanie, Placement, PlacementCar
 from simple_history.admin import SimpleHistoryAdmin
 
 
@@ -71,3 +71,9 @@ class CarAdmin (SimpleHistoryAdmin):
     list_display =('id','created','changed_by','site','period')
     list_display_links = ('id','created',)
     list_editable = ['changed_by','site','period']
+
+@admin.register(PlacementCar)
+class CarAdmin (SimpleHistoryAdmin):
+    list_display =('id','car','placement')
+    list_display_links = ('id',)
+    list_editable = ['car','placement']

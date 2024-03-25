@@ -3,40 +3,38 @@
 {% block content %}
 
     <h1>Создание нового документа "Расстановка"</h1>
-<p></p>
+
+        <p></p>
+
     <form method="post">
     {% csrf_token %}
     <p>Период:  {{ form.period }}</p>  <!-- Render the period field explicitly -->
     <p>{{ form.site.label_tag }} {{ form.site }}</p>
     <!-- Render  other fields as needed -->
 
+        <p></p>
+
+    <h4>Выберите машины на участок:</h4>
+
+{#    {{ form.cars }}#}
+        <input type="hidden" id="selected_cars" name="selected_cars" value="">
+        <div id="cars_table"></div>
+
+        <p></p>
+
+<div id="avgKTG">Average KTG: 0</div>
+<div id="avgVolume">Average Volume: 0</div>
+        <p></p>
+<button type="submit">Сохранить</button>
 <p></p>
-<strong>Свойства участка:</strong>
+        Свойства: <span id="site_title"></span> за <span id="period_title"></span>
 <p></p>
 
 <div id="site_properties_table">
 
 </div>
 
-
-{#<div id="placement_properties_table">#}
-{##}
-{#</div>#}
-
-
-        <p></p>
-    <h3>Выберите машины на участок:</h3>
-    {{ form.cars }}
-        <p></p>
-    <button type="submit">Сохранить</button>
 </form>
-
-
-
-
-
-
-
 
 <p></p>
     <a href="{% url 'placement-list' %}">Назад в список расстановок</a>
@@ -58,7 +56,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 // Ensure 'html' key exists in the JSON response and contains your HTML content
                 const htmlContent = data.html;
                 document.getElementById('site_properties_table').innerHTML = htmlContent;
-            })
+
+                // Update the site title based on the selected option's text
+                const selectedSiteTitle = siteSelect.options[siteSelect.selectedIndex].text;
+                document.getElementById('site_title').innerHTML = selectedSiteTitle;
+
+                // Update the period title based on the selected option's text
+                const selectedPeriodTitle = periodSelect.options[periodSelect.selectedIndex].text;
+                document.getElementById('period_title').innerHTML = selectedPeriodTitle;            })
             .catch(error => console.error('Error:', error));
     };
 
@@ -78,22 +83,74 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Assuming you have an element with ID "toggleCarsTable" for toggling the visibility of car tables
-document.getElementById("toggleCarsTable").addEventListener("click", function() {
-    var selectedTable = document.getElementById("selectedCarsTable"); // Ensure this ID matches your element
-    var fullTable = document.getElementById("fullCarsTable"); // Ensure this ID matches your element
-    if (fullTable.style.display === "none") {
-        fullTable.style.display = "block";
-        selectedTable.style.display = "none";
-        this.textContent = "Показать машины документа";
-    } else {
-        fullTable.style.display = "none";
-        selectedTable.style.display = "block";
-        this.textContent = "Показать все машины";
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const periodSelect = document.getElementById('id_period'); // Assuming 'id_period' is the ID for your period select element
+
+    periodSelect.addEventListener('change', function() {
+        const periodId = this.value;
+        fetch(`/ajax/get_cars_for_period/?period_id=${periodId}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('cars_table').innerHTML = data.html_table;
+            })
+            .catch(error => console.error('Error loading cars table:', error));
+    });
+
+    document.addEventListener('change', function(e) {
+        if (e.target.name === 'car_select') {
+            updateSelectedCars();
+        }
+    });
+
+    function updateSelectedCars() {
+        const selectedCarCheckboxes = document.querySelectorAll('input[name="car_select"]:checked');
+        const selectedCarIds = Array.from(selectedCarCheckboxes).map(checkbox => checkbox.value).join(',');
+        document.getElementById('selected_cars').value = selectedCarIds;
+    }
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+    function updateAverages() {
+        let selectedCars = document.querySelectorAll('#cars_table input[type="checkbox"]:checked');
+        let totalKTG = 0, totalVolume = 0, count = 0;
+
+        selectedCars.forEach(function(car) {
+            console.log(car);
+            totalKTG += parseFloat(car.getAttribute('data-ktg'));
+            totalVolume += parseFloat(car.getAttribute('data-volume'));
+            count++;
+        });
+
+        {#console.log(`Total KTG: ${totalKTG}, Total Volume: ${totalVolume}, Count: ${count}`);#}
+
+        let avgKTG = count > 0 ? (totalKTG / count).toFixed(2) : 0;
+        let avgVolume = count > 0 ? (totalVolume / count).toFixed(2) : 0;
+
+        document.getElementById('avgKTG').textContent = `Average KTG: ${avgKTG}`;
+        document.getElementById('avgVolume').textContent = `Average Volume: ${avgVolume}`;
     }
 
+    // Bind the updateAverages function to checkbox change events
+    document.querySelectorAll('#cars_table input[type="checkbox"]').forEach(function(checkbox) {
+        checkbox.addEventListener('change', updateAverages);
+    });
+
+    document.getElementById('cars_table').addEventListener('change', function(e) {
+    if (e.target.name === 'car_select') {
+        updateAverages();
+    }
+    });
+    // Initial calculation
+    updateAverages();
 });
-</script>
+
+//function updateSelectedCars() {
+//    let selectedCarCheckboxes = document.querySelectorAll('#cars_table input[type="checkbox"]:checked');
+//    let selectedCarIds = Array.from(selectedCarCheckboxes).map(checkbox => checkbox.value).join(',');
+//    document.getElementById('selected_cars').value = selectedCarIds;
+//}
 
 
 

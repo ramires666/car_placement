@@ -289,6 +289,7 @@ class CarPropertyBase(models.Model):
 class Ktg(CarPropertyBase):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Машина")
     KTG = models.FloatField(verbose_name="КТГ")
+    history = HistoricalRecords()
     class Meta:
         verbose_name="KTG - КТГ"
 
@@ -344,6 +345,7 @@ class PlacementCar(models.Model):
     placement = models.ForeignKey(Placement, on_delete=models.CASCADE, verbose_name="Размещение")
     car = models.ForeignKey(Car, on_delete=models.CASCADE, verbose_name="Машина")
     # Here you can add additional fields if needed, such as a timestamp for when the car was added to the placement.
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "Размещенные машины"

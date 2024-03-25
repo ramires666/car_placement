@@ -1,6 +1,7 @@
 from collections import defaultdict
 from django.db.models.functions import Concat
-
+import pdb
+import logging
 
 from django import forms
 from django.contrib.auth.decorators import login_required
@@ -41,7 +42,10 @@ from .site_data_service import SiteDataService
 from django.utils.html import format_html_join, mark_safe
 
 from django.utils import timezone
-from django.db import transaction
+from django.db import transaction, IntegrityError
+
+logger = logging.getLogger(__name__)
+
 
 
 class CarListView(ListView):
@@ -1048,6 +1052,84 @@ def format_table(df,**kwargs):
     return df.to_html(**params,**kwargs)
 
 
+def get_cars_for_period(request):
+    period_id = request.GET.get('period_id')
+    try:
+        period = YearMonth.objects.get(pk=period_id)
+    except YearMonth.DoesNotExist:
+        return JsonResponse({'error': 'Invalid period'}, status=400)
+
+    ktgs = Ktg.objects.filter(period=period).select_related('car')
+    ktg_map = {ktg.car_id: ktg.KTG for ktg in ktgs}
+
+    cars = Car.objects.all()
+
+    # Initialize sums and counters for calculating averages
+    sum_v_objem_kuzova = 0
+    sum_ktg = 0
+    count = 0
+
+    car_data = []
+    for car in cars:
+        v_objem_kuzova = car.V_objem_kuzova if car.V_objem_kuzova else 0
+        ktg = ktg_map.get(car.id, 0)
+        car_data.append({
+            'title': car.title,
+            'garnom': car.garnom,
+            'V_objem_kuzova': v_objem_kuzova,
+            'ktg': ktg,
+            'select': f'<input type="checkbox" name="car_select" value="{car.id}" data-ktg="{ktg}" data-volume="{v_objem_kuzova}"/>',  # Add checkbox
+        })
+        sum_v_objem_kuzova += v_objem_kuzova
+        sum_ktg += ktg
+        count += 1
+
+    df = pd.DataFrame(car_data)
+
+    if count > 0:
+        # Calculate averages
+        avg_v_objem_kuzova = sum_v_objem_kuzova / count
+        avg_ktg = sum_ktg / count
+        averages = {'avg_v_objem_kuzova': avg_v_objem_kuzova, 'avg_ktg': avg_ktg}
+    else:
+        averages = {'avg_v_objem_kuzova': 'N/A', 'avg_ktg': 'N/A'}
+
+    df.columns=['Машина','Гар.№','V-кузова','КТГ','Назначить']
+    html_table = format_table(df)
+    return JsonResponse({'html_table': html_table, 'averages': averages})
+
+
+# def get_cars_for_period(request):
+#     period_id = request.GET.get('period_id')
+#     try:
+#         period = YearMonth.objects.get(pk=period_id)
+#     except YearMonth.DoesNotExist:
+#         return JsonResponse({'error': 'Invalid period'}, status=400)
+#
+#     # Fetch all KTGs for the selected period and map them by car_id for quick access
+#     ktgs = Ktg.objects.filter(period=period).select_related('car')
+#     ktg_map = {ktg.car_id: ktg.KTG for ktg in ktgs}
+#
+#     # Fetch all cars
+#     cars = Car.objects.all()
+#
+#     # Compile data for each car, using the KTG map
+#     car_data = [{
+#         'title': car.title,
+#         'garnom': car.garnom,
+#         'V_objem_kuzova': car.V_objem_kuzova,
+#         'ktg': ktg_map.get(car.id, 'N/A')  # Default to 'N/A' if no KTG found
+#     } for car in cars]
+#
+#     # Create a pandas DataFrame
+#     df = pd.DataFrame(car_data)
+#
+#     # Convert DataFrame to HTML table
+#     df.columns=['Машина','Гар.№','V-кузова','КТГ']
+#     html_table = format_table(df)
+#
+#     return JsonResponse({'html_table': html_table})
+
 
 
 def get_latest_ktg_for_car(car_id, period):
@@ -1156,7 +1238,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
 
             df_full = pd.DataFrame(cars_list_full)
 
-            df_full['KTG'].fillna("-", inplace=True)
+            df_full['KTG'] = df_full['KTG'].fillna("-")
 
             # Add a 'checkbox' column to the DataFrame
             df_full['checkbox'] = df_full.apply(lambda row: f'<input type="checkbox" name="cars" value="{row["id"]}"'+
@@ -1197,7 +1279,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
             if cars_form.is_valid():
                 # This step assumes that you are manually handling the creation/updation of PlacementCar instances.
                 # Clear existing cars from this placement
-                placement.cars.clear()
+                # placement.cars.clear()
                 # Add new cars to the placement
                 cars = cars_form.cleaned_data['car']
                 for car in cars:
@@ -1208,6 +1290,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
 
 
 # @login_required
+
 class PlacementCreateView(LoginRequiredMixin, CreateView):
     model = Placement
     form_class = PlacementForm
@@ -1215,24 +1298,22 @@ class PlacementCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('placement-list')  # Redirect to placement list view on success
 
     def form_valid(self, form):
-        # Save the Placement instance first without committing to the database
-        placement = form.save(commit=False)
-        placement.save()  # Now the Placement instance is saved and has an ID
+        with transaction.atomic():
+            placement = form.save(commit=False)
+            placement.changed_by = self.request.user  # Assuming a 'changed_by' field to track the user
+            placement.save()  # Save the Placement instance
 
-        form.instance.changed_by = self.request.user  # Set the current user as the author
-        form.save_m2m()
-        # Get the selected cars from the form
-        cars = form.cleaned_data['cars']
+        selected_cars_ids = self.request.POST.get('selected_cars', '')
+        selected_cars_ids = [int(car_id) for car_id in selected_cars_ids.split(',') if car_id.isdigit()]
 
-        # Create PlacementCar instances for each selected car
-        for car in cars:
-            PlacementCar.objects.create(placement=placement, car=car)
+        responce = super().form_valid(form)
+        cars = Car.objects.filter(id__in=selected_cars_ids)
+        with transaction.atomic():
+            for car in cars:
+                PlacementCar.objects.create(placement=placement, car=car)
 
-        return super(CreateView, self).form_valid(form)
+        return responce
 
-# class PlacementCreateView(CreateView):
-#     # Your view definition...
-#     success_url = reverse_lazy('placements')  # Make sure this matches your URL pattern name
 
 
 class PlacementListView(ListView):
@@ -1255,11 +1336,12 @@ class PlacementListView(ListView):
         ).order_by('-year', '-month')  # Order by year and month
 
         df = pd.DataFrame(list(placements))
-        df['created'] = df['created'].dt.strftime('%Y-%m-%d %H-%M')
-        df['created'] = df.apply(lambda row: f'<a href="/placement/edit/{row["id"]}">{row["created"]}</a>',axis=1)
+        if len(df)>0:
+            df['created'] = df['created'].dt.strftime('%Y-%m-%d %H-%M')
+            df['created'] = df.apply(lambda row: f'<a href="/placement/edit/{row["id"]}">{row["created"]}</a>',axis=1)
 
-        df = df[['id','period_title', 'created', 'username', 'mine_title', 'shaft_title', 'site_title', ]]
-        df.columns = (['№','Период','Создано','Автор', 'Рудник','Шахта','Участок', ])
+            df = df[['id','period_title', 'created', 'username', 'mine_title', 'shaft_title', 'site_title', ]]
+            df.columns = (['№','Период','Создано','Автор', 'Рудник','Шахта','Участок', ])
 
 
         context['placements_table'] = format_table(df,**{'index':False})

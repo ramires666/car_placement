@@ -9,6 +9,24 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'INFO',  # Установите уровень логирования в DEBUG для просмотра SQL запросов
+        },
+    },
+}
+
+
 
 from pathlib import Path
 
@@ -27,7 +45,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-INTERNAL_IPS = ["0.0.0.0"]
+INTERNAL_IPS = ['127.0.0.1','0.0.0.0']
 # Application definition
 
 INSTALLED_APPS = [
