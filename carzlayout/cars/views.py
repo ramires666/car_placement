@@ -1153,7 +1153,7 @@ def get_latest_ktg_for_car(car_id, period):
     ).order_by('-created').first()
 
     if latest_ktg_year:
-        return latest_ktg_year.KTG
+        return latest_ktg_year.KTGfetch_site_properties
 
     # If neither month-specific nor yearly KTG values are found, return a default value
     return "-"
@@ -1382,61 +1382,34 @@ def get_site_properties(request, site_id, period_id):
     df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
     html_table = format_table(df_properties, index=False)  # Assuming format_table is a function that formats your DataFrame as HTML
 
-    return html_table
+    return html_table,df_properties
 
-#
-# def get_site_properties(request, site_id, period_id):
-#     try:
-#         site = Site.objects.get(pk=site_id)
-#         period = YearMonth.objects.get(pk=period_id)
-#         is_whole_year = period.month == 0
-#
-#         properties_data = []
-#
-#         for prop in [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]:
-#             qs = prop.objects.filter(site=site, period__year=period.year)
-#
-#             if not is_whole_year:
-#                 # Attempt to get the record for the exact month first
-#                 property_record = qs.filter(period__month=period.month).order_by('-created').first()
-#             elif is_whole_year or property_record==None:
-#                 # For a whole year, get the yearly record or the most recent record within the year if no specific yearly record is found
-#                 property_record = qs.filter(period__month=0).order_by('-created').first() or qs.order_by('-period__month', '-created').first()
-#
-#             property_value = property_record.value if property_record else "-"
-#             properties_data.append([prop._meta.verbose_name, property_value])
-#
-#         df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
-#         return format_table(df_properties, **{'index':False})
-#
-#     except (Site.DoesNotExist, YearMonth.DoesNotExist):
-#         return pd.DataFrame([['Error', 'Участок или Период не найдены']], columns=['Свойство', 'Величина'])
-
-
-# def get_site_properties(request, site_id, period_id):
-#     try:
-#         site = Site.objects.get(pk=site_id)
-#         period = YearMonth.objects.get(pk=period_id)
-#         is_whole_year = period.month == 0
-#
-#         properties_data = []
-#
-#         for prop in [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]:
-#             qs = prop.objects.filter(site=site)
-#             property_record = qs.filter(period=period).first() if not is_whole_year else qs.filter(period__year=period.year, period__month=0).first()
-#             property_value = property_record.value if property_record else "-"
-#             properties_data.append([prop._meta.verbose_name, property_value])
-#
-#         df_properties = pd.DataFrame(properties_data, columns=['Свойство', 'Величина'])
-#         return format_table(df_properties,**{'index':False})
-#
-#     except (Site.DoesNotExist, YearMonth.DoesNotExist):
-#         return pd.DataFrame([['Error', 'Участок или Период не найдены']], columns=['Свойство', 'Величина'])
 
 
 
 def ajax_get_site_properties(request, site_id, period_id):
-    df_properties = get_site_properties(request,site_id, period_id)
+    html_table,df_properties = get_site_properties(request,site_id, period_id)
     # properties_html = df_properties.to_html(escape=False, classes="table", index=False)
     # return JsonResponse({'html': properties_html})
-    return JsonResponse({'html': df_properties})
+    return JsonResponse({'html': html_table})
+
+
+def calc_placement(request):
+    # Extract query parameters
+    site_id = request.GET.get('site_id')
+    period_id = request.GET.get('period_id')
+    car_ids = request.GET.get('car_ids', '').split(',')
+
+    html_table, df_properties = get_site_properties(request, site_id, period_id)
+
+    # Your logic to calculate placement based on site_id, period_id, and car_ids
+    # This is just a placeholder response
+    calculation_result = {
+        'success': True,
+        'data': {
+            # Placeholder data
+            'extraInfo': 'Calculated information based on selected parameters'
+        }
+    }
+
+    return JsonResponse({'site':site_id,'period':period_id,'carids':car_ids})

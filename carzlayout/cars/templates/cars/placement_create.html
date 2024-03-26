@@ -22,8 +22,9 @@
 
         <p></p>
 
-<div id="avgKTG">Average KTG: 0</div>
-<div id="avgVolume">Average Volume: 0</div>
+<div id="avgKTG">Средний КТГ: 0</div>
+<div id="avgVolume">Средни объем кузова: 0</div>
+<div id="Placement">Расстановка: 0</div>
         <p></p>
 <button type="submit">Сохранить</button>
 <p></p>
@@ -137,21 +138,39 @@ document.addEventListener("DOMContentLoaded", function() {
         checkbox.addEventListener('change', updateAverages);
     });
 
-    document.getElementById('cars_table').addEventListener('change', function(e) {
-    if (e.target.name === 'car_select') {
-        updateAverages();
-    }
-    });
     // Initial calculation
     updateAverages();
+
+    document.getElementById('cars_table').addEventListener('change', function(e) {
+        if (e.target.name === 'car_select') {
+            updateAverages();
+            //const selectedCarCheckboxes = document.querySelectorAll('input[name="car_select"]:checked');
+            //const selectedCarIds = Array.from(selectedCarCheckboxes).map(checkbox => checkbox.value).join(',');
+            //const selectedCarIds = Array.from(selectedCarCheckboxes).map(checkbox => checkbox.value).join(',');
+            //const selectedCarIds = Array.from(selectedCars).map(checkbox => checkbox.value);
+            let selectedCars = document.querySelectorAll('#cars_table input[type="checkbox"]:checked');
+            const selectedCarIds = Array.from(selectedCars).map(checkbox => checkbox.value);
+            const site_id = document.getElementById('id_site').value;
+            const period_id = document.getElementById('id_period').value;
+            calc_Placement(selectedCarIds,site_id,period_id);
+        }
+    });
+
 });
 
-//function updateSelectedCars() {
-//    let selectedCarCheckboxes = document.querySelectorAll('#cars_table input[type="checkbox"]:checked');
-//    let selectedCarIds = Array.from(selectedCarCheckboxes).map(checkbox => checkbox.value).join(',');
-//    document.getElementById('selected_cars').value = selectedCarIds;
-//}
+function calc_Placement(selectedCarIds,site_id,period_id) {
+    // Assuming you have an endpoint that returns some data based on car IDs
+    const url = `/ajax/calc_placement?site_id=${site_id}&period_id=${period_id}&car_ids=${selectedCarIds.join(',')}`;
 
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Assuming 'data' contains some information you want to display
+            //document.getElementById('Placement').textContent = `Расстановка: ${site_id}&period_id=${period_id}&car_ids=${selectedCarIds.join(',')} ${data.text}`;
+            document.getElementById('Placement').textContent = `Расстановка:  ${data.site} ${data.period} ${data.carids.textContent}`;
+        })
+        .catch(error => console.error('Failed to fetch extra info:', error));
+};
 
 
 
