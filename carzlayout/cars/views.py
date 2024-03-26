@@ -22,7 +22,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, FormView, UpdateView, CreateView
 from cars.models import Mine, Shaft, Site, Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, \
-    T_pereezd, T_vspom, Nsmen, YearMonth, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki, \
+    T_pereezd, T_vspom, Nsmen, YearMonth, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki, \
     Ktg, Placement, PlacementCar
 from .forms import SiteEditForm, PlanZadanieFormset, Plotnost_gruzaFormset, Schema_otkatkiFormset, T_smenyFormset, \
     T_regl_pereryvFormset, T_pereezdFormset, T_vspomFormset, NsmenFormset, PropertyEditForm, UniversalPropertyForm, \
@@ -229,7 +229,7 @@ models = {
     't_pereezd': T_pereezd,
     't_vspom': T_vspom,
     'nsmen': Nsmen,
-    'Vk': V_objem_kuzova,
+    # 'Vk': V_objem_kuzova,
     'Kz': Kuzov_Coeff_Zapl,
     'Vdv': V_Skorost_dvizh,
     'Tpogr': T_pogruzki,
@@ -245,7 +245,7 @@ PROPERTY_SLUYGIFYED_MODEL_MAP = {
     'vremya-pereezda': T_pereezd,
     'vremya-vspomogat': T_vspom,
     'kol-vo-smnen': Nsmen,
-    'obem-kuzova': V_objem_kuzova,
+    # 'obem-kuzova': V_objem_kuzova,
     'koeff-zapoln-kuzova': Kuzov_Coeff_Zapl,
     'skorost-dvizheniya': V_Skorost_dvizh,
     'vremya-pogruzki': T_pogruzki,
@@ -909,8 +909,8 @@ def places1(request, period_id=None):
         Prefetch('t_vspom_set', queryset=T_vspom.objects.filter(period=current_period), to_attr='t_vspom_yearly'),
         Prefetch('nsmen_set', queryset=Nsmen.objects.filter(period=current_period), to_attr='nsmen_monthly'),
         Prefetch('nsmen_set', queryset=Nsmen.objects.filter(period=current_period), to_attr='nsmen_yearly'),
-        Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_period), to_attr='v_objem_kuzova_monthly'),
-        Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_period), to_attr='v_objem_kuzova_yearly'),
+        # Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_period), to_attr='v_objem_kuzova_monthly'),
+        # Prefetch('v_objem_kuzova_set', queryset=V_objem_kuzova.objects.filter(period=current_period), to_attr='v_objem_kuzova_yearly'),
         Prefetch('kuzov_coeff_zapl_set', queryset=Kuzov_Coeff_Zapl.objects.filter(period=current_period), to_attr='kuzov_coeff_zapl_monthly'),
         Prefetch('kuzov_coeff_zapl_set', queryset=Kuzov_Coeff_Zapl.objects.filter(period=current_period), to_attr='kuzov_coeff_zapl_yearly'),
         Prefetch('v_skorost_dvizh_set', queryset=V_Skorost_dvizh.objects.filter(period=current_period), to_attr='v_skorost_dvizh_monthly'),
@@ -948,8 +948,8 @@ def places1(request, period_id=None):
                             (site.t_vspom_yearly[0].value if site.t_vspom_yearly else None),
             'Кол-во смнен': (site.nsmen_monthly[0].value if site.nsmen_monthly else None) or
                             (site.nsmen_yearly[0].value if site.nsmen_yearly else None),
-            'Объем кузова': (site.v_objem_kuzova_monthly[0].value if site.v_objem_kuzova_monthly else None) or
-                            (site.v_objem_kuzova_yearly[0].value if site.v_objem_kuzova_yearly else None),
+            # 'Объем кузова': (site.v_objem_kuzova_monthly[0].value if site.v_objem_kuzova_monthly else None) or
+            #                 (site.v_objem_kuzova_yearly[0].value if site.v_objem_kuzova_yearly else None),
             'КОэфф заполн. кузова': (site.kuzov_coeff_zapl_monthly[0].value if site.kuzov_coeff_zapl_monthly else None) or
                             (site.kuzov_coeff_zapl_yearly[0].value if site.kuzov_coeff_zapl_yearly else None),
             'Скорость движения': (site.v_skorost_dvizh_monthly[0].value if site.v_skorost_dvizh_monthly else None) or
@@ -1368,7 +1368,7 @@ def get_site_properties(request, site_id, period_id):
 
     properties_data = []
     properties_models = [Plan_zadanie, Plotnost_gruza, Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom,
-                         Nsmen, V_objem_kuzova, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]
+                         Nsmen,  Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, T_razgruzki]
 
     for prop in properties_models:
         # First, try to get the property for the exact month (if not a whole year period)
@@ -1421,10 +1421,10 @@ def calc_placement(request):
         car = Car.objects.get(pk=car_id)
         car_row = {'car_id':car_id,'volume':car.V_objem_kuzova,'ktg':ktg}
         cars.append(car_row)
-        total_ktg += ktg
+        total_ktg += float(ktg)
         total_volume += car.V_objem_kuzova
-    avg_vol = total_volume/len(car_ids)
-    avg_ktg = total_ktg/len(car_ids)
+    Vk = total_volume/len(car_ids)
+    KTG = total_ktg/len(car_ids)
     print('d')
     #final placementcalculation:
     Qpl = df_props.iloc[0]['Величина']
@@ -1435,11 +1435,11 @@ def calc_placement(request):
     Tprz = df_props.iloc[5]['Величина']
     Tvsp = df_props.iloc[6]['Величина']
     Nsm = df_props.iloc[7]['Величина']
-    Vk = df_props.iloc[8]['Величина']
-    Kz = df_props.iloc[9]['Величина']
-    Vdv = df_props.iloc[10]['Величина']
-    Tpogr = df_props.iloc[11]['Величина']
-    Trazgr = df_props.iloc[12]['Величина']
+    # Vk = df_props.iloc[8]['Величина']
+    Kz = df_props.iloc[8]['Величина']
+    Vdv = df_props.iloc[9]['Величина']
+    Tpogr = df_props.iloc[10]['Величина']
+    Trazgr = df_props.iloc[11]['Величина']
 
 
     return JsonResponse({'site':Qpl,'period':d,'carids':L})
