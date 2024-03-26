@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Car, Category, Mine, Shaft, Site, YearMonth, Plan_zadanie, Placement, PlacementCar
+from .models import Car, Category, Mine, Shaft, Site, YearMonth, Plan_zadanie, Placement, PlacementCar, Plotnost_gruza, \
+    Schema_otkatki, T_smeny, T_regl_pereryv, T_pereezd, T_vspom, Nsmen, Kuzov_Coeff_Zapl, V_Skorost_dvizh, T_pogruzki, \
+    T_razgruzki
 from simple_history.admin import SimpleHistoryAdmin
 
 
@@ -77,3 +79,77 @@ class CarAdmin (SimpleHistoryAdmin):
     list_display =('id','car','placement')
     list_display_links = ('id',)
     list_editable = ['car','placement']
+
+
+@admin.register(Plotnost_gruza)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+@admin.register(Schema_otkatki)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+@admin.register(T_smeny)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+@admin.register(T_regl_pereryv)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+
+@admin.register(T_pereezd)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+
+@admin.register(T_vspom)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+
+@admin.register(Nsmen)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+
+@admin.register(Kuzov_Coeff_Zapl)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+
+@admin.register(V_Skorost_dvizh)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+
+@admin.register(T_pogruzki)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']
+
+
+@admin.register(T_razgruzki)
+class CarAdmin(SimpleHistoryAdmin):
+    list_display = ('id','value','period', 'site')
+    list_display_links = ('id','value','period', 'site')
+    history_list_display = ['site','value']

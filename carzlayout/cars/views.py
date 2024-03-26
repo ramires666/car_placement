@@ -970,8 +970,7 @@ def places1(request, period_id=None):
         address = f"/{slugify(rudnik)}-{slugify(shahta)}-{slugify(uchastok)}/"
         for column in row.index:
             if pd.notnull(row[column]) and column not in ['Рудник', 'Шахта', 'Участок']:
-                df.at[
-                    index, column] = f"<a href='{address}{slugify(column)}/{current_period.id}/'><div>{row[column]}</div></a>"
+                df.at[index, column] = f"<a href='{address}{slugify(column)}/{current_period.id}/'><div>{row[column]}</div></a>"
             elif column not in ['Рудник', 'Шахта', 'Участок']:
                 df.at[index, column] = f"<a href='{address}{slugify(column)}/{current_period.id}/'><div>-</div></a>"
 
