@@ -167,7 +167,7 @@ function calc_Placement(selectedCarIds,site_id,period_id) {
         .then(data => {
             // Assuming 'data' contains some information you want to display
             //document.getElementById('Placement').textContent = `Расстановка: ${site_id}&period_id=${period_id}&car_ids=${selectedCarIds.join(',')} ${data.text}`;
-            document.getElementById('Placement').textContent = `Расстановка:  ${data.site} ${data.period} ${data.carids.textContent}`;
+            document.getElementById('Placement').textContent = `Расстановка:  ${data.site} ${data.period} ${data.carids}`;
         })
         .catch(error => console.error('Failed to fetch extra info:', error));
 };

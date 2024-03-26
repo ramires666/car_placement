@@ -192,10 +192,10 @@ class Nsmen(PropertyBase):
         verbose_name="Nsm - Количество смен"
 
 
-class V_objem_kuzova(PropertyBase):
-    # Vk = models.FloatField(verbose_name="Объем кузова")
-    class Meta:
-        verbose_name="Vk - Объем кузова"
+# class V_objem_kuzova(PropertyBase):
+#     # Vk = models.FloatField(verbose_name="Объем кузова")
+#     class Meta:
+#         verbose_name="Vk - Объем кузова"
 
 
 class Kuzov_Coeff_Zapl(PropertyBase):

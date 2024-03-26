@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement javascript tables showoff alpha">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/carzlayout/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/carzlayout/settings.py" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement calc alpha 0.0.1">
       <change beforePath="$PROJECT_DIR$/carzlayout/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/db.sqlite3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -144,23 +137,7 @@
       <workItem from="1710141131350" duration="65541000" />
       <workItem from="1710407733744" duration="33553000" />
       <workItem from="1710693556144" duration="25123000" />
-      <workItem from="1710828723127" duration="41323000" />
-    </task>
-    <task id="LOCAL-00010" summary="car detail and list viw">
-      <option name="closed" value="true" />
-      <created>1709146059660</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1709146059660</updated>
-    </task>
-    <task id="LOCAL-00011" summary="KTG added">
-      <option name="closed" value="true" />
-      <created>1709146374841</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1709146374841</updated>
+      <workItem from="1710828723127" duration="72040000" />
     </task>
     <task id="LOCAL-00012" summary="finished car editing page with period KTG">
       <option name="closed" value="true" />
@@ -538,7 +515,23 @@
       <option name="project" value="LOCAL" />
       <updated>1710776021221</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="fixed big placement doc unsaving django jumbo erorr">
+      <option name="closed" value="true" />
+      <created>1711332802804</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1711332802804</updated>
+    </task>
+    <task id="LOCAL-00060" summary="placement calc alpha 0.0.1">
+      <option name="closed" value="true" />
+      <created>1711477387229</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1711477387229</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -579,8 +572,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/carzlayout" />
     </ignored-roots>
-    <MESSAGE value="last10 records df" />
-    <MESSAGE value="polishing places and property editor" />
     <MESSAGE value="finished integrating new year monthly data fetching in places and property editor" />
     <MESSAGE value="placement alpha" />
     <MESSAGE value="placement alpha.2" />
@@ -604,29 +595,16 @@
     <MESSAGE value="ктг rename" />
     <MESSAGE value="added toggle to show all cars and docs cars" />
     <MESSAGE value="placement javascript tables showoff alpha" />
-    <option name="LAST_COMMIT_MESSAGE" value="placement javascript tables showoff alpha" />
+    <MESSAGE value="fixed big placement doc unsaving django jumbo erorr" />
+    <MESSAGE value="placement calc alpha 0.0.1" />
+    <option name="LAST_COMMIT_MESSAGE" value="placement calc alpha 0.0.1" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/carzlayout/cars/views.py</url>
-          <line>1124</line>
-          <option name="timeStamp" value="50" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/carzlayout/cars/views.py</url>
-          <line>1336</line>
-          <option name="timeStamp" value="73" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/carzlayout/cars/views.py</url>
-          <line>1342</line>
-          <option name="timeStamp" value="74" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/carzlayout/cars/templates/cars/placement_create.html</url>
-          <line>105</line>
+          <line>110</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="54" />
         </line-breakpoint>
@@ -640,6 +618,6 @@
     </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1710923483137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
+    <SUITE FILE_PATH="coverage/django$site_cars.coverage" NAME="site_cars Coverage Results" MODIFIED="1711476381133" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="C:\PYTHON\Projects\django\carzlayout" />
   </component>
 </project>

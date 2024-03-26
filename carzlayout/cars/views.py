@@ -873,7 +873,18 @@ def places1(request, period_id=None):
     if period_id:
         current_period = YearMonth.objects.get(id=period_id)
     else:
-        current_period = periods.last()
+        # current_period = periods.last()
+        today = now()
+        current_year = today.year
+        current_month = today.month
+
+        # Try to get the period for the current year and month
+        try:
+            current_period = YearMonth.objects.get(year=current_year, month=current_month)
+        except YearMonth.DoesNotExist:
+            # If there's no exact match, fallback to the last available period
+            current_period = periods.last()
+
     yearly_period = YearMonth.objects.filter(year=current_period.year, month=0).first()
 
     current_index = list(periods).index(current_period)
@@ -1395,21 +1406,40 @@ def ajax_get_site_properties(request, site_id, period_id):
 
 
 def calc_placement(request):
-    # Extract query parameters
     site_id = request.GET.get('site_id')
     period_id = request.GET.get('period_id')
     car_ids = request.GET.get('car_ids', '').split(',')
 
-    html_table, df_properties = get_site_properties(request, site_id, period_id)
+    _, df_props = get_site_properties(request, site_id, period_id)
 
-    # Your logic to calculate placement based on site_id, period_id, and car_ids
-    # This is just a placeholder response
-    calculation_result = {
-        'success': True,
-        'data': {
-            # Placeholder data
-            'extraInfo': 'Calculated information based on selected parameters'
-        }
-    }
 
-    return JsonResponse({'site':site_id,'period':period_id,'carids':car_ids})
+    cars =[]
+    total_volume = 0
+    total_ktg = 0
+    for car_id in car_ids:
+        ktg = get_latest_ktg_for_car(car_id, YearMonth.objects.get(pk=period_id))
+        car = Car.objects.get(pk=car_id)
+        car_row = {'car_id':car_id,'volume':car.V_objem_kuzova,'ktg':ktg}
+        cars.append(car_row)
+        total_ktg += ktg
+        total_volume += car.V_objem_kuzova
+    avg_vol = total_volume/len(car_ids)
+    avg_ktg = total_ktg/len(car_ids)
+    print('d')
+    #final placementcalculation:
+    Qpl = df_props.iloc[0]['Величина']
+    d = df_props.iloc[1]['Величина']
+    L = df_props.iloc[2]['Величина']
+    Tsm = df_props.iloc[3]['Величина']
+    Tregl = df_props.iloc[4]['Величина']
+    Tprz = df_props.iloc[5]['Величина']
+    Tvsp = df_props.iloc[6]['Величина']
+    Nsm = df_props.iloc[7]['Величина']
+    Vk = df_props.iloc[8]['Величина']
+    Kz = df_props.iloc[9]['Величина']
+    Vdv = df_props.iloc[10]['Величина']
+    Tpogr = df_props.iloc[11]['Величина']
+    Trazgr = df_props.iloc[12]['Величина']
+
+
+    return JsonResponse({'site':Qpl,'period':d,'carids':L})
