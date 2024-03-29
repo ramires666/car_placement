@@ -163,11 +163,12 @@ function calc_Placement(selectedCarIds,site_id,period_id) {
     const url = `/ajax/calc_placement?site_id=${site_id}&period_id=${period_id}&car_ids=${selectedCarIds.join(',')}`;
 
     fetch(url)
-        .then(response => response.json())
-        .then(data => {
+        .then(response => response.text())
+        .then(htmlContent  => {
             // Assuming 'data' contains some information you want to display
             //document.getElementById('Placement').textContent = `Расстановка: ${site_id}&period_id=${period_id}&car_ids=${selectedCarIds.join(',')} ${data.text}`;
-            document.getElementById('Placement').textContent = `Расстановка:  ${data.site} ${data.period} ${data.carids}`;
+            //document.getElementById('Placement').textContent = `Расстановка:  ${htmlContent } `;
+            document.getElementById('Placement').innerHTML  = `Расстановка:  ${htmlContent} `;
         })
         .catch(error => console.error('Failed to fetch extra info:', error));
 };

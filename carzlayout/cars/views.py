@@ -1,3 +1,4 @@
+# import math
 from collections import defaultdict
 from django.db.models.functions import Concat
 import pdb
@@ -1059,6 +1060,10 @@ def format_table(df,**kwargs):
     for key in kwargs.keys():
         if key in params:  # Check if the parameter is also a local variable
             del params[key]
+
+    numeric_columns = df.select_dtypes(include=['float', 'int']).columns
+    df[numeric_columns] = df[numeric_columns].apply(lambda x: x.round(2))
+
     return df.to_html(**params,**kwargs)
 
 
@@ -1069,7 +1074,8 @@ def get_cars_for_period(request):
     except YearMonth.DoesNotExist:
         return JsonResponse({'error': 'Invalid period'}, status=400)
 
-    ktgs = Ktg.objects.filter(period=period).select_related('car')
+    # Пытаемся найти KTG для конкретного месяца или для всего года, если записи за месяц отсутствуют
+    ktgs = Ktg.objects.filter(Q(period=period) | Q(period__year=period.year, period__month=0)).select_related('car').distinct()
     ktg_map = {ktg.car_id: ktg.KTG for ktg in ktgs}
 
     cars = Car.objects.all()
@@ -1163,7 +1169,7 @@ def get_latest_ktg_for_car(car_id, period):
     ).order_by('-created').first()
 
     if latest_ktg_year:
-        return latest_ktg_year.KTGfetch_site_properties
+        return latest_ktg_year.KTG #fetch_site_properties
 
     # If neither month-specific nor yearly KTG values are found, return a default value
     return "-"
@@ -1225,7 +1231,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
 
             # Fetch cars related to the placement
             # Fetch ALL cars
-            cars_qs = Car.objects.all().values('id', 'artikul', 'garnom', 'title')
+            cars_qs = Car.objects.all().values('id', 'artikul', 'garnom', 'title','V_objem_kuzova')
 
             # Get IDs of cars currently selected in this placement
             selected_car_ids = set(self.object.cars.values_list('id', flat=True))
@@ -1241,6 +1247,7 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
                 'garnom': car['garnom'],
                 'title': car['title'],
                 'selected': car['id'] in selected_car_ids,  # Properly compute 'selected'
+                'V_objem_kuzova':car['V_objem_kuzova'],
                 'KTG': get_latest_ktg_for_car(car['id'], placement_period)
                 }
                 for car in cars_qs
@@ -1255,10 +1262,10 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
                                                   (' checked' if row['selected'] else '') +
                                                   '>', axis=1)
 
-            df_full.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'КТГ','В работе']
+            df_full.columns = ['id','Артикул','Гар.№','Машина','Выбрано', 'Объем кузова', 'КТГ','В работе']
             df_selected_cars = df_full[df_full['Выбрано'] == True]
 
-            kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'КТГ', 'В работе'],'index':False}
+            kwargs = {'columns':['Гар.№', 'Артикул', 'Машина', 'Объем кузова', 'КТГ', 'В работе'],'index':False}
             df_full_html = format_table(df_full,**kwargs)
             context['cars_table_full'] = mark_safe(df_full_html)
             df_selected_cars_html = format_table(df_selected_cars,**kwargs)
@@ -1266,7 +1273,8 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
 
             df_properties = get_site_properties(self.request,site.id, placement_period.id)
             context['site_properties_table'] = df_properties
-
+            # df_placement = calc_placement(self.request)
+            # context['placement_calculation'] = df_placement
 
         return context
 
@@ -1420,25 +1428,135 @@ def calc_placement(request):
         car = Car.objects.get(pk=car_id)
         car_row = {'car_id':car_id,'volume':car.V_objem_kuzova,'ktg':ktg}
         cars.append(car_row)
-        total_ktg += float(ktg)
+        try: float(ktg)
+        except: ktg = 0
+        total_ktg += ktg
         total_volume += car.V_objem_kuzova
-    Vk = total_volume/len(car_ids)
-    KTG = total_ktg/len(car_ids)
-    print('d')
+    Total_cars = len(car_ids)
+    Vk = total_volume/Total_cars
+    KTG = total_ktg/Total_cars
+    # print('d')
     #final placementcalculation:
-    Qpl = df_props.iloc[0]['Величина']
-    d = df_props.iloc[1]['Величина']
-    L = df_props.iloc[2]['Величина']
-    Tsm = df_props.iloc[3]['Величина']
-    Tregl = df_props.iloc[4]['Величина']
-    Tprz = df_props.iloc[5]['Величина']
-    Tvsp = df_props.iloc[6]['Величина']
-    Nsm = df_props.iloc[7]['Величина']
-    # Vk = df_props.iloc[8]['Величина']
-    Kz = df_props.iloc[8]['Величина']
-    Vdv = df_props.iloc[9]['Величина']
-    Tpogr = df_props.iloc[10]['Величина']
-    Trazgr = df_props.iloc[11]['Величина']
+    # Qpl = df_props.iloc[0]['Величина']
+    # d = df_props.iloc[1]['Величина']
+    # L = df_props.iloc[2]['Величина']
+    # Tsm = df_props.iloc[3]['Величина']
+    # Tregl = df_props.iloc[4]['Величина']
+    # Tprz = df_props.iloc[5]['Величина']
+    # Tvsp = df_props.iloc[6]['Величина']
+    # Nsm = df_props.iloc[7]['Величина']
+    # # Vk = df_props.iloc[8]['Величина']
+    # Kz = df_props.iloc[8]['Величина']
+    # Vdv = df_props.iloc[9]['Величина']
+    # Tpogr = df_props.iloc[10]['Величина']
+    # Trazgr = df_props.iloc[11]['Величина']
+    Qpl = df_props[df_props['Свойство'] == 'Qpl - План задание']['Величина'].values[0]
+    d = df_props[df_props['Свойство'] == 'd - Плотность груза']['Величина'].values[0]
+    L = df_props[df_props['Свойство'] == 'L - Плечо откатки']['Величина'].values[0]
+    Tsm = df_props[df_props['Свойство'] == 'Tsm - Длительность смены']['Величина'].values[0]
+    Tregl = df_props[df_props['Свойство'] == 'Tregl - Регламентные перерывы']['Величина'].values[0]
+    Tprz = df_props[df_props['Свойство'] == 'Tprz - Время переезда']['Величина'].values[0]
+    Tvsp = df_props[df_props['Свойство'] == 'Tvsp - Вспомогательное время']['Величина'].values[0]
+    Nsm = df_props[df_props['Свойство'] == 'Nsm - Количество смен']['Величина'].values[0]
+    Kz = df_props[df_props['Свойство'] == 'Kz - Коэффициент заполнения кузова']['Величина'].values[0]
+    Vdv = df_props[df_props['Свойство'] == 'Vdv - Средняя скорость движения']['Величина'].values[0]
+    Tpogr = df_props[df_props['Свойство'] == 'Tpogr - Продолжит погрузки со сменой автосам']['Величина'].values[0]
+    Trazgr = df_props[df_props['Свойство'] == 'Trazgr - Продолжит. разгрузки с маневрами']['Величина'].values[0]
+
+    site = {
+        'Vk':Vk,
+        'KTG':KTG,
+        'Qpl': Qpl,
+        'd': d,
+        'L': L,
+        'Tsm': Tsm,
+        'Tregl': Tregl,
+        'Tprz': Tprz,
+        'Tvsp': Tvsp,
+        'Nsm': Nsm,
+        'Kz': Kz,
+        'Vdv': Vdv,
+        'Tpogr': Tpogr,
+        'Trazgr': Trazgr,
+    }
+    #Грузовместимость кузова:
+    q = Vk * d * Kz
+    # Продолжит.движения в обе строны:
+    Tdv = 2 * L / Vdv
+    # Продолжит цикла автосамосвала
+    Tcycl = Tdv + Tpogr + Trazgr
+    # Техническая  производительность.
+    Pt = q / Tcycl
+    # Время перевозки план объема груза
+    Tprv = Qpl / Pt
+    # Количество автосамосв к 1-му погрузчику
+    nac = Total_cars
+    # Время ожидания погрузки (учитывать значения +) Тож = Qпл х (nас х tпогр - Тц)/q/nас
+    Tozh = max(Qpl * (Total_cars * Tpogr - Tcycl) / q / nac,0)
+    # Время основн технол операц на план объем
+    Tosn = Tprv + Tozh
+    # Устранение неисправностей- ремонт
+    Tr = (1 - KTG) * (Tsm - Tregl)
+    # Фонд времени смены на основные технол операц
+    Tsto = Tsm - Tregl - Tprz - Tvsp - Tr
+    # Фонд времени основн технол операц на 1 маш.
+    Tmto = Tsto * Nsm
+    # Необх кол рабоч машин на план объем
+    nRab = Tosn / Tmto
+    # План наработка на списочн машину
+    try:
+        nspis = round(nRab)
+        if nspis == 0:
+            Npl = 0
+        else:
+            Npl = Tosn / nspis + (Tprz + Tvsp) * Nsm
+    except ZeroDivisionError:
+        nspis = 0
+        Npl = 0
+
+    nl = r'<br>'
+    Rasschet = [
+        {'Грузовместимость кузова': q},
+        {'Продолжит.движения в обе строны': Tdv},
+        {'Продолжит цикла автосамосвала': Tcycl},
+        {'Техническая  производительность': Pt},
+        {'Время перевозки план объема груза': Tprv},
+        {'Количество автосамосв к 1-му погрузчику': nac},
+        {'Время ожидания погрузки (учитывать значения +)': Tozh},
+        {'Время основн технол операц на план объем': Tosn},
+        {'Устранение неисправностей-ремонт': Tr},
+        {'Фонд времени смены на основные технол операц': Tsto},
+        {'Необх кол рабоч машин на план объем': nRab},
+        {'Принятое списочное количество машин': nspis},
+        {'План наработка на списочн машину': Npl}
+    ]
+
+    # Сериализация в JSON с отступом для новой строки и замена <pr> на реальный перевод строки
+    # json_string = json.dumps(Rasschet, ensure_ascii=False, indent=4).replace('"<pr>"', '\n')
+    #
+    # return JsonResponse(json_string,safe=False)
+
+    dict = {
+        'Показатель': [
+            'Грузовместимость кузова',
+            'Продолжит.движения в обе строны',
+            'Продолжит цикла автосамосвала',
+            'Техническая производительность',
+            'Время перевозки план объема груза',
+            'Количество автосамосв к 1-му погрузчику',
+            'Время ожидания погрузки (учитывать значения +)',
+            'Время основн технол операц на план объем',
+            'Устранение неисправностей-ремонт',
+            'Фонд времени смены на основные технол операц',
+            'Необх кол рабоч машин на план объем',
+            'Принятое списочное количество машин',
+            'План наработка на списочн машину'
+        ],
+        'Значение': [q, Tdv, Tcycl, Pt, Tprv, nac, Tozh, Tosn, Tr, Tsto, nRab, nspis, Npl]
+    }
+    df_rasschet = pd.DataFrame.from_dict(dict)
+    html_content = format_table(df_rasschet,index=False)
+    return HttpResponse(html_content, content_type='text/html')
 
 
-    return JsonResponse({'site':Qpl,'period':d,'carids':L})
+    # return JsonResponse(Rasschet,safe=False)
