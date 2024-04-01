@@ -8,8 +8,9 @@
 
     <form method="post">
     {% csrf_token %}
-    <p>Период:  {{ form.period }}</p>  <!-- Render the period field explicitly -->
+    <p>{{ form.period.label_tag }}  {{ form.period }}</p>  <!-- Render the period field explicitly -->
     <p>{{ form.site.label_tag }} {{ form.site }}</p>
+    <p>{{ form.nspis.label_tag }} {{ form.nspis }}</p>
     <!-- Render  other fields as needed -->
 
         <p></p>
@@ -24,11 +25,12 @@
 
 <div id="avgKTG">Средний КТГ: 0</div>
 <div id="avgVolume">Средни объем кузова: 0</div>
-<div id="Placement">Расстановка: 0</div>
+<div id="Placement">Расстановка:
+        <p>{{ form.calculations.label_tag }} {{ form.calculations }}</p></div>
         <p></p>
 <button type="submit">Сохранить</button>
 <p></p>
-        Свойства: <span id="site_title"></span> за <span id="period_title"></span>
+        Свойства: <span id="site_title">участка</span> <span id="period_title">за период</span>
 <p></p>
 
 <div id="site_properties_table">

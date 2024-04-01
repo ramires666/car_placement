@@ -183,21 +183,27 @@ class PlacementForm(forms.ModelForm):
     cars = forms.ModelMultipleChoiceField(
         queryset=Car.objects.all(),
         required=False,
-        widget=forms.CheckboxSelectMultiple,  # Use checkboxes for selection
+        widget=forms.CheckboxSelectMultiple,
         label="Выберите машины"
     )
     class Meta:
         model = Placement
-        fields = ['site', 'period',  'cars']
+        # fields = ['site', 'period',  'cars', 'nspis']
+        # fields = [ 'changed_by','period', 'site', 'cars', 'nspis', 'calculations']
+        fields = [ 'period', 'site', 'cars', 'nspis', 'calculations']
         widgets = {
             'period': forms.Select(choices=[(period.id, period.title) for period in YearMonth.objects.all()]),
+            'nspis': forms.NumberInput(attrs={'step': 0.1, 'class': 'form-control', 'style': 'max-width: 100px;'}),
+            'calculations': forms.Textarea(),
         }
-        # You can add more fields as needed
     def __init__(self, *args, **kwargs):
         super(PlacementForm, self).__init__(*args, **kwargs)
         # self.fields['changed_by'].disabled = True
         # self.fields['changed_by'].widget.attrs['readonly'] = True
 
+    def is_valid(self):
+        # Place breakpoint here to debug form validation
+        return super().is_valid()
 
 
 

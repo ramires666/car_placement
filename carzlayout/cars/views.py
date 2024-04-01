@@ -1200,44 +1200,12 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
             site = self.object.site
             placement_period = self.object.period
 
-            # # Get the KTG values for the exact period or the yearly period if the month is not available
-            # ktg_subquery = Ktg.objects.filter(
-            #     car=OuterRef('pk'),
-            #     period__year=placement_period.year,
-            #     period__month=0  # Assuming 0 denotes a yearly period
-            # ).order_by('-created').values('KTG')[:1]
-            #
-            # # Get the exact KTG values if they exist for the month
-            # ktg_month_subquery = Ktg.objects.filter(
-            #     car=OuterRef('pk'),
-            #     period=placement_period
-            # ).order_by('-created').values('KTG')[:1]
-            #
-            # # Annotate the cars with the latest KTG value
-            # cars_qs = Car.objects.annotate(
-            #     latest_ktg_month=Subquery(ktg_month_subquery),
-            #     latest_ktg_year=Subquery(ktg_subquery),
-            # ).values('pk', 'artikul', 'garnom', 'title', 'latest_ktg_month', 'latest_ktg_year')
-            #
-            # # Prepare the DataFrame
-            # cars_list = list(cars_qs)
-            # df = pd.DataFrame(cars_list)
-            # df['selected'] = df['pk'].isin(self.object.cars.values_list('pk', flat=True))
-            #
-            # # Determine the correct KTG value to use
-            # df['KTG'] = df.apply(
-            #     lambda row: row['latest_ktg_month'] if row['latest_ktg_month'] is not None else row['latest_ktg_year'],
-            #     axis=1)
-
             # Fetch cars related to the placement
             # Fetch ALL cars
             cars_qs = Car.objects.all().values('id', 'artikul', 'garnom', 'title','V_objem_kuzova')
 
             # Get IDs of cars currently selected in this placement
             selected_car_ids = set(self.object.cars.values_list('id', flat=True))
-
-            # cars_qs = Car.objects.filter(placement=self.object).values('id', 'artikul', 'garnom', 'title')
-            # selected_car_ids = self.object.cars.values_list('id', flat=True)
 
             # Prepare a list to hold KTG values and other car information
             cars_list_full = [
@@ -1275,6 +1243,20 @@ class PlacementUpdateView(LoginRequiredMixin, UpdateView):
             context['site_properties_table'] = df_properties
             # df_placement = calc_placement(self.request)
             # context['placement_calculation'] = df_placement
+
+            # Prepare the calculations data
+            placement_calculations = self.object.calculations
+            if type(placement_calculations)==dict and len(placement_calculations)!=0:
+                # Assuming `placement_calculations` is a dictionary like the one provided
+                # Transform it into a DataFrame for easy HTML table rendering
+                df_calculations = pd.DataFrame({
+                    'Показатель': list(placement_calculations['Показатель'].values()),
+                    'Значение': list(placement_calculations['Значение'].values())
+                })
+                calculations_html = format_table(df_calculations, index=False)
+                context['calculations_table'] = mark_safe(calculations_html)
+            else:
+                context['calculations_table'] = "Рассчет не сохранен"
 
         return context
 
@@ -1315,10 +1297,13 @@ class PlacementCreateView(LoginRequiredMixin, CreateView):
     template_name = 'cars/placement_create.html'
     success_url = reverse_lazy('placement-list')  # Redirect to placement list view on success
 
+
+
     def form_valid(self, form):
         with transaction.atomic():
             placement = form.save(commit=False)
             placement.changed_by = self.request.user  # Assuming a 'changed_by' field to track the user
+            placement.calculations = calc_placement(self.request,False).to_dict()
             placement.save()  # Save the Placement instance
 
         selected_cars_ids = self.request.POST.get('selected_cars', '')
@@ -1332,7 +1317,11 @@ class PlacementCreateView(LoginRequiredMixin, CreateView):
 
         return responce
 
-
+    # def post(self, request, *args, **kwargs):
+    #     # self.form_class.calculations = calc_placement(self.request,False).to_dict()
+    #
+    #     # Place breakpoint here to catch the POST request submission
+    #     return super().post(request, *args, **kwargs)
 
 class PlacementListView(ListView):
     model = Placement
@@ -1412,10 +1401,32 @@ def ajax_get_site_properties(request, site_id, period_id):
     return JsonResponse({'html': html_table})
 
 
-def calc_placement(request):
-    site_id = request.GET.get('site_id')
-    period_id = request.GET.get('period_id')
-    car_ids = request.GET.get('car_ids', '').split(',')
+def calc_placement(request,html=True):
+    # try:
+    #     if request.request:
+    #         if len(request.request.GET) > 0:
+    #             site_id = request.request.GET.get('site_id')
+    #             period_id = request.request.GET.get('period_id')
+    #             car_ids = request.request.GET.get('car_ids', '').split(',')
+    #         else:
+    #             site_id = int(request.POST.get('site_id'))
+    #             period_id = int(request.POST.get('period_id'))
+    #             car_ids = request.POST.get('car_ids', '').split(',')
+    #
+    # except:
+    if request.method == 'GET':
+    # if len(request.GET) > 0:
+        site_id = request.GET.get('site_id')
+        period_id = request.GET.get('period_id')
+        car_ids = request.GET.get('car_ids', '').split(',')
+    else:
+        site_id = request.POST.get('site')
+        period_id = request.POST.get('period')
+        car_ids = request.POST.get('selected_cars', '').split(',')
+
+        # site_id = int(request.POST.get('site_id'))
+        # period_id = int(request.POST.get('period_id'))
+        # car_ids = request.POST.get('car_ids', '').split(',')
 
     _, df_props = get_site_properties(request, site_id, period_id)
 
@@ -1548,7 +1559,7 @@ def calc_placement(request):
             'Время основн технол операц на план объем',
             'Устранение неисправностей-ремонт',
             'Фонд времени смены на основные технол операц',
-            'Необх кол рабоч машин на план объем',
+            'Необх кол-во рабоч машин на план объем',
             'Принятое списочное количество машин',
             'План наработка на списочн машину'
         ],
@@ -1556,7 +1567,8 @@ def calc_placement(request):
     }
     df_rasschet = pd.DataFrame.from_dict(dict)
     html_content = format_table(df_rasschet,index=False)
-    return HttpResponse(html_content, content_type='text/html')
+    if html:
+        return HttpResponse(html_content, content_type='text/html')
+    else:
+        return df_rasschet
 
-
-    # return JsonResponse(Rasschet,safe=False)

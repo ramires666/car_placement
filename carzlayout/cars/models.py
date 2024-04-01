@@ -332,6 +332,8 @@ class Placement(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     site = models.ForeignKey(Site, on_delete=models.CASCADE, verbose_name="Участок")
     cars = models.ManyToManyField('Car', through='PlacementCar', verbose_name="Машины")
+    nspis = models.FloatField(verbose_name="Принятое списочное кол-во машин", default=1.0)
+    calculations = models.JSONField(default=dict,blank=True)
     history = HistoricalRecords()
 
     class Meta:
