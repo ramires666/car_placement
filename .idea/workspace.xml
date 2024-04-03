@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement calc alpha 1.1.1&#10;some beauty">
-      <change afterPath="$PROJECT_DIR$/carzlayout/cars/static/cars/images/logo2.svg" afterDir="false" />
-    </list>
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement calc alpha 1.1.1&#10;some beauty" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -139,23 +137,7 @@
       <workItem from="1710693556144" duration="25123000" />
       <workItem from="1710828723127" duration="72040000" />
       <workItem from="1711533121181" duration="33416000" />
-      <workItem from="1711962157201" duration="28492000" />
-    </task>
-    <task id="LOCAL-00015" summary="almost finished mass editiong of properties in a big table">
-      <option name="closed" value="true" />
-      <created>1709750896821</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1709750896821</updated>
-    </task>
-    <task id="LOCAL-00016" summary="almost finished mass editiong of properties in a big table ШШ">
-      <option name="closed" value="true" />
-      <created>1709759355108</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1709759355108</updated>
+      <workItem from="1711962157201" duration="29012000" />
     </task>
     <task id="LOCAL-00017" summary="switching to universal property value filed">
       <option name="closed" value="true" />
@@ -533,7 +515,23 @@
       <option name="project" value="LOCAL" />
       <updated>1712144226853</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="placement calc alpha 1.1.1&#10;some beauty">
+      <option name="closed" value="true" />
+      <created>1712144297786</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1712144297786</updated>
+    </task>
+    <task id="LOCAL-00065" summary="placement calc alpha 1.1.1&#10;some beauty">
+      <option name="closed" value="true" />
+      <created>1712144326651</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1712144326651</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
