@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement calc alpha 1.1.1&#10;some beauty" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement calc alpha 1.1.1&#10;some beauty">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carzlayout/cars/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/carzlayout/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/db.sqlite3" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -137,15 +141,7 @@
       <workItem from="1710693556144" duration="25123000" />
       <workItem from="1710828723127" duration="72040000" />
       <workItem from="1711533121181" duration="33416000" />
-      <workItem from="1711962157201" duration="29962000" />
-    </task>
-    <task id="LOCAL-00018" summary="switched to universal property value filed">
-      <option name="closed" value="true" />
-      <created>1709764559649</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1709764559649</updated>
+      <workItem from="1711962157201" duration="32984000" />
     </task>
     <task id="LOCAL-00019" summary="last10 records df">
       <option name="closed" value="true" />
@@ -531,7 +527,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712144983190</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="placement calc alpha 1.1.1&#10;some beauty">
+      <option name="closed" value="true" />
+      <created>1712147106918</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1712147106918</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

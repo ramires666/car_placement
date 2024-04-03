@@ -1402,20 +1402,7 @@ def ajax_get_site_properties(request, site_id, period_id):
 
 
 def calc_placement(request,html=True):
-    # try:
-    #     if request.request:
-    #         if len(request.request.GET) > 0:
-    #             site_id = request.request.GET.get('site_id')
-    #             period_id = request.request.GET.get('period_id')
-    #             car_ids = request.request.GET.get('car_ids', '').split(',')
-    #         else:
-    #             site_id = int(request.POST.get('site_id'))
-    #             period_id = int(request.POST.get('period_id'))
-    #             car_ids = request.POST.get('car_ids', '').split(',')
-    #
-    # except:
     if request.method == 'GET':
-    # if len(request.GET) > 0:
         site_id = request.GET.get('site_id')
         period_id = request.GET.get('period_id')
         car_ids = request.GET.get('car_ids', '').split(',')
@@ -1423,10 +1410,6 @@ def calc_placement(request,html=True):
         site_id = request.POST.get('site')
         period_id = request.POST.get('period')
         car_ids = request.POST.get('selected_cars', '').split(',')
-
-        # site_id = int(request.POST.get('site_id'))
-        # period_id = int(request.POST.get('period_id'))
-        # car_ids = request.POST.get('car_ids', '').split(',')
 
     _, df_props = get_site_properties(request, site_id, period_id)
 
@@ -1446,21 +1429,7 @@ def calc_placement(request,html=True):
     Total_cars = len(car_ids)
     Vk = total_volume/Total_cars
     KTG = total_ktg/Total_cars
-    # print('d')
-    #final placementcalculation:
-    # Qpl = df_props.iloc[0]['Величина']
-    # d = df_props.iloc[1]['Величина']
-    # L = df_props.iloc[2]['Величина']
-    # Tsm = df_props.iloc[3]['Величина']
-    # Tregl = df_props.iloc[4]['Величина']
-    # Tprz = df_props.iloc[5]['Величина']
-    # Tvsp = df_props.iloc[6]['Величина']
-    # Nsm = df_props.iloc[7]['Величина']
-    # # Vk = df_props.iloc[8]['Величина']
-    # Kz = df_props.iloc[8]['Величина']
-    # Vdv = df_props.iloc[9]['Величина']
-    # Tpogr = df_props.iloc[10]['Величина']
-    # Trazgr = df_props.iloc[11]['Величина']
+
     Qpl = df_props[df_props['Свойство'] == 'Qpl - План задание']['Величина'].values[0]
     d = df_props[df_props['Свойство'] == 'd - Плотность груза']['Величина'].values[0]
     L = df_props[df_props['Свойство'] == 'L - Плечо откатки']['Величина'].values[0]
