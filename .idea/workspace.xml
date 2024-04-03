@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement calc alpha 1.1.1&#10;saves and opens">
-      <change afterPath="$PROJECT_DIR$/carzlayout/cars/migrations/0041_alter_historicalplacement_calculations_and_more.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/carzlayout/cars/static/cars/css/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/carzlayout/cars/static/cars/css/styles.css" afterDir="false" />
+    <list default="true" id="4607ee38-0423-42a6-9f2f-6863f936654b" name="Changes" comment="placement calc alpha 1.1.1&#10;some beauty">
+      <change afterPath="$PROJECT_DIR$/carzlayout/cars/static/cars/images/logo2.svg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,15 +139,7 @@
       <workItem from="1710693556144" duration="25123000" />
       <workItem from="1710828723127" duration="72040000" />
       <workItem from="1711533121181" duration="33416000" />
-      <workItem from="1711962157201" duration="27657000" />
-    </task>
-    <task id="LOCAL-00014" summary="fixing mass propertis table edit">
-      <option name="closed" value="true" />
-      <created>1709745489219</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1709745489219</updated>
+      <workItem from="1711962157201" duration="28492000" />
     </task>
     <task id="LOCAL-00015" summary="almost finished mass editiong of properties in a big table">
       <option name="closed" value="true" />
@@ -535,7 +525,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712001673084</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="placement calc alpha 1.1.1&#10;some beauty">
+      <option name="closed" value="true" />
+      <created>1712144226853</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1712144226853</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -576,7 +574,6 @@
       <path value="$PROJECT_DIR$" />
       <path value="$PROJECT_DIR$/carzlayout" />
     </ignored-roots>
-    <MESSAGE value="placement alpha.2" />
     <MESSAGE value="placement alpha.3" />
     <MESSAGE value="placement beta" />
     <MESSAGE value="placement beta + docker" />
@@ -601,7 +598,8 @@
     <MESSAGE value="placement calc alpha 0.0.1" />
     <MESSAGE value="placement calc alpha 0.1.1" />
     <MESSAGE value="placement calc alpha 1.1.1&#10;saves and opens" />
-    <option name="LAST_COMMIT_MESSAGE" value="placement calc alpha 1.1.1&#10;saves and opens" />
+    <MESSAGE value="placement calc alpha 1.1.1&#10;some beauty" />
+    <option name="LAST_COMMIT_MESSAGE" value="placement calc alpha 1.1.1&#10;some beauty" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
