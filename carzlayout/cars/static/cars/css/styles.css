@@ -81,7 +81,7 @@ p.link-read-post a {
 }
 
 div.article-panel {
-    background: #eee;
+    background: #e1dbc7;
     padding: 5px 10px 5px 10px;
     box-sizing: border-box;
     overflow: hidden;
@@ -118,7 +118,7 @@ ul.list-articles li {
 
 .content-table th, .content-table td {
     padding: 8px;
-    border: 1px solid maroon;
+    border: 1px solid #2b0080;
     text-align: center;
 }
 
@@ -151,12 +151,12 @@ ul.list-articles li {
 .clear {clear: both;}
 
 .header {
-	background: #3F4137;
+	background: #384870;
 	height: 60px;
 }
 
 .logo {
-	background: url('../images/logo.png') no-repeat 5px 5px;
+	background: url('../images/logo2.svg') no-repeat 5px 5px;
 	width: 128px;
 	height: 60px;
 }
@@ -166,7 +166,7 @@ ul.mainmenu {
 	margin: 0;
 	padding: 0;
 	height: 60px;
-	color: #fdc073;
+	color: #585afa;
 	font-size: 20px;
 	overflow: hidden;
 }
@@ -178,7 +178,7 @@ ul.mainmenu li.logo {margin: 0;}
 ul.mainmenu li.last {float: right;}
 
 ul.mainmenu li a {
-	color: #fdc073;
+	color: #aea3f8;
 	text-decoration: none;
 }
 ul.mainmenu li a:hover {
@@ -237,7 +237,7 @@ div.button {
 
 .left-chapters {
 	margin: 0;
-	background: #eee;
+	background: rgba(250, 243, 235, 0.99);
 	border-right: 1px solid #ccc;
 }
 .left-chapters ul {
