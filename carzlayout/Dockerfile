@@ -18,8 +18,11 @@ RUN pip install gunicorn
 # Copy project
 COPY . /PLACEMENT/
 
+ENV DJANGO_SETTINGS_MODULE=carzlayout.settings
+
+
 # Collect static files
-RUN python manage.py collectstatic --no-input
+RUN python manage.py collectstatic --no-input --settings=carzlayout.settings
 
 # Run the application with Gunicorn
 CMD ["gunicorn", "carzlayout.wsgi:application", "--bind", "0.0.0.0:8000"]
